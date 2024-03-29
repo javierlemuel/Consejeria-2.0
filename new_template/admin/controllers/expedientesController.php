@@ -151,6 +151,7 @@ class ExpedientesController {
                     error_log($logMessage, 3, $archivoRegistro);
 
                     $course_code = $_POST['crse_code'];
+                    $department = substr($course_code, 0, 4);
                     $grade = $_POST['grade'];
                     $equi = $_POST['equivalencia'];
                     $conva = $_POST['convalidacion'];
@@ -167,16 +168,39 @@ class ExpedientesController {
                     {
                         $type = $course_info['type'];
                     }
-                    
+
+                    if($department == "CCOM")
+                    {
+                        if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
+                        {
+                            $status = "np";
+                        }
+                        else
+                        {
+                            $status = "p";
+                        }
+                    }
+                    else
+                    {
+                        if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
+                        {
+                            $status = "np";
+                        }
+                        else
+                        {
+                            $status = "p";
+                        }
+                    }
+
                     $result = $studentModel->studentAlreadyHasGrade($student_num, $course_code, $conn);
 
                     if($result == TRUE)
                     {
-                        $studentModel->UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $conn);
+                        $studentModel->UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $term, $status, $conn);
                     }
                     else
                     {
-                        $studentModel->InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $conn);
+                        $studentModel->InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn);
                     }
                 }
                 if(isset($_POST['insertGrade']) && !empty($_POST['insertGrade'])) {

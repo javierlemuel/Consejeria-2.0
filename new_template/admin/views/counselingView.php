@@ -135,6 +135,7 @@
                                         <div>
                                             <label for="estatus" class="block text-center text-lg">Escoge el term para ver las recomendaciones</label>
                                             <select id="termSelect" class="form-select text-white-dark w-full" name="estatus" x-data="dropdown" @click.outside="open = false">
+                                                <option value=""></option>
                                                 <?php foreach ($studentRecommendedTerms as $term): ?>
                                                     <option value="<?php echo $term?>"><?php echo $term?></option>
                                                 <?php endforeach; ?>
@@ -271,11 +272,14 @@
                                             echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
                                             echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
-                                            echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "'/></td>";
-                                            echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
+                                            echo "<td style='padding: 5px;'>" . $curso['term'] . "</td>";
+                                            echo "<input type='hidden' name='term' value='" . $curso['term'] . "'/>";
                                             echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
                                             echo "</tr>";
+                                            echo "<input type='hidden' name='equivalencia' value=''/>";
+                                            echo "<input type='hidden' name='convalidacion' value=''/>";
+                                            echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
