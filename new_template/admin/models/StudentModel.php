@@ -477,10 +477,10 @@ class StudentModel {
         }
     }
 
-    public function UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $conn) {
+    public function UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
         // Preparar la consulta SQL para la actualización
         $sql = "UPDATE student_courses 
-                SET credits = ?, type = ?, crse_grade = ?, crse_status = 'P', term = ?, equivalencia = ?, convalidacion = ?
+                SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                 WHERE student_num = ? AND crse_code = ? AND term = ?";
         
         // Preparar la sentencia
@@ -491,7 +491,7 @@ class StudentModel {
         }
         
         // Vincular los parámetros con los valores
-        $stmt->bind_param("sssssssss", $credits, $type, $grade, $term, $equi, $conva, $student_num, $course_code, $old_term);
+        $stmt->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
         
         // Ejecutar la sentencia
         if ($stmt->execute()) {
@@ -511,10 +511,10 @@ class StudentModel {
         }
     }
 
-    public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $conn) {
+    public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn) {
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, type, crse_grade, crse_status, term, equivalencia, convalidacion)
-                VALUES (?, ?, ?, ?, ?, 'P', ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
@@ -524,7 +524,7 @@ class StudentModel {
         }
         
         // Vincular los parámetros con los valores
-        $stmt->bind_param("ssssssss", $student_num, $course_code, $credits, $type, $grade, $term, $equi, $conva);
+        $stmt->bind_param("sssssssss", $student_num, $course_code, $credits, $type, $grade, $status, $term, $equi, $conva);
         
         // Ejecutar la sentencia
         if ($stmt->execute()) {

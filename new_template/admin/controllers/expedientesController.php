@@ -371,8 +371,10 @@ class ExpedientesController {
                         $class = $line[2];
                         //Se toman solo los primeros 8 caracteres de la clase ya que el archivo incluye las secciones y no nos interesa esa informacion
                         $class = substr($class, 0, 8);
+                        $department = substr($class, 0, 4);
                         $creditAmount = $line[3];
                         $grade = $line[5];
+                        $grade = trim($grade); # para eliminar los espacios en blanco si no hay nota. deja el string en ""
 
                         $studentData = $studentModel->selectStudent($studentNumber, $conn);
                         // El estudiante no existe en la base de datos.
@@ -395,19 +397,41 @@ class ExpedientesController {
                                 {
                                     $type = $course_info["type"];
                                 }
-                                $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);
-                                //el estudiante ya tiene una nota en esa clase y en ese semestre
+
+                                if($grade == "")
+                                {
+                                    $status = "m";
+                                }
+                                elseif($department == "CCOM")
+                                {
+                                    if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
+                                    {
+                                        $status = "np";
+                                    }
+                                    else
+                                    {
+                                        $status = "p";
+                                    }
+                                }
+                                else
+                                {
+                                    if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
+                                    {
+                                        $status = "np";
+                                    }
+                                    else
+                                    {
+                                        $status = "p";
+                                    }
+                                }
+                                $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);//el estudiante ya tiene una nota en esa clase y en ese semestre
                                 if ($result == TRUE)
                                 {
-                                    error_log("Nota del estudiante " . $studentNumber . " en la clase " . $class . " fue actualizada\n", 3, $archivoRegistro);
-                                    error_log("El term a ser actualizado es: $term\n", 3, $archivoRegistro);
-                                    $result = $studentModel->UpdateStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $conn);
+                                    $result = $studentModel->UpdateStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
                                 }
                                 else // el estudiante no tiene una nota en esa clase.
                                 {
-                                    error_log("Nota del estudiante " . $studentNumber . " en la clase " . $class . " fue insertada\n", 3, $archivoRegistro);
-                                    error_log("El term a ser insertado es: $term\n", 3, $archivoRegistro);
-                                    $result = $studentModel->InsertStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $conn);
+                                    $result = $studentModel->InsertStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $status, $conn);
                                 }
                             }
                         }
