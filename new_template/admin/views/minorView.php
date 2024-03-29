@@ -124,6 +124,8 @@
                                         echo"<h2 style='color:limegreen; bold' class='text-xl'>Minor fue editado!</h2>";
                                      elseif ($message == "add_success") 
                                         echo "<h2 style='color:limegreen; bold' class='text-xl'>Minor fue creado!</h2>";
+                                    elseif ($message == "del_success") 
+                                        echo "<h2 style='color:limegreen; bold' class='text-xl'>Minor fue eliminado!</h2>";
                                 ?>
                         <br>
                     </div>
@@ -191,9 +193,9 @@
                     <tr>
                         <th style='text-align:center'>ID</th>
                         <th style='text-align:center'>Titulo</th>
-                        <th style='text-align:center'>Creditos</th>
+                        <th style='text-align:center'>Cursos</th>
                         <th style='text-align:center'></th>
-                       
+                        <th style='text-align:center'></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -212,17 +214,36 @@
             <input name='name' type="text" class="form-input" value="<?php echo $minor['name']?>" required />
             </td>
             <td style='text-align:center'>
-            <input name='credits' type="number" min='1' max='21' class="form-input" value="<?php echo $minor['required_credits']?>" required />
+            <select name="courses" id="courses">
+            <?php 
+             $minorController = new MinorController();
+             $courses = $minorController->getCourses($minor['ID']);
+ 
+             foreach ($courses as $course)
+             {
+                 $c = $course['crse_code'];
+                 echo "<option value=\"$c\">$c</option>";
+             }
+            ?>
+            </select>
             </td>
             <td style='text-align:center'>
             <!-- <a href='?addOffer&code=$courseCode'>
                     <span class='badge whitespace-nowrap badge-outline-primary'>Añade a oferta</span>
             </a> -->
-            <button type='submit' class='badge whitespace-nowrap badge-outline-primary'>Editar</button>
+            <button type='submit' class='badge whitespace-nowrap badge-outline-primary'>Actualizar título</button>
             </td>                                       
-            </tr>
+            
             </form>
-            <?php } ?>
+            <td style='text-align:center'>
+            <form action='?minor&delete' method='POST'>
+                <input type='hidden' value='<?php echo $minor['ID']?>' name='minorID'>
+                <button type='submit' class='badge whitespace-nowrap badge-outline-danger'>Eliminar</button>
+            </form>
+            </td>
+            </tr>
+            <?php
+            } ?>
     </tbody>
             </table>
         </div>

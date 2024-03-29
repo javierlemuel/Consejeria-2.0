@@ -184,10 +184,6 @@
                                     <?php if((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
                                     <option value='mandatory' <?php if($class['type']=='mandatory'){echo 'selected';} ?>>Curso requerido</option>
                                     <option value='elective' <?php if($class['type']=='elective'){echo 'selected';} ?>>Electiva</option>
-                                    <?php foreach($minors as $minor) { ?>
-                                    <option value='<?php echo $minor["ID"]; ?>' <?php if($class['type']==strval($minor["ID"])){echo 'selected';} ?>>
-                                <?php echo $minor['name']; ?></option>
-                                    <?php } ?>
                                     <?php } 
                                     else { ?>
                                         <option value='ESPA' <?php if($class['type']=='ESPA'){echo 'selected';} ?>>Español</option>
@@ -215,6 +211,17 @@
                                         <option value='0' <?php if($class['required']=='0'){echo 'selected';} ?>>No</option>
                                     </select>
                                 <?php } ?>
+                            </div>
+                            <div>
+                                <label for="minor">Minor</label>
+                                <select name='minor' class='form-select text-white-dark'>
+                                    <option value='NULL'>No Minor</option>
+                                    <?php foreach($minors as $minor) { ?>
+                                        <option value='<?php echo $minor["ID"]; ?>' <?php if($class['minor_id']==strval($minor["ID"])){echo 'selected';} ?>>
+                                    <?php echo $minor['name']; ?></option>
+                                        <?php } ?>
+                                </select>
+                            </div>
                             </div>
                         </div>
                         

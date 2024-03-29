@@ -27,9 +27,8 @@ class MinorController{
 
         $mID = $_POST['mID'];
         $name = $_POST['name'];
-        $credits = $_POST['credits'];
 
-        $message = $minorModel->editMinor($conn, $mID, $name, $credits);
+        $message = $minorModel->editMinor($conn, $mID, $name);
 
         $this->index($message);
     }
@@ -42,9 +41,8 @@ class MinorController{
             $minorModel = new MinorModel();
 
             $name = $_POST['name'];
-            $credits = $_POST['credits'];
 
-            $message = $minorModel->addMinor($conn, $name, $credits);
+            $message = $minorModel->addMinor($conn, $name);
            
 
            // $this->index($message);
@@ -54,6 +52,27 @@ class MinorController{
             echo "Error: " . $e->getMessage();
         }
         
+    }
+
+    public function deleteMinor()
+    {
+        global $conn;
+        $minorModel = new MinorModel();
+
+        $minorID = $_POST['minorID'];
+
+        $message = $minorModel->deleteMinorModel($conn, $minorID);
+
+        $this->index($message);
+    }
+
+
+    public function getCourses($id)
+    {
+        global $conn;
+        $minorModel = new MinorModel();
+
+        return $minorModel->getMinorCourses($conn, $id);
     }
 }
 
@@ -66,6 +85,9 @@ if(isset($_GET['minor']))
     
     if(isset($_GET['add']))
         $minorController->addMinor();
+
+    if(isset($_GET['delete']))
+        $minorController->deleteMinor();
 
     $minorController->index('');
 }

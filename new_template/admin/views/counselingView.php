@@ -245,7 +245,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                        <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Actualmente Tomando</h2>
+                        <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Que Toma Actualmente</h2>
                         <form method="POST" action="index.php">
                             <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
                             <!-- basic table -->
