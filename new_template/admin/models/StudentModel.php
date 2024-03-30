@@ -479,43 +479,82 @@ class StudentModel {
 
     public function UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
         // Preparar la consulta SQL para la actualización
-        $sql = "UPDATE student_courses 
-                SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
-                WHERE student_num = ? AND crse_code = ? AND term = ?";
-        
+        $sql0 = "SELECT crse_grade, term
+                FROM student_courses
+                WHERE student_num = ? AND crse_code = ?";
         // Preparar la sentencia
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
+        $stmt0 = $conn->prepare($sql0);
+        if (!$stmt0) {
             // Manejar el error de preparación de la consulta
             return FALSE;
         }
-        
-        // Vincular los parámetros con los valores
-        $stmt->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
-        
-        // Ejecutar la sentencia
-        if ($stmt->execute()) {
-            // Verificar si la actualización fue exitosa
-            if ($stmt->affected_rows > 0) {
-                $stmt->close();
-                return TRUE; // La actualización fue exitosa
-            } else {
-                $stmt->close();
-                return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
-            }
+
+        $stmt0->bind_param("ss", $student_num, $course_code);
+
+        $crse_grade = '';
+  
+        // Ejecutar
+        if ($stmt0->execute()) {
+            // Sacar la nota
+            $stmt0->bind_result($crse_grade, $old_term);
+            $stmt0->fetch();
+
+            // Cerrar
+            $stmt0->close();
         } else {
-            // Ocurrió un error al ejecutar la consulta
-            // Manejar el error según sea necesario
-            $stmt->close();
-            return FALSE;
+            // Error
+            echo "Error executing query.";
         }
+
+        if($crse_grade > $grade)
+        {
+            echo "Updating $course_code from $crse_grade to $grade<br>";
+
+            $sql1 = "UPDATE student_courses 
+                    SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
+                    WHERE student_num = ? AND crse_code = ? AND term = ?";
+            
+            // Preparar la sentencia
+            $stmt1 = $conn->prepare($sql1);
+            if (!$stmt1) {
+                // Manejar el error de preparación de la consulta
+                echo "Error preparing SQL statement: " . $conn->error . "<br>";
+                return FALSE;
+            }
+            
+            // Vincular los parámetros con los valores
+            $stmt1->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
+            
+            // Ejecutar la sentencia
+            if ($stmt1->execute()) {
+                // Verificar si la actualización fue exitosa
+                if ($stmt1->affected_rows > 0) {
+                    $stmt1->close();
+                    echo "Update successful<br>";
+                    return TRUE; // La actualización fue exitosa
+                } else {
+                    $stmt1->close();
+                    echo "No rows affected by the update<br>";
+                    return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
+                }
+            } else {
+                // Ocurrió un error al ejecutar la consulta
+                // Manejar el error según sea necesario
+                echo "Error executing SQL statement: " . $stmt1->error . "<br>";
+                $stmt1->close();
+                return FALSE;
+            }
+            
+        }
+        else
+            return TRUE;
     }
 
     public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn) {
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, type, crse_grade, crse_status, term, equivalencia, convalidacion)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+    
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -525,6 +564,8 @@ class StudentModel {
         
         // Vincular los parámetros con los valores
         $stmt->bind_param("sssssssss", $student_num, $course_code, $credits, $type, $grade, $status, $term, $equi, $conva);
+
+        // echo $stmt;
         
         // Ejecutar la sentencia
         if ($stmt->execute()) {

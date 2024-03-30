@@ -120,7 +120,35 @@ class ClassesModel {
 
     public function getCohortCoursesWgradesCCOMfree($conn, $studentCohort, $student_num)
     {
-        $sql = "SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
+        // Preparar la consulta SQL para la actualización
+        $sql0 = "SELECT minor
+                FROM student
+                WHERE student_num = ?";
+        // Preparar la sentencia
+        $stmt0 = $conn->prepare($sql0);
+        if (!$stmt0) {
+            // Manejar el error de preparación de la consulta
+            return FALSE;
+        }
+
+        $stmt0->bind_param("s", $student_num);
+
+        $student_minor_id = 0;
+  
+        // Ejecutar
+        if ($stmt0->execute()) {
+            // Sacar la nota
+            $stmt0->bind_result($student_minor_id);
+            $stmt0->fetch();
+
+            // Cerrar
+            $stmt0->close();
+        } else {
+            // Error
+            echo "Error executing query.";
+        }
+
+        $sql1 = "SELECT c.crse_code, c.name, c.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -129,21 +157,50 @@ class ClassesModel {
                     FROM cohort co
                     WHERE co.cohort_year = $studentCohort
                 )
+                AND (c.minor_id <> $student_minor_id OR c.minor_id IS NULL)
                 ORDER BY c.crse_code ASC;
                 ";
 
-        $result = $conn->query($sql);
+        $result1 = $conn->query($sql1);
 
-        if ($result === false) {
+        if ($result1 === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
 
-        return $result;
+        return $result1;
     }
 
     public function getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num)
     {
-        $sql = "SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
+        // Preparar la consulta SQL para la actualización
+        $sql0 = "SELECT minor
+                FROM student
+                WHERE student_num = ?";
+        // Preparar la sentencia
+        $stmt0 = $conn->prepare($sql0);
+        if (!$stmt0) {
+            // Manejar el error de preparación de la consulta
+            return FALSE;
+        }
+
+        $stmt0->bind_param("s", $student_num);
+
+        $student_minor_id = 0;
+  
+        // Ejecutar
+        if ($stmt0->execute()) {
+            // Sacar la nota
+            $stmt0->bind_result($student_minor_id);
+            $stmt0->fetch();
+
+            // Cerrar
+            $stmt0->close();
+        } else {
+            // Error
+            echo "Error executing query.";
+        }
+
+        $sql = "(SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
                 FROM general_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -151,8 +208,14 @@ class ClassesModel {
                     SELECT co.crse_code
                     FROM cohort co
                     WHERE co.cohort_year = $studentCohort
-                )
-                ORDER BY c.crse_code ASC;
+                ))
+                UNION
+                (SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
+                FROM ccom_courses c
+                JOIN student_courses sc ON c.crse_code = sc.crse_code
+                WHERE sc.student_num = $student_num
+                AND c.minor_id = $student_minor_id)
+                ORDER BY crse_code ASC;        
                 ";
 
         $result = $conn->query($sql);

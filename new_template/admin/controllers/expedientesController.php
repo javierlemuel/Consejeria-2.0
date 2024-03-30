@@ -388,7 +388,9 @@ class ExpedientesController {
                     {
                         // Asigna cada dato a una variable
                         $term = $line[0];
-                        $term = trim($term); # no se por que esta pone un espacio en blanco en el comienzo del archivo. ya con trim lo quitamos
+                        if(strlen($term) > 3)
+                            $term = trim($term); # no se por que esta pone un espacio en blanco en el comienzo del archivo. ya con trim lo quitamos
+                        $term = trim($term, "\xEF\xBB\xBF");
                         $studentNumber = $line[1];
                         //le quita los guiones al numero de estudiantes.
                         $studentNumber = str_replace("-", "", $studentNumber);
@@ -448,7 +450,11 @@ class ExpedientesController {
                                         $status = "p";
                                     }
                                 }
-                                $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);//el estudiante ya tiene una nota en esa clase y en ese semestre
+                                if(!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995']))
+                                    $result = $studentModel->studentAlreadyHasGrade($studentNumber, $class, $conn);
+                                else
+                                    $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);//el estudiante ya tiene una nota en esa clase y en ese semestre
+                                
                                 if ($result == TRUE)
                                 {
                                     $result = $studentModel->UpdateStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
