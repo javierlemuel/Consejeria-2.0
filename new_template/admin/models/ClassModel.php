@@ -97,11 +97,11 @@ class ClassModel {
         
 
         //Verifica si el curso requisito existe
-        $sql = "SELECT *
+        $sql = "SELECT crse_code
         FROM ccom_courses
         WHERE crse_code = '$req'
         UNION ALL
-        SELECT *
+        SELECT crse_code
         FROM general_courses
         WHERE crse_code = '$req'";
 
@@ -181,11 +181,11 @@ class ClassModel {
     {
         
         //Verifica si el curso requisito existe
-        $sql = "SELECT *
+        $sql = "SELECT crse_code
         FROM ccom_courses
         WHERE crse_code = '$req'
         UNION ALL
-        SELECT *
+        SELECT crse_code
         FROM general_courses
         WHERE crse_code = '$req'";
 

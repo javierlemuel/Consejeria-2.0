@@ -233,7 +233,6 @@
 
                     </div>  
                 </div>
-            </div>
 
 
             <div class='flex-1 text-sm' x-show='tab === "req"'>
@@ -308,6 +307,7 @@
                     </div>  
                 </div>
             </div>
+                    </div>
                
 
 
