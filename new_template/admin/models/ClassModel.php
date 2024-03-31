@@ -45,6 +45,8 @@ class ClassModel {
                 level = '$level'
                 WHERE crse_code = '$oldcourse'
                 ";
+
+        
         $result = $conn->query($sql);
 
         if ($result === false) {
@@ -66,6 +68,7 @@ class ClassModel {
                 WHERE crse_code = '$old_course_id'
                 ";
         
+        echo "Editing course: $old_course_id";
         $result = $conn->query($sql);
 
         if ($result === false) {

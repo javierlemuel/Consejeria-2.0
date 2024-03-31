@@ -164,7 +164,7 @@
                             <input type='hidden' name='oldcode' value="<?php echo $class['crse_code'] ?>">
                             <div>
                                 <label for="code">Código</label>
-                                <input name="code" type="text" value="<?php echo $class['crse_code'] ?>" class="form-input" disabled required/>
+                                <input name="code" type="text" value="<?php echo $class['crse_code'] ?>" class="form-input" readonly required/>
                             </div>
                             <div>
                                 <label for="name">Nombre</label>

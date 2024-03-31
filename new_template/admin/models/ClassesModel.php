@@ -289,11 +289,11 @@ class ClassesModel {
         while ($row = $result->fetch_assoc()) {
             $code = $row['crse_code'];
             $term = $row['term'];
-            $sql2 = "SELECT *
+            $sql2 = "SELECT crse_code, credits, name, type
                     FROM ccom_courses
                     WHERE crse_code = '$code'
                     UNION ALL
-                    SELECT *
+                    SELECT crse_code, credits, name, type
                     FROM general_courses
                     WHERE crse_code = '$code'";
             $result2 = $conn->query($sql2);

@@ -16,14 +16,14 @@ class CohorteModel {
     public function getFirstSem($conn, $cohort, $year)
     {
         $sql = "SELECT * FROM(
-                SELECT *
+                SELECT crse_code, name, credits, type
                 FROM cohort NATURAL JOIN ccom_courses
                 WHERE cohort.crse_code = ccom_courses.crse_code
                 AND cohort_year = $cohort
                 AND crse_year = $year
                 AND crse_semester = 1
                 UNION ALL 
-                SELECT * 
+                SELECT crse_code, name, credits, type
                 FROM cohort NATURAL JOIN general_courses
                 WHERE cohort.crse_code = general_courses.crse_code
                 AND cohort_year = $cohort
@@ -43,14 +43,14 @@ class CohorteModel {
     public function getSecondSem($conn, $cohort, $year)
     {
         $sql = "SELECT * FROM(
-                SELECT * 
+                SELECT crse_code, name, credits, type
                 FROM cohort NATURAL JOIN ccom_courses
                 WHERE cohort.crse_code = ccom_courses.crse_code
                 AND cohort_year = $cohort
                 AND crse_year = $year
                 AND crse_semester = 2
                 UNION ALL 
-                SELECT * 
+                SELECT crse_code, name, credits, type 
                 FROM cohort NATURAL JOIN general_courses
                 WHERE cohort.crse_code = general_courses.crse_code
                 AND cohort_year = $cohort

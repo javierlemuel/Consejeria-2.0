@@ -53,7 +53,8 @@ class ClassesController{
         {
             $courseID = $_GET['code'];
             $message = $classesModel->addToOffer($conn,$courseID);
-            $courses = $classesModel->getCcomCourses($conn);
+            $term = $classesModel->getTerm($conn);
+            $courses = $classesModel->getCcomCourses($conn, $term);
             $category = 'concentracion';
             header('Location: ?classes&message='.$message);
             die;
@@ -63,8 +64,8 @@ class ClassesController{
         {
             $courseID = $_GET['code'];
             $classesModel->removeFromOffer($conn,$courseID);
-            $courses = $classesModel->getOfferCourses($conn);
             $term = $classesModel->getTerm($conn);
+            $courses = $classesModel->getOfferCourses($conn, $term);
             $category = 'oferta';
             header('Location: ?offer');
             die;
@@ -133,7 +134,7 @@ class ClassesController{
                 $term = $classesModel->getTerm($conn);
             }
                 // Get courses in offer and return to offer page
-                $courses = $classesModel->getOfferCourses($conn);
+                $courses = $classesModel->getOfferCourses($conn, $_POST['term']);
                 $category = 'oferta';
                 echo '<script>';
                 echo 'window.location.href = "?offer";';
