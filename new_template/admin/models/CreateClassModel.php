@@ -2,7 +2,7 @@
 
 class CreateClassModel {
     public function createCcomCourse($conn, $crse_code, $crse_name, $cred,
-    $type, $level)
+    $type, $level, $minor)
     {
         $sql = "SELECT *
                 FROM ccom_courses
@@ -17,7 +17,7 @@ class CreateClassModel {
             if ($result->num_rows == 0)
             {
                 $sql = "INSERT INTO ccom_courses
-                        VALUES('$crse_code', '$crse_name', $cred, '$type', '$level')";
+                        VALUES('$crse_code', '$crse_name', $cred, '$type', '$level', $minor)";
                 
                 $result = $conn->query($sql);
                 if ($result === false) {
@@ -60,6 +60,18 @@ class CreateClassModel {
                 return false;
             }
         }
+        return $result;
+    }
+
+    public function getMinors($conn){
+        $sql = "SELECT *
+                FROM minor";
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
         return $result;
     }
 }

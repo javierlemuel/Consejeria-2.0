@@ -15,6 +15,7 @@ class CreateClassController{
        if(isset($_GET['createclass']) && !isset($_GET['code']))
        {
         $courseType = $_GET['createclass'];
+        $minors = $createClassModel->getMinors($conn);
         require_once(__DIR__ . '/../views/createClassView.php');
        }
        elseif(isset($_GET['createclass']) && isset($_GET['code']))
@@ -27,8 +28,9 @@ class CreateClassController{
          if($_GET['code'] == 'CCOM')
          {
             $level = $_POST['level'];
+            $minor = $_POST['minor'];
             $result = $createClassModel->createCcomCourse($conn, $crse_code, $crse_name, $cred,
-                                            $type, $level);
+                                            $type, $level, $minor);
             if($result !== false)
             {
                 header('Location: ?classes');

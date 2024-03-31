@@ -155,7 +155,6 @@
                 <?php if($courseType == 'CCOM') { ?>
                 <option value='mandatory' selected>Curso requerido</option>
                 <option value='elective' >Electiva</option>
-                <option value='1' >Web Design</option>
                 <?php } 
                 else { ?>
                     <option value='ESPA' >Español</option>
@@ -184,6 +183,17 @@
                 </select>
             <?php } ?>
         </div>
+        <?php if($courseType == 'CCOM') { ?>
+        <div>
+        <label for="minor">Minor</label>
+        <select name='minor' class='form-select text-white-dark'>
+            <option value='NULL'>No Minor</option>
+            <?php foreach($minors as $minor) { ?>
+                <option value='<?php echo $minor["ID"]; ?>'>
+            <?php echo $minor['name']; ?></option>
+                <?php } ?>
+        </select>
+    </div> <?php } ?>
     </div>
     
     <button type="submit" class="btn btn-primary !mt-6">Someter</button>
