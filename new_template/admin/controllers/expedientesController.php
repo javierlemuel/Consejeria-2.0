@@ -196,7 +196,7 @@ class ExpedientesController {
 
                     if($result == TRUE)
                     {
-                        $studentModel->UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $term, $status, $conn);
+                        $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn);
                     }
                     else
                     {
@@ -457,7 +457,7 @@ class ExpedientesController {
                                 
                                 if ($result == TRUE)
                                 {
-                                    $result = $studentModel->UpdateStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
+                                    $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
                                 }
                                 else // el estudiante no tiene una nota en esa clase.
                                 {

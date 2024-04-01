@@ -477,7 +477,7 @@ class StudentModel {
         }
     }
 
-    public function UpdateStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
+    public function UpdateStudentGradeCSV($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
         // Preparar la consulta SQL para la actualización
         $sql0 = "SELECT crse_grade, term
                 FROM student_courses
@@ -508,8 +508,6 @@ class StudentModel {
 
         if($crse_grade > $grade)
         {
-            echo "Updating $course_code from $crse_grade to $grade<br>";
-
             $sql1 = "UPDATE student_courses 
                     SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
@@ -530,7 +528,6 @@ class StudentModel {
                 // Verificar si la actualización fue exitosa
                 if ($stmt1->affected_rows > 0) {
                     $stmt1->close();
-                    echo "Update successful<br>";
                     return TRUE; // La actualización fue exitosa
                 } else {
                     $stmt1->close();
@@ -548,6 +545,42 @@ class StudentModel {
         }
         else
             return TRUE;
+    }
+
+    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
+            $sql1 = "UPDATE student_courses 
+                    SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
+                    WHERE student_num = ? AND crse_code = ? AND term = ?";
+            
+            // Preparar la sentencia
+            $stmt1 = $conn->prepare($sql1);
+            if (!$stmt1) {
+                // Manejar el error de preparación de la consulta
+                echo "Error preparing SQL statement: " . $conn->error . "<br>";
+                return FALSE;
+            }
+            
+            // Vincular los parámetros con los valores
+            $stmt1->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
+            
+            // Ejecutar la sentencia
+            if ($stmt1->execute()) {
+                // Verificar si la actualización fue exitosa
+                if ($stmt1->affected_rows > 0) {
+                    $stmt1->close();
+                    return TRUE; // La actualización fue exitosa
+                } else {
+                    $stmt1->close();
+                    echo "No rows affected by the update<br>";
+                    return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
+                }
+            } else {
+                // Ocurrió un error al ejecutar la consulta
+                // Manejar el error según sea necesario
+                echo "Error executing SQL statement: " . $stmt1->error . "<br>";
+                $stmt1->close();
+                return FALSE;
+            }
     }
 
     public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn) {
