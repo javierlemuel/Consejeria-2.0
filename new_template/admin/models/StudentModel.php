@@ -531,7 +531,6 @@ class StudentModel {
                     return TRUE; // La actualización fue exitosa
                 } else {
                     $stmt1->close();
-                    echo "No rows affected by the update<br>";
                     return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
                 }
             } else {
@@ -571,7 +570,6 @@ class StudentModel {
                     return TRUE; // La actualización fue exitosa
                 } else {
                     $stmt1->close();
-                    echo "No rows affected by the update<br>";
                     return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
                 }
             } else {

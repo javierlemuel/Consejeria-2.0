@@ -216,23 +216,21 @@
                                                         <option value=''></option>
                                                         <option value='mandatory'>Mandatory</option>
                                                         <option value='elective'>Elective</option>
-                                                        <option value='free'>FREE</option>
-                                                        <option value='espa'>ESPA</option>
-                                                        <option value='ingl'>INGL</option>
-                                                        <option value='mate'>MATE</option>
-                                                        <option value='huma'>HUMA</option>
-                                                        <option value='ciso'>CISO</option>
-                                                        <option value='cibi'>CIBI</option>
-                                                        <option value='fisi'>FISI</option>
+                                                        <option value='FREE'>FREE</option>
+                                                        <option value='ESPA'>ESPA</option>
+                                                        <option value='INGL'>INGL</option>
+                                                        <option value='MATE'>MATE</option>
+                                                        <option value='HUMA'>HUMA</option>
+                                                        <option value='CISO'>CISO</option>
+                                                        <option value='CIBI'>CIBI</option>
+                                                        <option value='FISI'>FISI</option>
                                                     </select>
                                                 </td>
                                                 <td style='padding: 5px;'><input type='text' name='grade' class='form-input' style='width: 4em;' value='' required></td>
                                                 <td style='padding: 5px;'>
-                                                    <select name='status' class='form-input' required>
+                                                    <select name='status' class='form-input'>
                                                         <option value=''></option>
-                                                        <option value='m'>Actualmente Tomando</option>
-                                                        <option value='P'>Paso</option>
-                                                        <option value='NP'>No Paso</option>
+                                                        <option value='M'>Actualmente Tomando</option>
                                                     </select>
                                                 </td>
                                                 <td style='padding: 5px;'><input type='text' name='term' class='form-input' style='width: 4.5em;' value='' required></td>
