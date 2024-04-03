@@ -4,7 +4,7 @@ class StudentModel
 {
     public function getStudentInfo($conn, $student_num)
     {
-        $sql = "SELECT email, name1, name2, last_name1, last_name2, cohort_year
+        $sql = "SELECT email, name1, name2, last_name1, last_name2, cohort_year, minor
                 FROM student
                 WHERE student.student_num = ?";
 
@@ -36,12 +36,6 @@ class StudentModel
 
     public function getStudentCCOMCourses($conn, $student_num, $cohort_year)
     {
-        // $sql = "SELECT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
-        //         student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, ccom_courses.type
-        // FROM ccom_courses
-        // LEFT JOIN student_courses ON ccom_courses.crse_code = student_courses.crse_code
-        // AND student_courses.student_num = ? WHERE ccom_courses.type = 'mandatory' ";
-
         $sql = "SELECT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
                 student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, ccom_courses.type,
                 cohort.cohort_year,
@@ -76,11 +70,6 @@ class StudentModel
 
     public function getStudentGeneralCourses($conn, $student_num, $cohort_year)
     {
-        // $sql = "SELECT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
-        //                 student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, general_courses.type
-        //         FROM general_courses
-        //         LEFT JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
-        //         AND student_courses.student_num = ?";
         $sql = "SELECT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
                         student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, general_courses.type,
                 CASE WHEN general_courses.crse_code IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
@@ -111,14 +100,19 @@ class StudentModel
         return $studentRecord;
     }
 
-    public function getCCOMElectives($conn, $student_num)
+    public function getCCOMElectives($conn, $student_num, $minor)
     {
+        if ($minor == 0) {
+            $minor_id =  "";
+        } else {
+            $minor_id =  "AND (cc.minor_id != " . $minor . " OR cc.minor_id IS NULL)";
+        }
 
         $sql = "SELECT cc.crse_code, cc.name, cc.credits, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion
         FROM ccom_courses AS cc
         JOIN student_courses AS sc
         ON cc.crse_code = sc.crse_code
-        WHERE sc.type = 'elec_ccom' AND sc.student_num = ?";
+        WHERE sc.type = 'elective' AND sc.student_num = ? " . $minor_id;
 
         $stmt = $conn->prepare($sql);
 
@@ -140,8 +134,13 @@ class StudentModel
         return $studentRecord;
     }
 
-    public function getFREElectives($conn, $student_num)
+    public function getFREElectives($conn, $student_num, $minor)
     {
+        if ($minor == 0) {
+            $minor_id =  "";
+        } else {
+            $minor_id =  "AND cc.minor_id = " . $minor;
+        }
 
         $sql = "SELECT sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion,
         COALESCE(cc.name, gc.name) AS name,
@@ -149,7 +148,7 @@ class StudentModel
         FROM student_courses AS sc
         LEFT JOIN ccom_courses AS cc ON sc.crse_code = cc.crse_code
         LEFT JOIN general_courses AS gc ON sc.crse_code = gc.crse_code
-        WHERE sc.student_num = ? AND sc.type = 'elec_free'";
+        WHERE sc.student_num = ? AND sc.type = 'elective' " . $minor_id;
 
         $stmt = $conn->prepare($sql);
 

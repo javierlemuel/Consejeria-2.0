@@ -236,7 +236,8 @@ if (session_status() == PHP_SESSION_NONE) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $generalCredits = 0;
+                                            <?php
+                                            $generalCredits = 0;
                                             foreach ($generalesStudentCourses as $generalesStudentCourse) :
                                                 $generalCredits += $generalesStudentCourse['credits']; ?>
                                                 <tr>
@@ -293,6 +294,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                         </thead>
                                         <tbody>
                                             <?php $ccomElectives_credits = 0;
+                                            //var_dump($ccomElectives);
                                             foreach ($ccomElectives as $ccomElective) :
                                                 $ccomElectives_credits += $ccomElective['credits']; ?>
                                                 <tr>
@@ -347,6 +349,8 @@ if (session_status() == PHP_SESSION_NONE) {
                                         </thead>
                                         <tbody>
                                             <?php $freeElectives_credits = 0;
+                                            //echo $studentInfo['minor'];
+                                            //var_dump($freeElectives);
                                             foreach ($freeElectives as $freeElective) :
                                                 $freeElectives_credits += $freeElective['credits']; ?>
                                                 <tr>

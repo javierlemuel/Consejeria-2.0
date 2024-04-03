@@ -27,15 +27,15 @@ class ExpedienteController
             $student_num = $_SESSION['student_num'];
         }
 
+
         //get student info
         $studentInfo = $studentModel->getStudentInfo($conn, $student_num);
-
 
         //get student courses
         $ccomStudentCourses = $studentModel->getStudentCCOMCourses($conn, $student_num, $studentInfo['cohort_year']);
         $generalesStudentCourses = $studentModel->getStudentGeneralCourses($conn, $student_num,  $studentInfo['cohort_year']);
-        $ccomElectives = $studentModel->getCCOMElectives($conn, $student_num);
-        $freeElectives = $studentModel->getFREElectives($conn, $student_num);
+        $ccomElectives = $studentModel->getCCOMElectives($conn, $student_num, $studentInfo['minor']);
+        $freeElectives = $studentModel->getFREElectives($conn, $student_num, $studentInfo['minor']);
 
 
 
