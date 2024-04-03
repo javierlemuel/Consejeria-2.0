@@ -456,7 +456,7 @@ class ExpedientesController {
                             if($creditAmount != 0) # clases de 0 creditos no se ponen en las notas
                             {
                                 $equi = "";
-                                $conva = 0;
+                                $conva = "";
                                 $course_info = $classModel->selectCourseWNull($conn, $class);
                                 if ($course_info == NULL)
                                 {
