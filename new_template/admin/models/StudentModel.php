@@ -313,7 +313,7 @@ class StudentModel {
     
         // Ejecuta el query de inserción
         $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, minor, cohort_year, status, edited_date)
-                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', '0000-00-00', 0, $cohort_year, 'Activo', NULL)";
+                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', '0000-00-00', 0, $cohort_year, 'Activo', '0000-00-00')";
     
         // Ejecuta el query
         if ($conn->query($query) === TRUE) {
@@ -637,5 +637,20 @@ class StudentModel {
             return FALSE;
         }
     }
+
+    public function updateEditDate($conn, $student_num, $date)
+    {
+        $sql = "UPDATE student SET edited_date = ? WHERE student_num = ?";
+        // Preparar la sentencia
+        $stmt = $conn->prepare($sql);
+        // Vincular el parámetro con el valor
+        $stmt->bind_param("ss", $date, $student_num);
+        // Ejecutar la sentencia
+        $stmt->execute();
+
+        return;
+
+    }
+
 }
 ?>
