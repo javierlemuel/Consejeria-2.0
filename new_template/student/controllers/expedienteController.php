@@ -36,6 +36,7 @@ class ExpedienteController
         $generalesStudentCourses = $studentModel->getStudentGeneralCourses($conn, $student_num,  $studentInfo['cohort_year']);
         $ccomElectives = $studentModel->getCCOMElectives($conn, $student_num, $studentInfo['minor']);
         $freeElectives = $studentModel->getFREElectives($conn, $student_num, $studentInfo['minor']);
+        $otherCourses = $studentModel->getOtherCourses($conn, $student_num);
 
 
 

@@ -387,6 +387,59 @@ if (session_status() == PHP_SESSION_NONE) {
                                         </tfoot>
                                     </table>
                                 </div>
+                                <div class="table-responsive mt-5">
+                                    <h4 class="font-semibold text-2xl my-4">EOtros Cursos</h4>
+                                    <table class="table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Curso</th>
+                                                <th>Creditos</th>
+                                                <th class="text-center">Notas</th>
+                                                <th class="text-center">Matriculado</th>
+                                                <th class="text-center">Recomendado</th>
+                                                <th class="text-center">Convalidacion</th>
+                                                <th class="text-center">Equivalencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $otherCourses_credits = 0;
+                                            //echo $studentInfo['minor'];
+                                            //var_dump($freeElectives);
+                                            foreach ($otherCourses as $otherCourse) :
+                                                $otherCourses_credits += $otherCourse['credits']; ?>
+                                                <tr>
+                                                    <td class="whitespace-nowrap"><?php echo $otherCourse['crse_code'] ?></td>
+                                                    <td><?php echo $otherCourse['credits'] ?> </td>
+                                                    <td><?php if ($otherCourse['crse_grade'] == 'NULL')
+                                                            echo '';
+                                                        else echo $otherCourse['crse_grade'] ?></td>
+                                                    <td><?php if ($otherCourse['term'] == 'NULL')
+                                                            echo '';
+                                                        else echo $otherCourse['term'] ?></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>
+                                                    <div>Creditos Totales:</div>
+                                                </th>
+                                                <th>
+                                                    <div><?php echo $otherCourses_credits ?></div>
+                                                </th>
+                                                <th>
+                                                    <div></div>
+                                                </th>
+                                                <th class="p-3 text-center">
+                                                    <div></div>
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </template>
                     </div>
