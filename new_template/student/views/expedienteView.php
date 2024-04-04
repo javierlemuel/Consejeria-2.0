@@ -92,6 +92,11 @@ if (session_status() == PHP_SESSION_NONE) {
                                 <p class="mb-4"><b>Correo Electronico:</b> <?php echo $studentInfo["email"]; ?></p>
                                 <p class="mb-4"><b>Numero de Estudiante:</b> <?php echo $studentInfo["formatted_student_num"]; ?></p>
                                 <p class="mb-4"><b>Major:</b> CCOM</p>
+                                <?php if ($studentInfo["minor"] != 0) {
+                                    echo '<p class="mb-4"><b>Minor:</b> ' . $minor . '</p>';
+                                }
+
+                                ?>
                                 <p class="mb-4">Si alguna de esta informacion esta incorrecta favor de avisarle a la consejera. </p>
                             </div>
                         </template>
@@ -99,70 +104,15 @@ if (session_status() == PHP_SESSION_NONE) {
                             <div>
                                 <div class="row flex">
                                     <div class="grid-cols-1" style="width:70%;">
-                                        <h4 class="font-semibold text-2xl mb-4">Expediente academico</h4>
+                                        <h4 class="font-bold text-2xl mb-4">Expediente academico</h4>
                                     </div>
-                                    <div class="grid-cols-1">
-                                        <p>Universidad de Puerto Rico en Arecibo</p>
-                                        <p>Departamento de Ciencias de Computos</p>
 
-                                    </div>
                                 </div>
-                                <div class="row flex">
-                                    <div class="grid-cols-1 justify-end" style="width:20%;">
-                                        <p><b>Nombre:</b></p>
-                                    </div>
-                                    <div class="grid-cols-1" style="width:50%;">
-                                        <p><?php echo $studentInfo["full_student_name"]; ?></p>
-                                    </div>
-                                    <!-- a~o de estudio -->
-                                    <!-- <div class="grid-cols-1">
-                                        <p><b>Año: </b>1</p>
-                                    </div> -->
-                                </div>
-                                <div class="row flex">
-                                    <div class="grid-cols-1" style="width:20%;">
-                                        <p><b>Numero de Estudiante:</b> </p>
-                                    </div>
-                                    <div class="grid-cols-1" style="width:50%;">
-                                        <p><?php echo $studentInfo["formatted_student_num"]; ?></p>
-                                    </div>
-                                    <!-- semestre -->
-                                    <!-- <div class="grid-cols-1">
-                                        <p><b>Semestre: </b>2</p>
-                                    </div> -->
-                                </div>
-                                <div class="row flex">
-                                    <div class="grid-cols-1" style="width:20%;">
-                                        <p><b>Correo electronico:</b> </p>
-                                    </div>
-                                    <div class="grid-cols-1" style="width:50%;">
-                                        <p><?php echo $studentInfo["email"]; ?></p>
-                                    </div>
-                                    <!-- creditos recomendados -->
-                                    <!-- <div class="grid-cols-1">
-                                        <p><b>Creditos Recomendados:</b> 14</p>
-                                    </div> -->
-                                </div>
-                                <div class="row flex">
-                                    <div class="grid-cols-1" style="width:70%;">
-                                    </div>
-                                    <!-- gpa -->
-                                    <!-- <div class="grid-cols-1">
-                                        <p><b>GPA Departamental:</b> 4.00</p>
-                                    </div> -->
-                                </div>
-                                <div class="row flex">
-                                    <div class="grid-cols-1" style="width:70%;">
-                                    </div>
-                                    <!-- gpa -->
-                                    <!-- <div class="grid-cols-1">
-                                        <p><b>GPA General:</b> 3.50</p>
-                                    </div> -->
-                                </div>
+
                                 <!-- start expediente table -->
                                 <!-- clases de concentracion -->
                                 <div class="table-responsive">
-                                    <h4 class="font-semibold text-2xl mb-4">Cursos de Concentracion</h4>
+                                    <h4 class="font-semibold text-xl mb-4">Cursos de Concentracion</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>
@@ -221,7 +171,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 </div>
                                 <!-- clases generales -->
                                 <div class="table-responsive mt-5">
-                                    <h4 class="font-semibold text-2xl my-4">Cursos Generales</h4>
+                                    <h4 class="font-semibold text-xl my-4">Cursos Generales</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>
@@ -278,7 +228,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 </div>
                                 <!-- electivas departamentales -->
                                 <div class="table-responsive mt-5">
-                                    <h4 class="font-semibold text-2xl my-4">Electivas Departamentales</h4>
+                                    <h4 class="font-semibold text-xl my-4">Electivas Departamentales</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>
@@ -388,7 +338,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                     </table>
                                 </div>
                                 <div class="table-responsive mt-5">
-                                    <h4 class="font-semibold text-2xl my-4">EOtros Cursos</h4>
+                                    <h4 class="font-semibold text-xl my-4">EOtros Cursos</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>

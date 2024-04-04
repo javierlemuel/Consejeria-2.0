@@ -203,4 +203,27 @@ class StudentModel
         }
         return $otherCourses;
     }
+
+    public function getMinor($conn, $student_num)
+    {
+        $sql = "SELECT minor.name
+        FROM minor
+        JOIN student AS s ON minor.ID = s.minor
+        WHERE s.student_num = ?;";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bind_param("s", $student_num);
+
+        // ejecuta el statement
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $minor = $result->fetch_assoc();
+        return $minor['name'];
+    }
 }
