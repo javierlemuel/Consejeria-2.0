@@ -142,18 +142,20 @@ class StudentModel
             $minor_id =  "AND cc.minor_id = " . $minor;
         }
 
-        $sql = "SELECT sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion,
-        COALESCE(cc.name, gc.name) AS name,
-        COALESCE(cc.credits, gc.credits) AS credits
+        $sql = "SELECT sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, cc.name AS name, cc.credits AS credits
         FROM student_courses AS sc
         LEFT JOIN ccom_courses AS cc ON sc.crse_code = cc.crse_code
-        LEFT JOIN general_courses AS gc ON sc.crse_code = gc.crse_code
-        WHERE sc.student_num = ? AND sc.type = 'elective' " . $minor_id;
+        WHERE sc.student_num = ? AND sc.type = 'elective' " . $minor_id . " UNION
+		SELECT sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, gc.name AS name, gc.credits AS credits
+        FROM student_courses AS sc
+        JOIN general_courses AS gc ON sc.crse_code = gc.crse_code
+        WHERE sc.student_num = ? AND sc.type = 'elective'";
+
 
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param("s", $student_num);
+        $stmt->bind_param("ss", $student_num, $student_num);
 
         // ejecuta el statement
         $stmt->execute();
@@ -168,5 +170,37 @@ class StudentModel
             $studentRecord[] = $row;
         }
         return $studentRecord;
+    }
+
+
+    public function getOtherCourses($conn, $student_num)
+    {
+        $sql = "SELECT *
+        FROM student_courses
+        WHERE crse_code NOT IN (
+            SELECT crse_code
+            FROM ccom_courses
+            UNION
+            SELECT crse_code
+            FROM general_courses
+        )
+        AND student_num = ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $student_num);
+
+        // ejecuta el statement
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $otherCourses = [];
+        while ($row = $result->fetch_assoc()) {
+            $otherCourses[] = $row;
+        }
+        return $otherCourses;
     }
 }
