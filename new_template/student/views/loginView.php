@@ -38,7 +38,7 @@
 
     <div class="main-container min-h-screen text-black dark:text-white-dark">
         <div x-data="auth">
-            <div class="relative flex min-h-screen items-center justify-center bg-[url(../images/auth/map.png)] bg-cover bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
+            <div class="relative flex min-h-screen items-center justify-center bg-[url(../images/auth/bg-gradient.png)] bg-cover bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
                 <div class="relative w-full max-w-[870px] rounded-md bg-[linear-gradient(45deg,#fff9f9_0%,rgba(255,255,255,0)_25%,rgba(255,255,255,0)_75%,_#fff9f9_100%)] p-2 dark:bg-[linear-gradient(52.22deg,#0E1726_0%,rgba(14,23,38,0)_18.66%,rgba(14,23,38,0)_51.04%,rgba(14,23,38,0)_80.07%,#0E1726_100%)]">
                     <div class="relative flex flex-col justify-center rounded-md bg-white/60 backdrop-blur-lg dark:bg-black/50 px-6 lg:min-h-[758px] py-20">
                         <div class="mx-auto w-full max-w-[440px]">
@@ -48,7 +48,7 @@
 
                                         <?php if ($_SESSION['message'] == 'no student')
                                             echo "<h2 style='color:red; bold' class='text-xl'>Credenciales incorrectos!</h2>";
-                                            else if ($_SESSION['message'] == 'student inactive')
+                                        else if ($_SESSION['message'] == 'student inactive')
                                             echo "<h2 style='color:red; bold' class='text-xl'>Estudiante no está permitido entrar</h2>"
                                         ?>
                                         <br>

@@ -33,7 +33,7 @@ if (isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticate
     } else if ($page === '2017' || $page === '2022') {
         require_once 'controllers/cohorteController.php';
     } else if ($page === 'links') {
-        require_once 'views/links.php';
+        require_once 'views/linksView.php';
     } else {
         // carga la pagina de consegeria 
         require_once 'controllers/counselingController.php';
