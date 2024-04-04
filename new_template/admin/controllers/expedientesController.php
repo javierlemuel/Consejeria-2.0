@@ -71,6 +71,8 @@ class ExpedientesController {
                 $status = $_POST['estatus'];
                 //JAVIER
                 $date = date("Y-m-d");
+                $dateObj = new DateTime($date); 
+                $date = $dateObj->modify('-1 day');
                 $result = $studentModel->editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $date, $conn);
                 $minors = $minorModel->getMinors($conn);
                 //
@@ -173,22 +175,22 @@ class ExpedientesController {
                     {
                         if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
                         {
-                            $status = "np";
+                            $status = "NP";
                         }
                         else
                         {
-                            $status = "p";
+                            $status = "P";
                         }
                     }
                     else
                     {
                         if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
                         {
-                            $status = "np";
+                            $status = "NP";
                         }
                         else
                         {
-                            $status = "p";
+                            $status = "P";
                         }
                     }
 
@@ -232,22 +234,22 @@ class ExpedientesController {
                             {
                                 if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
                                 {
-                                    $status = "np";
+                                    $status = "NP";
                                 }
                                 else
                                 {
-                                    $status = "p";
+                                    $status = "P";
                                 }
                             }
                             else
                             {
                                 if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
                                 {
-                                    $status = "np";
+                                    $status = "NP";
                                 }
                                 else
                                 {
-                                    $status = "p";
+                                    $status = "P";
                                 }
                             }
                         }
@@ -308,19 +310,25 @@ class ExpedientesController {
                 
                         // Leemos el contenido del segundo archivo CSV
                         $file_content2 = file_get_contents($file_tmp2);
-                        $lines2 = explode("\n", $file_content2);
+                        $lines2 = preg_split('/\r\n|\r|\n/', $file_content2);
                         $birthdays = [];
                 
                         foreach ($lines2 as $line2) {
+
                             $data2 = explode(",", $line2);
+                            // Trim each data element to remove leading/trailing spaces
+                            $data2 = array_map('trim', $data2);
+
                             $student_num2 = trim($data2[0]);
                             $birthday = trim($data2[count($data2) - 2]); // Asumiendo que la fecha de nacimiento está en el penúltimo índice
                 
                             // Almacenar la fecha de nacimiento asociada al número de estudiante
                             $birthdays[$student_num2] = $birthday;
+                            //echo "{{Birthday for $student_num2: $birthdays[$student_num2]}}\n";
                         }
                         
                         foreach ($lines as $line) {
+
                             // Dividimos cada línea por el delimitador ";"
                             $data = explode(";", $line);
                         
@@ -348,7 +356,9 @@ class ExpedientesController {
                             $email = trim($data[12]);
 
                             // Obtener la fecha de nacimiento del array $birthdays si está disponible
+                            // echo "{{Student $student_num has $birthdays[$student_num]}}\n";
                             $birthdate = isset($birthdays[$student_num]) ? $birthdays[$student_num] : '';
+                            //echo $birthdate;
 
                             //hacer que los nombre comienzen con letra mayuscula y el resto sea minusculas.
                             $nombre = ucwords(strtolower($nombre));
@@ -369,6 +379,11 @@ class ExpedientesController {
                                     // Llamamos a la función del modelo para insertar el estudiante
                                     $studentModel->insertStudentCSV($conn, $student_num, $nombre, $segundo_nombre, $apellido_materno, $apellido_paterno, $email, $birthdate);
                                     $archivoRegistroModel = __DIR__ . '/../models/archivo_de_registro.txt';
+                                    $date = date("Y-m-d");
+                                    $dateObj = new DateTime($date); 
+                                    $date = $dateObj->modify('-1 day');
+                                    $date = $date->format('Y-m-d');
+                                    $studentModel->updateEditDate($conn, $student_num, $date);
                                 }
                             }
                             else
@@ -441,7 +456,7 @@ class ExpedientesController {
                             if($creditAmount != 0) # clases de 0 creditos no se ponen en las notas
                             {
                                 $equi = "";
-                                $conva = 0;
+                                $conva = "";
                                 $course_info = $classModel->selectCourseWNull($conn, $class);
                                 if ($course_info == NULL)
                                 {
@@ -454,28 +469,28 @@ class ExpedientesController {
 
                                 if($grade == "")
                                 {
-                                    $status = "m";
+                                    $status = "M";
                                 }
                                 elseif($department == "CCOM")
                                 {
                                     if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
                                     {
-                                        $status = "np";
+                                        $status = "NP";
                                     }
                                     else
                                     {
-                                        $status = "p";
+                                        $status = "P";
                                     }
                                 }
                                 else
                                 {
                                     if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
                                     {
-                                        $status = "np";
+                                        $status = "NP";
                                     }
                                     else
                                     {
-                                        $status = "p";
+                                        $status = "P";
                                     }
                                 }
                                 if(!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995']))
@@ -486,10 +501,20 @@ class ExpedientesController {
                                 if ($result == TRUE)
                                 {
                                     $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
+                                    $date = date("Y-m-d");
+                                    $dateObj = new DateTime($date); 
+                                    $date = $dateObj->modify('-1 day');
+                                    $date = $date->format('Y-m-d');
+                                    $studentModel->updateEditDate($conn, $studentNumber, $date);
                                 }
                                 else // el estudiante no tiene una nota en esa clase.
                                 {
                                     $result = $studentModel->InsertStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $status, $conn);
+                                    $date = date("Y-m-d");
+                                    $dateObj = new DateTime($date); 
+                                    $date = $dateObj->modify('-1 day');
+                                    $date = $date->format('Y-m-d');
+                                    $studentModel->updateEditDate($conn, $studentNumber, $date);
                                 }
                             }
                         }
