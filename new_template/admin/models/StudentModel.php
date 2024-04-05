@@ -253,7 +253,7 @@ class StudentModel {
         );
     
         // Tipos de datos para los parámetros
-        $types = 'sssssssisssssi';
+        $types = 'sssssssissssss';
     
         // Ejecutar la consulta
         $stmt = $conn->prepare($sql);
