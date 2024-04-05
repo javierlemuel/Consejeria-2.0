@@ -33,11 +33,12 @@ class ClassController{
                 $credits = $_POST['cred'];
                 $type = $_POST['type'];
                 $level = $_POST['level'];
+                $minor = $_POST['minor'];
 
                 $classModel = new ClassModel();
 
                 $classModel->updateCourse($conn, $old_course_id, $course_id, 
-                                            $course_name, $credits, $type, $level);
+                                            $course_name, $credits, $type, $level, $minor);
             }
             else
             {

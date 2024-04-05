@@ -213,6 +213,7 @@
                                 <?php } ?>
                             </div>
                             <div>
+                                <?php if((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
                                 <label for="minor">Minor</label>
                                 <select name='minor' class='form-select text-white-dark'>
                                     <option value='NULL'>No Minor</option>
@@ -221,6 +222,7 @@
                                     <?php echo $minor['name']; ?></option>
                                         <?php } ?>
                                 </select>
+                                <?php } ?>
                             </div>
                             </div>
                         </div>

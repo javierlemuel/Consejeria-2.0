@@ -35,14 +35,15 @@ class ClassModel {
     }
 
     public function updateCourse($conn, $oldcourse, $course_id, $course_name, $credits,
-    $type, $level)
+    $type, $level, $minor)
     {
         $sql = "UPDATE ccom_courses
                 SET crse_code = '$course_id',
                 name = '$course_name',
                 credits = '$credits',
                 type = '$type',
-                level = '$level'
+                level = '$level',
+                minor_id = '$minor'
                 WHERE crse_code = '$oldcourse'
                 ";
 
