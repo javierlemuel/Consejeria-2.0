@@ -125,7 +125,12 @@
                             $formattedStudentNum = substr($studentNum, 0, 3) . '-' . substr($studentNum, 3, 2) . '-' . substr($studentNum, 5);
                         ?>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Numero de estudiante: <?php echo $formattedStudentNum; ?></h2>
-                        <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 2em;">Correo electronico: <?php echo $studentData['email']; ?></h2>
+                        <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Correo electronico: <?php echo $studentData['email']; ?></h2>
+                        <?php
+                            if($studentHaveMinor != NULL){
+                                echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 2em;">Menor: ' . $studentHaveMinor . '</h2>';
+                            }
+                        ?>
                         <div class="flex justify-center items-center h-screen">
                             <div class="w-1/3">
                                 <form id="termForm" action="index.php" method="POST"> <!-- Este form utiliza JAVASCRIPT para enviar los valores -->
