@@ -120,7 +120,7 @@ class CohorteController{
         global $conn;
         $cohorteModel = new CohorteModel();
         $cohort = $_POST['cohort'];
-        $copy = $_GET['copy'];
+        $copy = $_POST['copy'];
 
         $message = $cohorteModel->createCohorte($conn, $cohort, $copy);
 

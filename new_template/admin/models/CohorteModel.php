@@ -201,7 +201,7 @@ class CohorteModel {
         if ($result->num_rows == 0) //No existe todavia el cohorte. Great!
         {
             //Si vamos a copiar el cohorte pasado al cohorte nuevo
-            if($copy == 'Sí')
+            if($copy == 'si')
             {
                 //Busca el cohorte pasado
                 $sql = "SELECT cohort_year
@@ -227,9 +227,9 @@ class CohorteModel {
                 //Cambia el cohorte al nuevo que se va a crear e inserta en DB
                 foreach ($result as $res)
                 {
-                    $sql2 = "INSERT INTO cohort (cohort_year, crse_code, crse_year, crse_semester) 
+                    $sql3 = "INSERT INTO cohort (cohort_year, crse_code, crse_year, crse_semester) 
                             VALUES (?, ?, ?, ?)";
-                    $stmt = $conn->prepare($sql2);
+                    $stmt = $conn->prepare($sql3);
                     $stmt->bind_param("ssis", $cohort, $res['crse_code'], 
                                         $res['crse_year'], $res['crse_semester']);
                     $result2 = $stmt->execute();
