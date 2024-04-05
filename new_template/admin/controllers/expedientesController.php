@@ -73,6 +73,7 @@ class ExpedientesController {
                 $date = date("Y-m-d");
                 $dateObj = new DateTime($date); 
                 $date = $dateObj->modify('-1 day');
+                $date = date("Y-m-d");
                 $result = $studentModel->editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $date, $conn);
                 $minors = $minorModel->getMinors($conn);
                 //
