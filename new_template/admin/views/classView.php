@@ -226,10 +226,20 @@
                             </div>
                             </div>
                         </div>
-                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <div></div>
+                        <div style='padding: 0px 30%'>
                         <button type="submit" class="btn btn-primary !mt-6">Actualizar</button>
-
                         </form>
+                        <form action="?removeCourse" method="POST">
+                            <input type='hidden' value='<?php echo $class['crse_code']?>' name='course'>
+                            <button type="submit" class="btn btn-danger !mt-6">Eliminar</button>
+                            
+                        </form>
+                        </div>
+
+                        
+                        </div>
                         <?php } ?>
                     
 

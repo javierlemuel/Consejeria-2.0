@@ -38,7 +38,7 @@ if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
         require_once 'controllers/adminController.php';
     }
     elseif(isset($_GET['class']) || isset($_GET['edit']) || isset($_GET['editReqs'])
-    || isset($_GET['addReq']))
+    || isset($_GET['addReq']) || isset($_GET['removeCourse']))
     {
         require_once 'controllers/classController.php';
     }

@@ -130,7 +130,11 @@
 
                 <div style='padding: 15px 0; text-align:center'>
                             <h2 class="text-xl">&nbsp; &nbsp; Cohorte <?php echo $cohort ?> </h2> <br>
+
+                            
                 </div>
+
+                
                 
 
                 <!-- Classes -->

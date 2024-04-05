@@ -102,6 +102,7 @@ class ClassController{
             
 
             $class = $classModel->getCourse($conn, $course);
+            $minors = $classModel->getMinors($conn);
     
             require_once(__DIR__ . '/../views/classView.php');
         }
@@ -124,6 +125,22 @@ class ClassController{
             $message = $classModel->addReq($conn, $course, $req, $cohort, $type, $table);
 
             $class = $classModel->getCourse($conn, $course);
+            $minors = $classModel->getMinors($conn);
+    
+            require_once(__DIR__ . '/../views/classView.php');
+        }
+
+        elseif(isset($_GET['removeCourse']))
+        {
+            global $conn;
+            $classModel = new ClassModel(); 
+
+            $course = $_POST['course'];
+
+            //TO ADD: Remove a course only if not found in student_courses, ccom_requirements or will_take
+
+            $class = $classModel->getCourse($conn, $course);
+            $minors = $classModel->getMinors($conn);
     
             require_once(__DIR__ . '/../views/classView.php');
         }
