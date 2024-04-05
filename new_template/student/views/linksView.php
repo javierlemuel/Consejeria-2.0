@@ -90,7 +90,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                             <div class="my-5">
                                 <h5 class="text-lg font-bold dark:text-white-light">Evaluadora del Programa en la Oficina de Admisiones</h5>
                                 <p class="mb-2">(Verificar Convalidaciones, Equivalencias y trámites relacionados) </p>
-                                <p class="mx-4">Sheila Soler Vázquez (sheila.soler@upr.edu) </p>
+                                <p class="mx-4">Sheila Soler Vázquez <a href="mailto:sheila.soler@upr.edu" class="text-primary"> (sheila.soler@upr.edu)</a> </p>
                             </div>
                             <div class="my-5">
                                 <h5 class="text-lg font-bold dark:text-white-light">Información para Graduandos</h5>

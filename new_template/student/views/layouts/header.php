@@ -69,22 +69,24 @@
                         </svg>
                     </a>
                     <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="top-11 w-[300px] !py-0 text-xs text-dark ltr:-right-16 rtl:-left-16 dark:text-white-dark sm:w-[375px] sm:ltr:-right-2 sm:rtl:-left-2">
-                        <li class="mb-5">
+                        <li>
                             <div class="relative overflow-hidden rounded-t-md !p-5 text-white">
                                 <div class="absolute inset-0 h-full w-full bg-warning bg-cover bg-center bg-no-repeat"></div>
                                 <h4 class="relative z-10 text-lg font-semibold">Mensajes</h4>
                             </div>
                         </li>
                         <li>
-                            <div class="flex items-center px-5 py-3" @click.self="toggle">
-                                <span class="px-3 dark:text-gray-500">
-                                    <?php if ($_SESSION['student_note'] == NULL) {
+                            <div class="flex items-center px-4 py-3 mb-2" @click.self="toggle">
+                                <span class="px-1 dark:text-gray-500">
+
+                                    <?php
+                                    if ($_SESSION['student_note'] == NULL) {
                                         //var_dump($_SESSION);
                                         echo '<div class="text-sm font-semibold dark:text-white-light/90">No tienes mensajes.</div>';
                                     } else {
                                         // var_dump($_SESSION);
-                                        echo '<div class="text-sm font-semibold dark:text-white-light/90">Dra. Valenzuela, Consejera nulo</div>
-                                        <div><?php echo';
+                                        echo '<div class="text-sm font-semibold dark:text-white-light/90">Dra. Valenzuela, Consejera</div>
+                                        <div><div>';
                                         echo $_SESSION['student_note'];
                                         echo '</div>';
                                     }

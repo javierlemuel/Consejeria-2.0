@@ -5,26 +5,37 @@ class CounselingModel
 
     public function getRecommendedCourses($conn, $student_num)
     {
+        $sql = "SELECT term
+        FROM offer AS o
+        WHERE o.crse_code = 'XXXX'";
+        $result = $conn->query($sql);
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $result = $result->fetch_assoc();
+        $term = $result['term'];
+
 
         $sql = "SELECT gc.crse_code, gc.name, gc.credits
                 FROM recommended_courses rc
                 JOIN general_courses gc ON rc.crse_code = gc.crse_code
-                WHERE rc.student_num = ?
+                WHERE rc.student_num = ? AND rc.term = ?
                 UNION
                 SELECT cc.crse_code, cc.name, cc.credits
                 FROM recommended_courses rc
                 JOIN ccom_courses cc ON rc.crse_code = cc.crse_code
-                WHERE rc.student_num = ?
+                WHERE rc.student_num = ? AND rc.term = ?
                 UNION
                 SELECT dc.crse_code, dc.name, dc.credits
                 FROM recommended_courses rc
                 JOIN dummy_courses dc ON rc.crse_code = dc.crse_code
-                WHERE rc.student_num = ? ";
+                WHERE rc.student_num = ? AND rc.term = ? ";
 
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param("sss", $student_num, $student_num, $student_num);
+        $stmt->bind_param("ssssss", $student_num, $term, $student_num, $term, $student_num, $term);
 
         // ejecuta el statement
         $stmt->execute();
@@ -48,20 +59,32 @@ class CounselingModel
         $student_num = intval($student_num);
         //selecciona las clases que estan en offer y ccom_courses pero que el estudiante no haya pasado (crse_status = 'P')
         // y ademas que los cursos no esten en recommended
+
+        $sql = "SELECT term
+        FROM offer AS o
+        WHERE o.crse_code = 'XXXX'";
+        $result = $conn->query($sql);
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $result = $result->fetch_assoc();
+        $term = $result['term'];
+
         $sql = "SELECT of.crse_code, cc.type, cc.name, cc.credits
                 FROM offer as of
                 NATURAL JOIN ccom_courses AS cc
                 WHERE of.crse_code = cc.crse_code
                 AND of.crse_code NOT IN (SELECT crse_code FROM student_courses WHERE crse_status = 'P' AND student_num = ?)
                 AND of.crse_code NOT IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?)
-                AND of.crse_code LIKE 'CCOM%'";
-
-
+                AND of.crse_code LIKE 'CCOM%'
+                AND of.term = ?
+                ";
 
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param("ss", $student_num, $student_num);
+        $stmt->bind_param("sss", $student_num, $student_num, $term);
 
         // ejecuta el statement
         $stmt->execute();
@@ -113,7 +136,16 @@ class CounselingModel
 
     public function getGeneralCourses($conn, $student_num)
     {
+        $sql = "SELECT term
+        FROM offer AS o
+        WHERE o.crse_code = 'XXXX'";
+        $result = $conn->query($sql);
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
 
+        $result = $result->fetch_assoc();
+        $term = $result['term'];
         //selecciona clases generales que estan en oferta y que el estudiante no haya pasado
         $sql = "SELECT of.crse_code, gc.type, gc.name, gc.credits
                 FROM offer as of
@@ -121,10 +153,11 @@ class CounselingModel
                 WHERE of.crse_code = gc.crse_code
                 AND of.crse_code NOT IN (SELECT crse_code FROM student_courses WHERE crse_status = 'P' AND student_num = ?)
                 AND of.crse_code NOT IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?)
-                AND gc.type <> 'FREE'";
+                AND gc.type <> 'FREE'
+                AND of.term = ?";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $student_num, $student_num);
+        $stmt->bind_param("sss", $student_num, $student_num, $term);
         //ejecuta el statement
         $stmt->execute();
         $result = $stmt->get_result();
@@ -183,7 +216,8 @@ class CounselingModel
     {
         //add selected courses to will_take table
         $sql = "SELECT term
-                FROM offer LIMIT 1";
+                FROM offer AS o
+                WHERE o.crse_code = 'XXXX'";
         $result = $conn->query($sql);
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
