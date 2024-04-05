@@ -93,7 +93,8 @@ if (session_status() == PHP_SESSION_NONE) {
                                 <p class="mb-4"><b>Numero de Estudiante:</b> <?php echo $studentInfo["formatted_student_num"]; ?></p>
                                 <p class="mb-4"><b>Major:</b> CCOM</p>
                                 <?php if ($studentInfo["minor"] != 0) {
-                                    echo '<p class="mb-4"><b>Minor:</b> ' . $minor . '</p>';
+                                    echo '<p class="mb-4"><b>Minor:</b> ' . $minor['name'] . '</p>';
+                                    //var_dump($minor);
                                 }
 
                                 ?>

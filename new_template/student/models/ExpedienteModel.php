@@ -224,6 +224,6 @@ class StudentModel
         }
 
         $minor = $result->fetch_assoc();
-        return $minor['name'];
+        return $minor;
     }
 }
