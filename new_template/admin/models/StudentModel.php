@@ -614,7 +614,55 @@ class StudentModel {
             return FALSE;
         }
     }
+
+    public function studentHaveMinor($student_num, $conn) {
+        // Preparar la consulta SQL para obtener el nombre de la menor
+        $sql = "SELECT 
+                    CASE
+                        WHEN s.minor > 0 THEN m.name
+                        ELSE NULL
+                    END AS minor_name
+                FROM student s
+                LEFT JOIN minor m ON s.minor = m.ID
+                WHERE s.student_num = ?";
     
+        // Preparar la sentencia
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            // Manejar el error de preparación de la consulta
+            return null;
+        }
+        
+        // Vincular los parámetros con los valores
+        $stmt->bind_param("s", $student_num);
+        
+        // Ejecutar la sentencia
+        if ($stmt->execute()) {
+            // Obtener el resultado de la consulta
+            $result = $stmt->get_result();
+            
+            // Verificar si se encontró alguna fila
+            if ($result->num_rows == 1) {
+                // Obtener el nombre de la menor
+                $row = $result->fetch_assoc();
+                $minor_name = $row['minor_name'];
+                
+                // Cerrar la sentencia y liberar recursos
+                $stmt->close();
+                
+                // Devolver el nombre de la menor
+                return $minor_name;
+            } else {
+                // No se encontró ninguna fila o se encontraron múltiples filas
+                $stmt->close();
+                return null;
+            }
+        } else {
+            // Manejar el error de ejecución de la consulta
+            return null;
+        }
+    }
+
     public function alreadyHasGradeInTerm($student_num, $class, $term, $conn) {
         // Preparar la consulta SQL
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ?";

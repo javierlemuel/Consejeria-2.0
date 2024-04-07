@@ -273,6 +273,8 @@ class ExpedientesController {
                     }
                 }
 
+                $studentHaveMinor = $studentModel->studentHaveMinor($student_num, $conn);
+
                 // variables para las notas
                 $currentlyTaking = $classesModel->getCurrentlyTakingClasses($conn, $student_num);
                 $ccomByCohort = $classesModel->getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num);
@@ -317,7 +319,16 @@ class ExpedientesController {
                 
                         foreach ($lines2 as $line2) {
 
+                            if (trim($line2) == '') {
+                                continue; // Saltar a la siguiente iteración si la línea está en blanco
+                            }
+
                             $data2 = explode(",", $line2);
+
+                            if ($data2 == 'ID'){
+                                continue;
+                            }
+
                             // Trim each data element to remove leading/trailing spaces
                             $data2 = array_map('trim', $data2);
 
@@ -330,6 +341,10 @@ class ExpedientesController {
                         }
                         
                         foreach ($lines as $line) {
+
+                            if (trim($line) == '') {
+                                continue; // Saltar a la siguiente iteración si la línea está en blanco
+                            }
 
                             // Dividimos cada línea por el delimitador ";"
                             $data = explode(";", $line);
