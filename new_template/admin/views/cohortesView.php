@@ -127,6 +127,8 @@
                                         echo"<h2 style='color:red; bold' class='text-xl'>El cohorte ya existe!</h2>";
                                      elseif ($_GET['message'] == "success") 
                                         echo "<h2 style='color:limegreen; bold' class='text-xl'>Cohorte fue creado!</h2>";
+                                     elseif ($_GET['message'] == "DelSuccess") 
+                                        echo "<h2 style='color:limegreen; bold' class='text-xl'>Cohorte fue eliminado!</h2>";
                                 ?>
                         <br>
                     </div>

@@ -57,6 +57,64 @@ class ClassModel {
         return $result;
     }
 
+    public function removeCourse($conn, $course)
+    {
+        $checker = true;
+        $sql1 = "SELECT * FROM student_courses WHERE crse_code = '$course'";
+        $result = $conn->query($sql1);
+        if ($result->num_rows > 0){ //Don't delete if course found in Student Courses table
+            $checker = false;
+            $message = 'NoDelSC';
+        }
+
+        $sql2 = "SELECT * FROM recommended_courses WHERE crse_code = '$course'";
+        $result = $conn->query($sql2);
+        if ($result->num_rows > 0){ //Don't delete if course found in Recommended Courses table
+            $checker = false;
+            $message = 'NoDelRC';
+        }
+
+        $sql3 = "SELECT * FROM will_take WHERE crse_code = '$course'";
+        $result = $conn->query($sql3);
+        if ($result->num_rows > 0){ //Don't delete if course found in Will Take table
+            $checker = false;
+            $message = 'NoDelWT';
+        }
+
+        $sql4 = "SELECT * FROM ccom_requirements WHERE req_crse_code = '$course'";
+        $result = $conn->query($sql4);
+        if ($result->num_rows > 0){ //Don't delete if course found in CCOM Requirements table
+            $checker = false;
+            $message = 'NoDelCR';
+        }
+
+        $sql5 = "SELECT * FROM general_requirements WHERE req_crse_code = '$course'";
+        $result = $conn->query($sql5);
+        if ($result->num_rows > 0){ //Don't delete if course found in General Requirements table
+            $checker = false;
+            $message = 'NoDelGR';
+        }
+
+        if((strpos($course, 'CCOM') !== false))
+            $table = 'ccom_courses';
+        else   
+            $table = 'general_courses';
+
+        if($checker == true)
+        {
+            $sql6 = "DELETE FROM $table WHERE crse_code = '$course';";
+            $result = $conn->query($sql6);
+            if ($result === false) {
+                throw new Exception("Error en la consulta SQL: " . $conn->error);
+            }
+            $message = 'DelSuccess';
+        }
+
+        return $message;
+
+
+    }
+
     public function updateGeneralCourse($conn, $old_course_id, $course_id, 
     $course_name, $credits, $type, $required)
     {

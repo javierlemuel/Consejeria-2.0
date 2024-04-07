@@ -124,6 +124,8 @@
                                         echo"<h2 style='color:red; bold' class='text-xl'>El curso ya está en oferta!</h2>";
                                      elseif ($_GET['message'] == "success") 
                                         echo "<h2 style='color:limegreen; bold' class='text-xl'>El curso fue añadido a la oferta!</h2>";
+                                     elseif ($_GET['message'] == "DelSuccess") 
+                                        echo "<h2 style='color:limegreen; bold' class='text-xl'>El curso fue eliminado!</h2>";
                                 ?>
                         <br>
                     </div>

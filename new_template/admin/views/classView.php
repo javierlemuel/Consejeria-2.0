@@ -134,6 +134,16 @@
                                             echo"<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue actualizado!!!</h2>";
                                       elseif ($message == "insert success") 
                                             echo"<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue añadido!!!</h2>";
+                                      elseif ($message == "NoDelSC") 
+                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Student Courses'.</h2>";
+                                      elseif ($message == "NoDelRC") 
+                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Recommended Courses'.</h2>";
+                                      elseif ($message == "NoDelWT") 
+                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Will Take'.</h2>";
+                                      elseif ($message == "NoDelCR") 
+                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'CCOM Requirements'.</h2>";
+                                      elseif ($message == "NoDelGR") 
+                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'General Requirements'.</h2>";
                                 ?>
                      <br>
                     </div>

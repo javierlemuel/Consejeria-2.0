@@ -5,6 +5,7 @@ if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
     exit;
 }
 require_once(__DIR__ . '/../models/ClassModel.php');
+require_once(__DIR__ . '/../models/ClassesModel.php');
 require_once(__DIR__ . '/../config/database.php');
 
 //echo"hey";
@@ -134,15 +135,25 @@ class ClassController{
         {
             global $conn;
             $classModel = new ClassModel(); 
+            $classesModel = new ClassesModel();
 
             $course = $_POST['course'];
 
-            //TO ADD: Remove a course only if not found in student_courses, ccom_requirements or will_take
+            $message = $classModel->removeCourse($conn, $course);
 
+            if($message == 'DelSuccess'){
+                $term = $classesModel->getTerm($conn);
+                $courses = $classesModel->getCcomCourses($conn, $term);
+                $category = 'concentracion';
+                header('Location: ?classes&message='.$message);
+                die;
+            }
+            else{
             $class = $classModel->getCourse($conn, $course);
             $minors = $classModel->getMinors($conn);
     
             require_once(__DIR__ . '/../views/classView.php');
+            }
         }
        
     }

@@ -10,6 +10,7 @@ require_once(__DIR__ . '/../models/StudentModel.php');
 require_once(__DIR__ . '/../models/MinorModel.php');
 //
 require_once(__DIR__ . '/../config/database.php');
+require_once(__DIR__ . '/../models/CohorteModel.php');
 
 class ExpedientesController {
     public function index() {
@@ -564,6 +565,8 @@ class ExpedientesController {
                 $_SESSION['registermodeltxt'] = $fileContentModel;
         }
         
+        $cohorteModel = new CohorteModel();
+        $cohortes = $cohorteModel->getCohorteYears($conn);
         require_once(__DIR__ . '/../views/expedientesView.php');
     }
 }

@@ -42,7 +42,7 @@ if(isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
     {
         require_once 'controllers/classController.php';
     }
-    elseif(isset($_GET['cohort']) || isset($_GET['newcohort']))
+    elseif(isset($_GET['cohort']) || isset($_GET['newcohort']) || isset($_GET['removeCohort']))
     {
         require_once 'controllers/cohorteController.php';
     }

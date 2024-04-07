@@ -123,16 +123,33 @@
                     <div style='padding: 15px 0' class="flex flex-wrap items-center justify-between gap-4">
                             <h2 style='color:red; bold' class="text-xl">
                                 <?php if ($_GET['message'] == 'exists in cohort') echo 'El curso ya existe en este cohorte.';
-                                     elseif ($_GET['message'] == "doesn't exist in db") echo 'El curso no existe???';?>
+                                     elseif ($_GET['message'] == "doesn't exist in db") echo 'El curso no existe???';
+                                     elseif ($_GET['message'] == "NoDelS") echo 'El cohorte no se pudo remover. Existe en "Students"';
+                                     elseif ($_GET['message'] == "NoDelCR") echo 'El cohorte no se pudo remover. Existe en "CCOM Requirements"';
+                                     elseif ($_GET['message'] == "NoDelGR") echo 'El cohorte no se pudo remover. Existe en "General Requirements"';?>
                         </h2> <br>
                     </div>
                 <?php } ?>
 
-                <div style='padding: 15px 0; text-align:center'>
-                            <h2 class="text-xl">&nbsp; &nbsp; Cohorte <?php echo $cohort ?> </h2> <br>
-
+                <div class="flex flex-wrap items-center justify-between gap-4" style='padding: 15px 0; text-align:center'>
+                    <h2 class="text-xl">&nbsp; &nbsp; Cohorte <?php echo $cohort ?> </h2> </h2>
+                    
+                    <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                        <div class="flex gap-3">
+                            <div>
+                            <form action="?removeCohort" method="POST">
+                            <input type='hidden' value='<?php echo $cohort?>' name='cohort'>
+                            <button type="submit" class="btn btn-danger !mt-6">Eliminar</button>
+                            </form>
+                            </div>
                             
+                        </div>
+                        <div class="flex gap-3">
+                        </div>
+                        
+                    </div>
                 </div>
+                
 
                 
                 

@@ -258,4 +258,42 @@ class CohorteModel {
 
 
     }
+
+    public function deleteCohorteModel($conn, $cohort)
+    {
+        $checker = true;
+
+        $sql1 = "SELECT * FROM student WHERE cohort_year = $cohort";
+        $result = $conn->query($sql1);
+        if ($result->num_rows > 0){ //Don't delete if cohort found in Students table
+            $checker = false;
+            $message = 'NoDelS';
+        }
+
+        $sql2 = "SELECT * FROM ccom_requirements WHERE cohort_year = $cohort";
+        $result = $conn->query($sql2);
+        if ($result->num_rows > 0){ //Don't delete if cohort found in CCOM Requirements table
+            $checker = false;
+            $message = 'NoDelCR';
+        }
+
+        $sql3 = "SELECT * FROM general_requirements WHERE cohort_year = $cohort";
+        $result = $conn->query($sql3);
+        if ($result->num_rows > 0){ //Don't delete if cohort found in General Requirements table
+            $checker = false;
+            $message = 'NoDelGR';
+        }
+
+        if($checker == true)
+        {
+            $sql4 = "DELETE FROM cohort WHERE cohort_year = $cohort";
+            $result = $conn->query($sql4);
+            if ($result === false) {
+                throw new Exception("Error2 en la consulta SQL: " . $conn->error);
+            }
+            $message = 'DelSuccess';
+        }
+
+        return $message;
+    }
 }

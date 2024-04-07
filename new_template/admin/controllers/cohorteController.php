@@ -127,6 +127,26 @@ class CohorteController{
         header('Location: ?cohort&message='.$message);
         die;
     }
+
+    public function deleteCohorte()
+    {
+        global $conn;
+        $cohorteModel = new CohorteModel();
+        $cohort = $_POST['cohort'];
+
+        $message = $cohorteModel->deleteCohorteModel($conn, $cohort);
+
+        if($message == 'DelSuccess')
+        {
+            header('Location: ?cohort&message='.$message);
+            die;
+        }
+        else
+        {
+            header('Location: ?cohort='.$cohort.'&year=1&message='.$message);
+            die;
+        }
+    }
 }
 
 
@@ -143,5 +163,7 @@ else if(isset($_GET['cohort']) && isset($_GET['editCohortReq']))
     $cohorteController->editCohorteReq();
 else if(isset($_GET['newcohort']))
     $cohorteController->newCohorte();
+    else if(isset($_GET['removeCohort']))
+    $cohorteController->deleteCohorte();
 else if (isset($_GET['cohort']))
     $cohorteController->index();

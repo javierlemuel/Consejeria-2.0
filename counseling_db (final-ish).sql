@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 03, 2024 at 06:29 AM
+-- Generation Time: Apr 05, 2024 at 03:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -66,10 +66,11 @@ INSERT INTO `ccom_courses` (`crse_code`, `name`, `credits`, `type`, `level`, `mi
 ('CCOM3001', 'Programación de computadoras I', 5, 'mandatory', 'NULL', NULL),
 ('CCOM3002', 'Programación de computadoras II', 5, 'mandatory', NULL, NULL),
 ('CCOM3010', 'Niveles lógicos', 3, 'mandatory', NULL, NULL),
+('CCOM3015', 'Comp. en la Sociedad', 3, 'mandatory', NULL, NULL),
 ('CCOM3017', 'Seguridad de las computadoras y la inf.', 3, 'mandatory', NULL, NULL),
 ('CCOM3020', 'Matemáticas discretas', 3, 'mandatory', NULL, NULL),
 ('CCOM3025', 'Introducción sistemas de computadoras', 3, 'mandatory', NULL, NULL),
-('CCOM3027', 'Programación orientada a objetos', 3, 'elective', 'intermediate', NULL),
+('CCOM3027', 'Programación orientada a objetos', 3, 'elective', 'intermediate', 0),
 ('CCOM3035', 'Organización de computadoras', 3, 'mandatory', NULL, NULL),
 ('CCOM3036', 'Programación visual', 3, 'elective', 'intermediate', NULL),
 ('CCOM3041', 'Sistemas operativos', 3, 'mandatory', NULL, NULL),
@@ -77,6 +78,7 @@ INSERT INTO `ccom_courses` (`crse_code`, `name`, `credits`, `type`, `level`, `mi
 ('CCOM3115', 'Aplicaciones básicas microprocesadores', 3, 'elective', 'advanced', NULL),
 ('CCOM3135', 'Temas en ciencias de cómputos', 3, 'elective', 'advanced', NULL),
 ('CCOM3985', 'Investigación subgraduada', 2, 'elective', 'variable', NULL),
+('CCOM4000', 'CCCOM', 4, 'elective', 'intermediate', NULL),
 ('CCOM4005', 'Estructura de datos', 3, 'mandatory', NULL, NULL),
 ('CCOM4006', 'Diseño y análisis de algoritmos', 3, 'mandatory', NULL, NULL),
 ('CCOM4007', 'Estadística con aplicación a ciencias..', 4, 'mandatory', NULL, NULL),
@@ -141,7 +143,8 @@ INSERT INTO `ccom_requirements` (`crse_code`, `cohort_year`, `type`, `req_crse_c
 ('CCOM4075', '2017', 'pre', 'CCOM4006'),
 ('CCOM4075', '2017', 'pre', 'CCOM4007'),
 ('CCOM4095', '2017', 'pre', 'CCOM4075'),
-('CCOM3002', '2022', 'pre', 'CCOM3001');
+('CCOM3002', '2022', 'pre', 'CCOM3001'),
+('CCOM3001', '2017', 'pre', 'CCOM3001');
 
 -- --------------------------------------------------------
 
@@ -184,7 +187,6 @@ INSERT INTO `cohort` (`cohort_year`, `crse_code`, `crse_year`, `crse_semester`) 
 ('2017', 'CCOM4115', 3, 2),
 ('2017', 'CCOM4075', 4, 1),
 ('2017', 'CCOM4095', 4, 2),
-('2017', 'CCOM3001', 1, 1),
 ('2017', 'INGL3101', 1, 1),
 ('2017', 'INGL3113', 1, 1),
 ('2017', 'INGL3102', 1, 2),
@@ -247,7 +249,8 @@ INSERT INTO `cohort` (`cohort_year`, `crse_code`, `crse_year`, `crse_semester`) 
 ('2022', 'CCOM3020', 2, 1),
 ('2022', 'CCOM4201', 3, 2),
 ('2022', 'FREEXXXX', 4, 1),
-('2022', 'FREEXXXX', 4, 1);
+('2022', 'FREEXXXX', 4, 1),
+('2017', 'CCOM3001', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -344,7 +347,52 @@ INSERT INTO `general_courses` (`crse_code`, `name`, `credits`, `required`, `type
 ('CISO3121', 'Introducción Ciencias Sociales', 3, 0, 'CISO'),
 ('GEOG3155', 'Elementos de Geografía', 3, 0, 'CISO'),
 ('ASTR3009', 'Astronomía General', 3, 0, 'FREE'),
-('HUMA3102', 'Cultura Occidental II', 3, 0, 'HUMA');
+('HUMA3102', 'Cultura Occidental II', 3, 0, 'HUMA'),
+('MUSI3225', 'Historia de la Música', 3, 1, 'HUMA'),
+('ARTE3115', 'Apreciación del Arte', 2, 1, 'HUMA'),
+('ARTE3116', 'Historia del Arte', 3, 1, 'HUMA'),
+('ARTE3118', 'Arte en Puerto Rico', 3, 1, 'HUMA'),
+('FILO3001', 'Introducción a la Filosofía I', 3, 1, 'HUMA'),
+('FILO3002', 'Introducción a la Filosofía II', 3, 1, 'HUMA'),
+('FILO3005', 'Ética', 3, 1, 'HUMA'),
+('FILO4006', 'Lógica', 3, 1, 'HUMA'),
+('FILO4027', 'Bioética', 3, 1, 'HUMA'),
+('HIST3111', 'Historia de los Estados Unidos I', 3, 1, 'HUMA'),
+('HIST3112', 'Historia de los Estados Unidos II', 3, 1, 'HUMA'),
+('HIST3165', 'Historia del Renacimiento', 3, 1, 'HUMA'),
+('HIST3177', 'Historia Social y Cultural de Puerto Ric', 3, 1, 'HUMA'),
+('HIST3179', 'Historia Social y Cultural de Estados Un', 3, 1, 'HUMA'),
+('HIST3241', 'Historia de Puerto Rico I', 3, 1, 'HUMA'),
+('HIST3242', 'Historia de Puerto Rico II', 3, 1, 'HUMA'),
+('HUMA3101', 'Cultura Occidental I', 3, 1, 'HUMA'),
+('HUMA3102', 'Cultura Occidental II', 3, 1, 'HUMA'),
+('HUMA3201', 'Cultura Occidental III', 3, 1, 'HUMA'),
+('HUMA3202', 'Cultura Occidental IV', 3, 1, 'HUMA'),
+('HUMA3145', 'Seminario Integración de la Web 2.0', 3, 1, 'HUMA'),
+('INTD3046', 'Escrituras Femeninas', 3, 1, 'HUMA'),
+('ESIN4001', 'Seminario de Investigación Estudios Puer', 3, 1, 'HUMA'),
+('LITE3011', 'Literatura Moderna', 3, 1, 'HUMA'),
+('LITE3012', 'Literatura Contemporánea', 3, 1, 'HUMA'),
+('LITE3035', 'Mitología en la Literatura Occidental', 3, 1, 'HUMA'),
+('LITE4055', 'Literatura Digital', 3, 1, 'HUMA'),
+('MUSI3235', 'Apreciación de la Música', 2, 1, 'HUMA'),
+('TEAT3025', 'Apreciación del Arte Dramático', 3, 1, 'HUMA'),
+('ANTR3006', 'Antropología Sociocultural', 5, 0, 'ESPA'),
+('CIPO3011', 'Principios y Problemas de las Ciencias P', 3, 1, 'CISO'),
+('CISO3121', 'Introducción a las Ciencias Sociales I', 3, 1, 'CISO'),
+('CISO3122', 'Introducción a las Ciencias Sociales II', 3, 1, 'CISO'),
+('CISO3155', 'Fundamentos de Razonamiento Estadístico', 3, 1, 'CISO'),
+('ECON3005', 'Introducción a la Economía', 3, 1, 'CISO'),
+('ECON3021', 'Principios de Economía I (Microeconomía)', 3, 1, 'CISO'),
+('ECON3022', 'Principios de Economía II (Macroeconomía', 3, 1, 'CISO'),
+('GEOG3155', 'Elementos de Geografía', 3, 1, 'CISO'),
+('PSIC3003', 'Introducción a la Psicología', 4, 1, 'CISO'),
+('PSIC3005', 'Psicología General', 3, 1, 'CISO'),
+('PSIC3006', 'Psicología Social', 3, 1, 'CISO'),
+('PSIC3116', 'Psicología Industrial', 3, 1, 'CISO'),
+('SOCI1001', 'Fundamentos Sociológicos de la Educación', 3, 1, 'CISO'),
+('SOCI3245', 'Principios de Sociología', 3, 1, 'CISO'),
+('SOCI4210', 'Biotecnologías, bioética y sociedad', 3, 1, 'CISO');
 
 -- --------------------------------------------------------
 
@@ -393,7 +441,7 @@ CREATE TABLE `minor` (
 --
 
 INSERT INTO `minor` (`ID`, `name`) VALUES
-(1, 'Web Design');
+(1, 'Web Designy');
 
 -- --------------------------------------------------------
 
@@ -607,7 +655,7 @@ ALTER TABLE `student`
 -- AUTO_INCREMENT for table `minor`
 --
 ALTER TABLE `minor`
-  MODIFY `ID` smallint(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `ID` smallint(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

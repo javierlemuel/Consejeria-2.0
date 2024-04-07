@@ -253,8 +253,9 @@
                                                             <div class="mb-5">
                                                                 <label for="cohorte">Cohorte</label>
                                                                 <select id="gridYear" class="form-select text-white-dark" name="cohorte" x-model="params.cohorte" required>
-                                                                    <option value="2017">2017</option>
-                                                                    <option value="2022">2022</option>
+                                                                    <?php foreach($cohortes as $c) { ?>
+                                                                    <option value="<?php echo $c['cohort_year']?>"><?php echo $c['cohort_year']?></option>
+                                                                    <?php } ?>
                                                                 </select>
                                                             </div>
                                                             <div class="mb-5">
