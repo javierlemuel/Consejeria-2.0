@@ -55,8 +55,8 @@
     </div>
 
     <div class="main-container min-h-screen text-black dark:text-white-dark" :class="[$store.app.navbar]">
-       <!-- start sidebar section -->
-       <div id="sidebar"></div>
+        <!-- start sidebar section -->
+        <div id="sidebar"></div>
         <!-- end sidebar section -->
 
         <div class="main-content flex flex-col min-h-screen">
@@ -402,7 +402,7 @@
                                 </li>
                             </ul>
                         </div>
-                         <!-- termina la paginacion UTILIZA SCRIPTS-->
+                        <!-- termina la paginacion UTILIZA SCRIPTS-->
         </div> <br>
             <!-- end main content section -->
 

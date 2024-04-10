@@ -152,7 +152,18 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <div>
                             <label for="cohorte">Cohorte</label>
-                            <input type="text" name="cohorte" class="form-input" maxlength="4" value="<?php echo $studentData['cohort_year']; ?>" required />
+                            <select name="cohorte" class="form-input" required>
+                                <?php
+                                // Iterar sobre los resultados de la consulta
+                                while ($row = $cohorts->fetch_assoc()) {
+                                    $cohort = $row['cohort_year'];
+                                    // Comprobar si la cohorte actual coincide con la cohorte por defecto
+                                    $selected = ($cohort == $studentData['cohort_year']) ? "selected" : "";
+                                    // Imprimir opción
+                                    echo "<option value=\"$cohort\" $selected>$cohort</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                         <div>
                             <label for="minor">Minor</label>
@@ -190,6 +201,11 @@
                     </div>
                     </div>
                     <button type="submit" class="btn btn-primary !mt-6">Someter Cambios</button>
+                </form>
+                <form method="POST" action="index.php">
+                    <input type="hidden" name="action" value="studentCounseling">
+                    <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
+                    <button style="margin-top: 1em" type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2">Consejeria</button>
                 </form>
                 <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Cancelar</button>
             </div>

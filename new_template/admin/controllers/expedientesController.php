@@ -49,14 +49,21 @@ class ExpedientesController {
             }
             elseif ($action === 'selecteStudent')
             {
+                require_once(__DIR__ . '/../models/ClassesModel.php');
+                $classesModel = new ClassesModel();
+
                 $student_num = $_POST['student_num'];
                 $studentData = $studentModel->selectStudent($student_num, $conn);
                 $minors = $minorModel->getMinors($conn);
+                $cohorts = $classesModel->getCohorts($conn);
                 require_once(__DIR__ . '/../views/editStudentView.php');
                 return;
             }
             elseif ($action === 'editStudent')
             {
+                require_once(__DIR__ . '/../models/ClassesModel.php');
+                $classesModel = new ClassesModel();
+
                 $nombre = $_POST['nombre'];
                 $nombre2 = $_POST['nombre2'];
                 $apellidoP = $_POST['apellidoP'];
@@ -79,6 +86,7 @@ class ExpedientesController {
                 $minors = $minorModel->getMinors($conn);
                 //
                 $studentData = $studentModel->selectStudent($numeroEst, $conn);
+                $cohorts = $classesModel->getCohorts($conn);
                 require_once(__DIR__ . '/../views/editStudentView.php');
                 return;
             }
