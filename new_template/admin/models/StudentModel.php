@@ -216,7 +216,7 @@ class StudentModel {
         }
     }
 
-    public function editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $date, $conn) {
+    public function editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn) {
         // Preparar la consulta SQL
         $sql = "UPDATE student 
                 SET name1 = ?, 
@@ -231,6 +231,7 @@ class StudentModel {
                     admin_note = ?, 
                     student_note = ?, 
                     status = ?, 
+                    type = ?,
                     edited_date = ? 
                 WHERE student_num = ?";
     
@@ -248,12 +249,13 @@ class StudentModel {
             $notaAdmin, 
             $notaEstudiante, 
             $status, 
+            $tipo,
             $date, 
             $numeroEst
         );
     
         // Tipos de datos para los parámetros
-        $types = 'sssssssissssss';
+        $types = 'sssssssisssssss';
     
         // Ejecutar la consulta
         $stmt = $conn->prepare($sql);

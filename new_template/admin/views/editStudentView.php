@@ -188,6 +188,16 @@
                             <option value="Graduado" <?php if ($studentData['status'] == "Graduado") echo 'selected'; ?>>Graduado</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="tipo">Tipo</label>
+                        <select class="form-select text-white-dark" name="tipo">
+                            <option value="readmision" <?php if ($studentData['type'] == "readmision") echo 'selected'; ?>>Readmisión</option>
+                            <option value="reclasificacion" <?php if ($studentData['type'] == "reclasificacion") echo 'selected'; ?>>Reclasificación</option>
+                            <option value="regular" <?php if ($studentData['type'] == "regular") echo 'selected'; ?>>Regular</option>
+                            <option value="traslado" <?php if ($studentData['type'] == "traslado") echo 'selected'; ?>>Traslado</option>
+                            <option value="transferencia" <?php if ($studentData['type'] == "transferencia") echo 'selected'; ?>>Transferencia</option>
+                        </select>
+                    </div>
                     </div>
                     <button type="submit" class="btn btn-primary !mt-6">Someter Cambios</button>
                 </form>
