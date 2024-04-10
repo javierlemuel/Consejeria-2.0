@@ -506,10 +506,15 @@ class StudentModel {
             echo "Error executing query.";
         }
 
-        if($crse_grade > $grade)
+        $checker = false;
+        if (strpos($grade, 'D') !== false || strpos($grade, 'F') !== false)
+            if(strpos($crse_grade, 'W') !== false)
+                $checker = true;
+
+        if(($crse_grade > $grade) && $checker == false)
         {
             $sql1 = "UPDATE student_courses 
-                    SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
+                    SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
             
             // Preparar la sentencia
@@ -548,7 +553,7 @@ class StudentModel {
 
     public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
             $sql1 = "UPDATE student_courses 
-                    SET credits = ?, type = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
+                    SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
             
             // Preparar la sentencia
@@ -582,9 +587,37 @@ class StudentModel {
     }
 
     public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn) {
+        
+        $course_level = '';
+
+        if((strpos($course_code, 'CCOM') !== false))
+        {
+            $sql0 = "SELECT `level` FROM ccom_courses WHERE crse_code = ?";
+            $stmt = $conn->prepare($sql0);
+            if (!$stmt) {
+                // Manejar el error de preparación de la consulta
+                return FALSE;
+            }
+            $stmt->bind_param("s", $course_code);
+            if ($stmt->execute()) {
+                // Vincular el resultado de la consulta a una variable
+                $stmt->bind_result($course_level);
+            
+                // Obtener el resultado de la consulta
+                if ($stmt->fetch())
+                    $level = $course_level;
+                       
+                
+            }
+
+            $stmt->close();
+        }
+        else
+            $level = 'NULL';
+
         // Preparar la consulta SQL para la inserción
-        $sql = "INSERT INTO student_courses (student_num, crse_code, credits, type, crse_grade, crse_status, term, equivalencia, convalidacion)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO student_courses (student_num, crse_code, credits, category, level, crse_grade, crse_status, term, equivalencia, convalidacion)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
@@ -594,7 +627,7 @@ class StudentModel {
         }
         
         // Vincular los parámetros con los valores
-        $stmt->bind_param("sssssssss", $student_num, $course_code, $credits, $type, $grade, $status, $term, $equi, $conva);
+        $stmt->bind_param("ssssssssss", $student_num, $course_code, $credits, $type, $level, $grade, $status, $term, $equi, $conva);
 
         // echo $stmt;
         

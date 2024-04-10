@@ -170,7 +170,10 @@ class ExpedientesController {
                     }
                     else
                     {
-                        $type = $course_info['type'];
+                        if($department != 'CCOM')
+                            $type = 'general';
+                        else
+                            $type = $course_info['type'];
                     }
 
                     if($department == "CCOM")
@@ -481,7 +484,10 @@ class ExpedientesController {
                                 }
                                 else
                                 {
-                                    $type = $course_info["type"];
+                                    if($department != 'CCOM')
+                                        $type = 'general';
+                                    else
+                                        $type = $course_info['type'];
                                 }
 
                                 if($grade == "")
