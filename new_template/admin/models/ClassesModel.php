@@ -26,6 +26,19 @@ class ClassesModel {
         return $result;
     }
 
+    public function getCohorts($conn)
+    {
+        $sql = "SELECT DISTINCT cohort_year FROM cohort;";
+
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        return $result;
+    }
+
     public function getCcomElectives($conn)
     {
         $sql = "SELECT *
