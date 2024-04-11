@@ -113,7 +113,7 @@ class ClassesModel {
     public function getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num)
     {
         $sql = "SELECT cohort.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
-                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term
+                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                 FROM cohort
                 JOIN ccom_courses ON cohort.crse_code = ccom_courses.crse_code
                 LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
@@ -161,7 +161,7 @@ class ClassesModel {
             echo "Error executing query.";
         }
 
-        $sql1 = "SELECT c.crse_code, c.name, c.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
+        $sql1 = "SELECT c.crse_code, c.name, c.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -213,7 +213,7 @@ class ClassesModel {
             echo "Error executing query.";
         }
 
-        $sql = "(SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
+        $sql = "(SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM general_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -223,7 +223,7 @@ class ClassesModel {
                     WHERE co.cohort_year = $studentCohort
                 ))
                 UNION
-                (SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term
+                (SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -243,7 +243,7 @@ class ClassesModel {
     public function getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num)
     {
         $sql = "SELECT cohort.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
-                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term
+                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                 FROM cohort
                 JOIN general_courses ON cohort.crse_code = general_courses.crse_code
                 LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code

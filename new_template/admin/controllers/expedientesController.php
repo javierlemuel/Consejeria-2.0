@@ -165,25 +165,13 @@ class ExpedientesController {
 
                     $course_code = $_POST['crse_code'];
                     $department = substr($course_code, 0, 4);
+                    $category = $_POST['category'];
                     $grade = $_POST['grade'];
                     $equi = $_POST['equivalencia'];
                     $conva = $_POST['convalidacion'];
                     $term = $_POST['term'];
                     $old_term = $_POST['old_term'];
                     $credits = $_POST['credits'];
-
-                    $course_info = $classModel->selectCourseWNull($conn, $course_code);
-                    if($course_info == NULL)
-                    {
-                        $type = "free";
-                    }
-                    else
-                    {
-                        if($department != 'CCOM')
-                            $type = 'general';
-                        else
-                            $type = $course_info['type'];
-                    }
 
                     if($department == "CCOM")
                     {
@@ -212,11 +200,11 @@ class ExpedientesController {
 
                     if($result == TRUE)
                     {
-                        $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn);
+                        $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $old_term, $status, $conn);
                     }
                     else
                     {
-                        $studentModel->InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn);
+                        $studentModel->InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn);
                     }
                 }
                 if(isset($_POST['insertGrade']) && !empty($_POST['insertGrade'])) {

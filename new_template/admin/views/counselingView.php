@@ -203,6 +203,7 @@
                                             <th style="padding: 5px;"></th>
                                             <th style="padding: 5px;">Codigo Del Curso</th>
                                             <th style="padding: 5px;">Creditos</th>
+                                            <th style="padding: 5px;">Categoría</th>
                                             <th style="padding: 5px;">Tipo</th>
                                             <th style="padding: 5px;">Nota</th>
                                             <th style="padding: 5px;">Estatus</th>
@@ -303,6 +304,7 @@
                                             <th style="padding: 5px;">Codigo Del Curso</th>
                                             <th style="padding: 5px;">Nombre</th>
                                             <th style="padding: 5px;">Creditos</th>
+                                            <th style="padding: 5px;">Categoría</th>
                                             <th style="padding: 5px;">Nota</th>
                                             <th style="padding: 5px;">Semestre</th>
                                             <th style="padding: 5px;">Equivalencia</th>
@@ -310,32 +312,41 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
+                                    <?php
                                         // Itera sobre los datos de los cursos y llena las celdas de la tabla
                                         foreach ($ccomByCohort as $curso) {
                                             echo "<tr>";
                                             echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                            echo"<form method='POST' action='index.php'>";
+                                            echo "<form method='POST' action='index.php'>";
                                             echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
                                             echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
                                             echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
                                             echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
                                             echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
+                                            echo "<td style='padding: 5px;'> 
+                                                    <select name='category' class='form-input' style='width: 8em;'>";
+                                                        $options = array("general", "free", "mandatory", "elective");
+                                                        foreach ($options as $option) {
+                                                            $selected = ($option == $curso['category']) ? "selected" : "";
+                                                            echo "<option value='$option' $selected>$option</option>";
+                                                        }
+                                                    echo "</select></td>";
                                             if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                 echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
                                             } else {
                                                 echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
-                                            }echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "'/></td>";
+                                            }
+                                            echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "'/></td>";
                                             echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
-                                            echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                            echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
                                             echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
-                                        ?>
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -349,6 +360,7 @@
                                             <th style="padding: 5px;">Codigo Del Curso</th>
                                             <th style="padding: 5px;">Nombre</th>
                                             <th style="padding: 5px;">Creditos</th>
+                                            <th style="padding: 5px;">Categoría</th>
                                             <th style="padding: 5px;">Nota</th>
                                             <th style="padding: 5px;">Semestre</th>
                                             <th style="padding: 5px;">Equivalencia</th>
@@ -368,6 +380,14 @@
                                             echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
                                             echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
                                             echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
+                                            echo "<td style='padding: 5px;'> 
+                                                    <select name='category' class='form-input' style='width: 8em;'>";
+                                                        $options = array("general", "free", "mandatory", "elective");
+                                                        foreach ($options as $option) {
+                                                            $selected = ($option == $curso['category']) ? "selected" : "";
+                                                            echo "<option value='$option' $selected>$option</option>";
+                                                        }
+                                                    echo "</select></td>";
                                             if (in_array($curso['crse_grade'], ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                 echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
                                             } else {
@@ -402,6 +422,7 @@
                                                 <th style="padding: 5px;">Codigo Del Curso</th>
                                                 <th style="padding: 5px;">Nombre</th>
                                                 <th style="padding: 5px;">Creditos</th>
+                                                <th style="padding: 5px;">Categoría</th>
                                                 <th style="padding: 5px;">Nota</th>
                                                 <th style="padding: 5px;">Semestre</th>
                                                 <th style="padding: 5px;">Equivalencia</th>
@@ -421,6 +442,14 @@
                                                 echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
                                                 echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
                                                 echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
+                                                echo "<td style='padding: 5px;'>
+                                                    <select name='category' class='form-input' style='width: 8em;'>";
+                                                        $options = array("general", "free", "mandatory", "elective");
+                                                        foreach ($options as $option) {
+                                                            $selected = ($option == $curso['category']) ? "selected" : "";
+                                                            echo "<option value='$option' $selected>$option</option>";
+                                                        }
+                                                    echo "</select></td>";
                                                 if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                     echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
                                                 } else {
@@ -455,6 +484,7 @@
                                                 <th style="padding: 5px;">Codigo Del Curso</th>
                                                 <th style="padding: 5px;">Nombre</th>
                                                 <th style="padding: 5px;">Creditos</th>
+                                                <th style="padding: 5px;">Categoría</th>
                                                 <th style="padding: 5px;">Nota</th>
                                                 <th style="padding: 5px;">Semestre</th>
                                                 <th style="padding: 5px;">Equivalencia</th>
@@ -474,6 +504,14 @@
                                                 echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
                                                 echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
                                                 echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
+                                                echo "<td style='padding: 5px;'> 
+                                                    <select name='category' class='form-input' style='width: 8em;'>";
+                                                        $options = array("general", "free", "mandatory", "elective");
+                                                        foreach ($options as $option) {
+                                                            $selected = ($option == $curso['category']) ? "selected" : "";
+                                                            echo "<option value='$option' $selected>$option</option>";
+                                                        }
+                                                    echo "</select></td>";
                                                 if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                     echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
                                                 } else {

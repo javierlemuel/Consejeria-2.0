@@ -553,7 +553,7 @@ class StudentModel {
             return TRUE;
     }
 
-    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
+    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $old_term, $status, $conn) {
             $sql1 = "UPDATE student_courses 
                     SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
@@ -567,7 +567,7 @@ class StudentModel {
             }
             
             // Vincular los parámetros con los valores
-            $stmt1->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
+            $stmt1->bind_param("ssssssssss", $credits, $category, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
             
             // Ejecutar la sentencia
             if ($stmt1->execute()) {
@@ -582,13 +582,12 @@ class StudentModel {
             } else {
                 // Ocurrió un error al ejecutar la consulta
                 // Manejar el error según sea necesario
-                echo "Error executing SQL statement: " . $stmt1->error . "<br>";
                 $stmt1->close();
                 return FALSE;
             }
     }
 
-    public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn) {
+    public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn) {
         
         $course_level = '';
 
@@ -608,7 +607,6 @@ class StudentModel {
                 // Obtener el resultado de la consulta
                 if ($stmt->fetch())
                     $level = $course_level;
-                       
                 
             }
 
@@ -629,7 +627,7 @@ class StudentModel {
         }
         
         // Vincular los parámetros con los valores
-        $stmt->bind_param("ssssssssss", $student_num, $course_code, $credits, $type, $level, $grade, $status, $term, $equi, $conva);
+        $stmt->bind_param("ssssssssss", $student_num, $course_code, $credits, $category, $level, $grade, $status, $term, $equi, $conva);
 
         // echo $stmt;
         
