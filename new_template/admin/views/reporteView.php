@@ -125,21 +125,33 @@
                     <thead>
                         <tr>
                             <th style='text-align:center; bold'>Tipo de Reporte</th>
-                            <th style='text-align:center; width: 40%; bold'>Cantidad</th>
+                            <th style='text-align:center; width: 40%; bold'>Cantidad de Estudiantes</th>
                             <th style='text-align:center'></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr style='background-color: lightgray'>
+                            <td style='text-align:center'>Estudiantes Activos</td>
+                            <td style='text-align:center'><?php echo $studentsActivos ?></td>
+                            <td style='text-align:center; vertical-align:middle'><a href='?reports&code=active'>
+                            <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
+                        </tr>
+                        <tr>
                             <td style='text-align:center'>Estudiantes Aconsejados</td>
                             <td style='text-align:center'><?php echo $studentsAconsejados ?></td>
                             <td style='text-align:center; vertical-align:middle'><a href='?reports&code=consCCOM'>
                             <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                         </tr>
-                        <tr>
+                        <tr style='background-color: lightgray'>
                             <td style='text-align:center'>Estudiantes Aconsejados sin Cursos de CCOM</td>
                             <td style='text-align:center'><?php echo $studentsSinCCOM  ?></td>
                             <td style='text-align:center; vertical-align:middle'><a href='?reports&code=consSinCCOM'>
+                            <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
+                        </tr>
+                        <tr>
+                            <td style='text-align:center'>Estudiantes que NO realizaron su Consejería</td>
+                            <td style='text-align:center'><?php echo $studentsNoConsejeria  ?></td>
+                            <td style='text-align:center; vertical-align:middle'><a href='?reports&code=noCons'>
                             <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                         </tr>
                         <tr style='background-color: lightgray'>
@@ -155,15 +167,15 @@
                     </tbody></table>
 
 
-                <br><br><br>
-                <div style='text-align:center; font-size: 35px'><h2>Reportes por Curso de CCOM</h2></div>
+                <br><br><br><br>
+                <div style='text-align:center; font-size: 35px'><h2>Reportes de Estudiantes por Curso de CCOM</h2></div>
                 <br><br><br>
 
                 <table style='font-size: 20px'>
                     <thead>
                         <tr>
                             <th style='text-align:center; bold'>Curso</th>
-                            <th style='text-align:center; width: 40%; bold'>Cantidad</th>
+                            <th style='text-align:center; width: 40%; bold'>Cantidad de Estudiantes</th>
                         </tr>
                     </thead>
                     <tbody>

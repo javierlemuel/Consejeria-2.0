@@ -14,6 +14,8 @@ class ReporteController{
 
         $studentsAconsejados = $reporteModel->getStudentsAconsejados($conn);
         $studentsSinCCOM = $reporteModel->getStudentsSinCCOM($conn);
+        $studentsNoConsejeria = $reporteModel->getStudentsNoConsejeria($conn);
+        $studentsActivos = $reporteModel->getStudentsActivos($conn);
         $studentsRegistrados = $reporteModel->getRegistrados($conn);
         $studentsEditados = $reporteModel->getEditados($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
@@ -43,6 +45,10 @@ class ReporteController{
                 $combinedCsvFileName = "Report_Aconsejados_".$term.".csv";
             else if($type == 'consSinCCOM')
                 $combinedCsvFileName = "Report_Aconsejados_Sin_CCOM_".$term.".csv";
+            else if($type == 'noCons')
+                $combinedCsvFileName = "Report_No_Han_Realizado_Consejeria_".$term.".csv";
+            else if($type == 'active')
+                $combinedCsvFileName = "Report_Estudiantes_Activos_".$term.".csv";
             $_SESSION['filename'] = $combinedCsvFileName;
 
         }

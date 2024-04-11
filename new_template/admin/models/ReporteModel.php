@@ -48,6 +48,43 @@ class ReporteModel {
             return 0;
    }
 
+   public function getStudentsNoConsejeria($conn)
+   {
+        $sql = "SELECT COUNT(DISTINCT student_num) AS count
+        FROM student
+        WHERE conducted_counseling = 0
+        AND status = 'Activo'";
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        if ($result->num_rows > 0)
+            foreach($result as $res)
+                return $res['count'];
+        else    
+            return 0;
+   }
+
+   public function getStudentsActivos($conn)
+   {
+        $sql = "SELECT COUNT(DISTINCT student_num) AS count
+        FROM student
+        WHERE status = 'Activo'";
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        if ($result->num_rows > 0)
+            foreach($result as $res)
+                return $res['count'];
+        else    
+            return 0;
+   }
+
    public function getStudentsInfo($conn, $type)
    {
         $term = $this->getTerm($conn);
@@ -69,6 +106,19 @@ class ReporteModel {
                 AND term = '$term'
                 )
             AND term = '$term'";
+        }
+        else if ($type == 'noCons')
+        {
+            $sql = "SELECT student_num, name1, name2, last_name1, last_name2
+            FROM student
+            WHERE conducted_counseling = 0
+            AND status = 'Activo'";
+        }
+        else if ($type == 'active')
+        {
+            $sql = "SELECT student_num, name1, name2, last_name1, last_name2
+            FROM student
+            WHERE status = 'Activo'";
         }
 
         $students = [];
