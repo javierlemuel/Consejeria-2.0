@@ -509,8 +509,8 @@ class StudentModel {
         }
 
         $checker = false;
-        if (strpos($grade, 'D') !== false || strpos($grade, 'F') !== false)
-            if(strpos($crse_grade, 'W') !== false)
+        if (strpos($grade, 'D') == true && strpos($grade, 'F') == true)
+            if(strpos($crse_grade, 'W') == true)
                 $checker = true;
 
         if(($crse_grade > $grade) && $checker == false)

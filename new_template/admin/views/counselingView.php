@@ -325,7 +325,7 @@
                                             echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
                                             echo "<td style='padding: 5px;'> 
                                                     <select name='category' class='form-input' style='width: 8em;'>";
-                                                        $options = array("general", "free", "mandatory", "elective");
+                                                        $options = array("mandatory", "free", "general", "elective");
                                                         foreach ($options as $option) {
                                                             $selected = ($option == $curso['category']) ? "selected" : "";
                                                             echo "<option value='$option' $selected>$option</option>";

@@ -479,13 +479,18 @@ class ExpedientesController {
                                 {
                                     $type = "free";
                                 }
-                                else
+                                else #AQUI
                                 {
-                                    if($department != 'CCOM')
+                                    
+                                    if ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
                                         $type = 'general';
-                                    else
+                                    } else {
                                         $type = $course_info['type'];
+                                    }
+                                    
                                 }
+
+                                #echo "{$course_info['crse_code']} has type: {$type}\n";
 
                                 if($grade == "")
                                 {
