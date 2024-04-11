@@ -5,7 +5,7 @@ class CounselingModel
 
     public function getRecommendedCourses($conn, $student_num)
     {
-        $sql = "SELECT term
+        $sql = "SELECT DISTINCT  term
         FROM offer AS o
         WHERE o.crse_code = 'XXXX'";
         $result = $conn->query($sql);
@@ -17,17 +17,17 @@ class CounselingModel
         $term = $result['term'];
 
 
-        $sql = "SELECT gc.crse_code, gc.name, gc.credits
+        $sql = "SELECT DISTINCT  gc.crse_code, gc.name, gc.credits
                 FROM recommended_courses rc
                 JOIN general_courses gc ON rc.crse_code = gc.crse_code
                 WHERE rc.student_num = ? AND rc.term = ?
                 UNION
-                SELECT cc.crse_code, cc.name, cc.credits
+                SELECT DISTINCT  cc.crse_code, cc.name, cc.credits
                 FROM recommended_courses rc
                 JOIN ccom_courses cc ON rc.crse_code = cc.crse_code
                 WHERE rc.student_num = ? AND rc.term = ?
                 UNION
-                SELECT dc.crse_code, dc.name, dc.credits
+                SELECT DISTINCT  dc.crse_code, dc.name, dc.credits
                 FROM recommended_courses rc
                 JOIN dummy_courses dc ON rc.crse_code = dc.crse_code
                 WHERE rc.student_num = ? AND rc.term = ? ";
@@ -60,7 +60,7 @@ class CounselingModel
         //selecciona las clases que estan en offer y ccom_courses pero que el estudiante no haya pasado (crse_status = 'P')
         // y ademas que los cursos no esten en recommended
 
-        $sql = "SELECT term
+        $sql = "SELECT DISTINCT  term
         FROM offer AS o
         WHERE o.crse_code = 'XXXX'";
         $result = $conn->query($sql);
@@ -71,12 +71,12 @@ class CounselingModel
         $result = $result->fetch_assoc();
         $term = $result['term'];
 
-        $sql = "SELECT of.crse_code, cc.type, cc.name, cc.credits
+        $sql = "SELECT DISTINCT  of.crse_code, cc.type, cc.name, cc.credits
                 FROM offer as of
                 NATURAL JOIN ccom_courses AS cc
                 WHERE of.crse_code = cc.crse_code
-                AND of.crse_code NOT IN (SELECT crse_code FROM student_courses WHERE crse_status = 'P' AND student_num = ?)
-                AND of.crse_code NOT IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?)
+                AND of.crse_code NOT IN (SELECT DISTINCT  crse_code FROM student_courses WHERE crse_status = 'P' AND student_num = ?)
+                AND of.crse_code NOT IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?)
                 AND of.crse_code LIKE 'CCOM%'
                 AND of.term = ?
                 ";
@@ -105,7 +105,7 @@ class CounselingModel
     public function getStudentInfo($conn, $student_num)
     {
 
-        $sql = "SELECT name1, name2, last_name1, last_name2, email, student_note  
+        $sql = "SELECT DISTINCT  name1, name2, last_name1, last_name2, email, student_note  
                 FROM student 
                 WHERE student_num = ?";
 
@@ -136,7 +136,7 @@ class CounselingModel
 
     public function getGeneralCourses($conn, $student_num)
     {
-        $sql = "SELECT term
+        $sql = "SELECT DISTINCT  term
         FROM offer AS o
         WHERE o.crse_code = 'XXXX'";
         $result = $conn->query($sql);
@@ -147,12 +147,12 @@ class CounselingModel
         $result = $result->fetch_assoc();
         $term = $result['term'];
         //selecciona clases generales que estan en oferta y que el estudiante no haya pasado
-        $sql = "SELECT of.crse_code, gc.type, gc.name, gc.credits
+        $sql = "SELECT DISTINCT  of.crse_code, gc.type, gc.name, gc.credits
                 FROM offer as of
                 NATURAL JOIN general_courses AS gc
                 WHERE of.crse_code = gc.crse_code
-                AND of.crse_code NOT IN (SELECT crse_code FROM student_courses WHERE crse_status = 'P' AND student_num = ?)
-                AND of.crse_code NOT IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?)
+                AND of.crse_code NOT IN (SELECT DISTINCT  crse_code FROM student_courses WHERE crse_status = 'P' AND student_num = ?)
+                AND of.crse_code NOT IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?)
                 AND gc.type <> 'FREE'
                 AND of.term = ?";
 
@@ -180,18 +180,18 @@ class CounselingModel
             // Check if $req contains only one value
             if (count($requisitos) == 1) {
                 // If there's only one value, no need for IN clause
-                $sql2 = "SELECT gr.req_crse_code AS crse_code, gc.name, gc.credits
+                $sql2 = "SELECT DISTINCT  gr.req_crse_code AS crse_code, gc.name, gc.credits
                          FROM general_courses AS gc
                          JOIN general_requirements AS gr ON gr.req_crse_code = gc.crse_code
                          WHERE gr.crse_code = $req AND gr.type = 'co'
-                         AND gr.crse_code NOT IN (SELECT crse_code FROM recommended_courses)";
+                         AND gr.crse_code NOT IN (SELECT DISTINCT  crse_code FROM recommended_courses)";
             } else {
                 // If there are multiple values, use the IN clause
-                $sql2 = "SELECT gr.req_crse_code AS crse_code, gc.name, gc.credits
+                $sql2 = "SELECT DISTINCT  gr.req_crse_code AS crse_code, gc.name, gc.credits
                          FROM general_courses AS gc
                          JOIN general_requirements AS gr ON gr.req_crse_code = gc.crse_code
                          WHERE gr.crse_code IN ($req) AND gr.type = 'co'
-                         AND gr.crse_code NOT IN (SELECT crse_code FROM recommended_courses)";
+                         AND gr.crse_code NOT IN (SELECT DISTINCT  crse_code FROM recommended_courses)";
             }
             $stmt = $conn->prepare($sql2);
             //ejecuta el statement
@@ -214,8 +214,8 @@ class CounselingModel
 
     public function setCourses($conn, $student_num, $courses)
     {
-        //add selected courses to will_take table
-        $sql = "SELECT term
+        //add SELECT DISTINCT ed courses to will_take table
+        $sql = "SELECT DISTINCT  term
                 FROM offer AS o
                 WHERE o.crse_code = 'XXXX'";
         $result = $conn->query($sql);
@@ -255,7 +255,7 @@ class CounselingModel
     public function getCounselingStatus($conn, $student_num)
     {
         //get the student counseling status 0 == not conducted, 1 == conducted
-        $sql = "SELECT conducted_counseling
+        $sql = "SELECT DISTINCT  conducted_counseling
                 FROM student
                 WHERE student_num = ?";
         $stmt = $conn->prepare($sql);
@@ -271,7 +271,7 @@ class CounselingModel
 
     public function getCohortes($conn)
     {
-        $sql = "SELECT DISTINCT cohort_year  
+        $sql = "SELECT DISTINCT  DISTINCT cohort_year  
                 FROM cohort";
 
         $stmt = $conn->prepare($sql);
@@ -296,7 +296,7 @@ class CounselingModel
     public function getStudentSelectedCourses($conn, $student_num)
     {
 
-        $sql = "SELECT wt.student_num, wt.crse_code, wt.term
+        $sql = "SELECT DISTINCT  wt.student_num, wt.crse_code, wt.term
                 FROM will_take as wt 
                 JOIN offer as of
                 ON of.term = wt.term

@@ -1,7 +1,9 @@
 <?php
 // models/StudentModel.php
-class StudentModel {
-    public function getStudentsByPageAndStatus($conn, $perPage, $currentPage, $status) {
+class StudentModel
+{
+    public function getStudentsByPageAndStatus($conn, $perPage, $currentPage, $status)
+    {
         $offset = ($currentPage - 1) * $perPage;
 
         // Modificamos la consulta SQL para incluir el filtro de estado
@@ -13,7 +15,7 @@ class StudentModel {
             $statusCondition = "1"; // Sin filtro, mostrar todos
         }
 
-        $sql = "SELECT student_num, name1, name2, last_name1, last_name2, conducted_counseling, status 
+        $sql = "SELECT DISTINCT  student_num, name1, name2, last_name1, last_name2, conducted_counseling, status 
                 FROM student 
                 WHERE $statusCondition 
                 ORDER BY name1 ASC 
@@ -37,7 +39,8 @@ class StudentModel {
         return $students;
     }
 
-    public function getTotalStudentsByStatus($conn, $status) {
+    public function getTotalStudentsByStatus($conn, $status)
+    {
         // Modificamos la consulta SQL para incluir el filtro de estado
         if ($status === 'Activos') {
             $statusCondition = "status = 'Activo'";
@@ -47,7 +50,7 @@ class StudentModel {
             $statusCondition = "1"; // Sin filtro, contar todos
         }
 
-        $sql = "SELECT COUNT(*) as total 
+        $sql = "SELECT DISTINCT  COUNT(*) as total 
                 FROM student 
                 WHERE $statusCondition";
 
@@ -61,4 +64,3 @@ class StudentModel {
         return $row['total'];
     }
 }
-?>

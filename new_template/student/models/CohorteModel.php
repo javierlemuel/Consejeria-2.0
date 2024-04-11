@@ -6,7 +6,7 @@ class CohorteModel
     public function getCohort($conn, $cohot_year)
     {
 
-        $sql = "SELECT c.cohort_year, c.crse_code, c.crse_year, c.crse_semester, 
+        $sql = "SELECT DISTINCT  c.cohort_year, c.crse_code, c.crse_year, c.crse_semester, 
                 COALESCE(cc.credits, gc.credits, dc.credits) AS credits,
                 COALESCE(cc.name, gc.name, dc.name) AS name
                 FROM cohort AS c

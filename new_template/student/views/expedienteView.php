@@ -339,7 +339,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                     </table>
                                 </div>
                                 <div class="table-responsive mt-5">
-                                    <h4 class="font-semibold text-xl my-4">EOtros Cursos</h4>
+                                    <h4 class="font-semibold text-xl my-4">Otros Cursos</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>

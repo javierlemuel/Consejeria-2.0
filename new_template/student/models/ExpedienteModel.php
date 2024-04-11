@@ -4,7 +4,7 @@ class StudentModel
 {
     public function getStudentInfo($conn, $student_num)
     {
-        $sql = "SELECT email, name1, name2, last_name1, last_name2, cohort_year, minor
+        $sql = "SELECT DISTINCT  email, name1, name2, last_name1, last_name2, cohort_year, minor
                 FROM student
                 WHERE student.student_num = ?";
 
@@ -36,10 +36,10 @@ class StudentModel
 
     public function getStudentCCOMCourses($conn, $student_num, $cohort_year)
     {
-        $sql = "SELECT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
+        $sql = "SELECT DISTINCT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
                 student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, ccom_courses.type,
                 cohort.cohort_year,
-                CASE WHEN ccom_courses.crse_code IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
+                CASE WHEN ccom_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
 
         FROM ccom_courses
         LEFT JOIN student_courses ON ccom_courses.crse_code = student_courses.crse_code
@@ -70,20 +70,50 @@ class StudentModel
 
     public function getStudentGeneralCourses($conn, $student_num, $cohort_year)
     {
-        $sql = "SELECT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
-                        student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, general_courses.type,
-                CASE WHEN general_courses.crse_code IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
+        // $sql = "SELECT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
+        //                 student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, general_courses.type,
+        //         CASE WHEN general_courses.crse_code IN (SELECT crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
 
-                FROM general_courses
-                LEFT JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
-                AND student_courses.student_num = ?
-                JOIN cohort on cohort.crse_code = general_courses.crse_code
-                WHERE cohort.cohort_year = ? AND general_courses.crse_code NOT IN ('INGL3113', 'INGL3114');";
+        //         FROM general_courses
+        //         LEFT JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
+        //         AND student_courses.student_num = ?
+        //         JOIN cohort on cohort.crse_code = general_courses.crse_code
+        //         WHERE cohort.cohort_year = ? AND general_courses.crse_code NOT IN ('INGL3113', 'INGL3114');";
+
+        $sql = "SELECT DISTINCT  general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
+            student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, general_courses.type,
+            CASE WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num =  ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
+
+            FROM general_courses
+            LEFT JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
+            AND student_courses.student_num = ?
+            JOIN cohort on cohort.crse_code = general_courses.crse_code
+            WHERE cohort.cohort_year =  ? AND general_courses.required = 1
+
+            UNION
+
+            SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND (student_courses.crse_code LIKE 'CISO%' OR student_courses.crse_code LIKE 'HUMA%') ;";
 
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param("sss", $student_num, $student_num, $cohort_year);
+        $stmt->bind_param("sssss", $student_num, $student_num, $cohort_year, $student_num, $student_num);
 
         // ejecuta el statement
         $stmt->execute();
@@ -108,11 +138,11 @@ class StudentModel
             $minor_id =  "AND (cc.minor_id != " . $minor . " OR cc.minor_id IS NULL)";
         }
 
-        $sql = "SELECT cc.crse_code, cc.name, cc.credits, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion
+        $sql = "SELECT DISTINCT cc.crse_code, cc.name, cc.credits, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion
         FROM ccom_courses AS cc
         JOIN student_courses AS sc
         ON cc.crse_code = sc.crse_code
-        WHERE sc.type = 'elective' AND sc.student_num = ? " . $minor_id;
+        WHERE sc.category = 'elective' AND sc.student_num = ? " . $minor_id;
 
         $stmt = $conn->prepare($sql);
 
@@ -142,14 +172,14 @@ class StudentModel
             $minor_id =  "AND cc.minor_id = " . $minor;
         }
 
-        $sql = "SELECT sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, cc.name AS name, cc.credits AS credits
+        $sql = "SELECT DISTINCT  sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, cc.name AS name, cc.credits AS credits
         FROM student_courses AS sc
         LEFT JOIN ccom_courses AS cc ON sc.crse_code = cc.crse_code
-        WHERE sc.student_num = ? AND sc.type = 'elective' " . $minor_id . " UNION
-		SELECT sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, gc.name AS name, gc.credits AS credits
+        WHERE sc.student_num = ? AND sc.category = 'elective' " . $minor_id . " UNION
+		SELECT DISTINCT  sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, gc.name AS name, gc.credits AS credits
         FROM student_courses AS sc
         JOIN general_courses AS gc ON sc.crse_code = gc.crse_code
-        WHERE sc.student_num = ? AND sc.type = 'elective'";
+        WHERE sc.student_num = ? AND sc.category = 'free'";
 
 
         $stmt = $conn->prepare($sql);
@@ -175,13 +205,13 @@ class StudentModel
 
     public function getOtherCourses($conn, $student_num)
     {
-        $sql = "SELECT *
+        $sql = "SELECT DISTINCT  *
         FROM student_courses
         WHERE crse_code NOT IN (
-            SELECT crse_code
+            SELECT DISTINCT  crse_code
             FROM ccom_courses
             UNION
-            SELECT crse_code
+            SELECT DISTINCT crse_code
             FROM general_courses
         )
         AND student_num = ?";
@@ -206,7 +236,7 @@ class StudentModel
 
     public function getMinor($conn, $student_num)
     {
-        $sql = "SELECT minor.name
+        $sql = "SELECT DISTINCT minor.name
         FROM minor
         JOIN student AS s ON minor.ID = s.minor
         WHERE s.student_num = ?;";
