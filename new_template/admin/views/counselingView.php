@@ -286,6 +286,8 @@
                                                 echo "<input type='hidden' name='convalidacion' value=''/>";
                                                 echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
+                                                echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
+                                                echo "<input type='hidden' name='category' value=" . $curso['category'] . ">";
                                                 echo "</form>";
                                             }
                                         ?>
