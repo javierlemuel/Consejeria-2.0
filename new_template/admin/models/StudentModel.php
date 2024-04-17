@@ -276,7 +276,8 @@ class StudentModel {
 
         $currentDateTime = date("Y-m-d H:i:s");
         $logMessage = "\n" . $currentDateTime . "\n";
-        error_log($logMessage, 3, $archivoRegistro);
+        #error_log($logMessage, 3, $archivoRegistro);
+        $_SESSION['registermodeltxt'] .= $logMessage;
 
         if(strlen($birthdate) == 5)
             $birthdate = '0'.$birthdate;
@@ -320,10 +321,12 @@ class StudentModel {
         // Ejecuta el query
         if ($conn->query($query) === TRUE) {
             // Insert exitoso
-            error_log("Estudiante insertado correctamente en la base de datos.\n", 3, $archivoRegistro);
+            #error_log("Estudiante insertado correctamente en la base de datos.\n", 3, $archivoRegistro);
+            $_SESSION['registermodeltxt'] .= "Estudiante ".$student_num." insertado correctamente en la base de datos.\n";
         } else {
             // querie fallo
-            error_log("Error al insertar estudiante en la base de datos: " . $conn->error . "\n", 3, $archivoRegistro);
+            #error_log("Error al insertar estudiante en la base de datos: " . $conn->error . "\n", 3, $archivoRegistro);
+            $_SESSION['registermodeltxt'] .= "Error al insertar estudiante ".$student_num." en la base de datos: " . $conn->error . "\n";
         }
     }
     
@@ -553,9 +556,9 @@ class StudentModel {
             return TRUE;
     }
 
-    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $old_term, $status, $conn) {
+    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn) {
             $sql1 = "UPDATE student_courses 
-                    SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
+                    SET credits = ?, category = ?, level = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
             
             // Preparar la sentencia
@@ -567,7 +570,7 @@ class StudentModel {
             }
             
             // Vincular los parámetros con los valores
-            $stmt1->bind_param("ssssssssss", $credits, $category, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
+            $stmt1->bind_param("sssssssssss", $credits, $category, $level, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
             
             // Ejecutar la sentencia
             if ($stmt1->execute()) {

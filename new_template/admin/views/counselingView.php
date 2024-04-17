@@ -423,6 +423,7 @@
                                                 <th style="padding: 5px;">Nombre</th>
                                                 <th style="padding: 5px;">Creditos</th>
                                                 <th style="padding: 5px;">Categoría</th>
+                                                <th style="padding: 5px;">Nivel</th>
                                                 <th style="padding: 5px;">Nota</th>
                                                 <th style="padding: 5px;">Semestre</th>
                                                 <th style="padding: 5px;">Equivalencia</th>
@@ -450,6 +451,14 @@
                                                             echo "<option value='$option' $selected>$option</option>";
                                                         }
                                                     echo "</select></td>";
+                                                echo "<td style='padding: 5px;'>
+                                                <select name='level' class='form-input' style='width: 8em;'>";
+                                                ?>
+                                                <option value='NULL' <?php if($curso['level'] != 'intermediate' && $curso['level'] != 'advanced') echo 'selected'?>>N/A</option>
+                                                <option value='intermediate' <?php if($curso['level'] == 'intermediate') echo 'selected'?>>Intermedia</option>
+                                                <option value='advanced' <?php if($curso['level'] == 'advanced') echo 'selected'?>>Avanzada</option>
+                                                <?php
+                                                echo "</select></td>";
                                                 if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                     echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
                                                 } else {

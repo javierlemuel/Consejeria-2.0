@@ -4,6 +4,7 @@
         header("Location: ../index.php");
         exit;
     }
+
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -116,7 +117,7 @@
                 <!-- start main content section -->
                 <div x-data="contacts">
                         <div class="flex flex-wrap items-center justify-between gap-4">
-                            <h2 class="text-xl">Expedientes de Estudiantes</h2>
+                            <h2 class="text-xl">Expedientes de Estudiantes (<?php echo $_SESSION['status'] ?>)</h2>
                             <!-- Comienzo Boton drop down -->
                             <div x-data="dropdown" @click.outside="open = false" class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" @click="toggle">Filtrar por Estatus
@@ -385,7 +386,7 @@
                                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                     <li>
                                         <a href="?page=<?php echo $i; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                            <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition <?php echo ($i === $currentPage) ? 'bg-primary text-white' : 'bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary'; ?>">
+                                            <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition <?php echo ($i == $currentPage) ? 'bg-primary text-white' : 'bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary'; ?>">
                                                 <?php echo $i; ?>
                                             </button>
                                         </a>
@@ -434,18 +435,19 @@
         unset($_SESSION['registertxt']);
     }
 
-    if (isset($_SESSION['registermodeltxt'])) {
+    if (isset($_SESSION['registermodeltxt']) && $_SESSION['registermodeltxt'] != '') {
+        // Set the desired filename
+        $date = date("Y-m-d");
+        $fileName = "error_log_".$date;
+    
         // Output the text content in a JavaScript block
         echo '<script>';
         echo 'var txtContent = ' . json_encode($_SESSION['registermodeltxt']) . ';';
-        echo 'var txtFileName = "archivo_de_registro_model.txt";'; // Set your desired filename here
-        echo 'var blob = new Blob([txtContent], { type: "text/plain" });'; // Use "text/plain" for plain text
-        echo 'var a = document.createElement("a");';
-        echo 'a.href = URL.createObjectURL(blob);';
-        echo 'a.target = "_blank";'; // Open in a new window
-        echo 'document.body.appendChild(a);';
-        echo 'a.click();';
-        echo 'document.body.removeChild(a);';
+        echo 'var txtFileName = ' . json_encode($fileName) . ';'; 
+        echo 'var blob = new Blob([txtContent], { type: "text/plain" });'; 
+        echo 'var url = URL.createObjectURL(blob);';
+        echo 'var newWindow = window.open(url, "_blank");'; 
+        echo 'newWindow.document.title = txtFileName;'; 
         echo '</script>';
     
         // Clear the session variable

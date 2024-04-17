@@ -112,15 +112,39 @@ class ClassesModel {
     }
     public function getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num)
     {
-        $sql = "SELECT cohort.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
-                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+        # CCOM CONCENTRATION COURSES
+        $sql = "SELECT DISTINCT cohort.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
+                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                 FROM cohort
                 JOIN ccom_courses ON cohort.crse_code = ccom_courses.crse_code
                 LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
                     AND cohort.cohort_year = $studentCohort
                     AND student_courses.student_num = $student_num
                 WHERE cohort.cohort_year = $studentCohort
-                ORDER BY cohort.crse_code ASC;";
+                AND student_courses.category = 'mandatory'
+                UNION
+
+                SELECT DISTINCT student_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
+                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                FROM student_courses
+                JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
+                WHERE student_courses.category = 'mandatory'
+                AND student_courses.student_num = $student_num
+                AND student_courses.crse_code NOT IN (
+                SELECT cohort.crse_code
+                FROM cohort
+                WHERE cohort.cohort_year = $studentCohort
+                )   
+
+                UNION
+
+                SELECT DISTINCT student_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
+                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                FROM student_courses
+                JOIN general_courses ON student_courses.crse_code = general_courses.crse_code
+                WHERE student_courses.category = 'mandatory'
+                AND student_courses.student_num = $student_num     
+                ORDER BY crse_code ASC;";
 
         $result = $conn->query($sql);
 
@@ -133,6 +157,7 @@ class ClassesModel {
 
     public function getCohortCoursesWgradesCCOMfree($conn, $studentCohort, $student_num)
     {
+        # CCOM ELECTIVE COURSES
         // Preparar la consulta SQL para la actualización
         $sql0 = "SELECT minor
                 FROM student
@@ -161,16 +186,12 @@ class ClassesModel {
             echo "Error executing query.";
         }
 
-        $sql1 = "SELECT c.crse_code, c.name, c.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+        $sql1 = "SELECT DISTINCT c.crse_code, c.name, c.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category, sc.level
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
-                AND c.crse_code NOT IN (
-                    SELECT co.crse_code
-                    FROM cohort co
-                    WHERE co.cohort_year = $studentCohort
-                )
-                AND (c.minor_id <> $student_minor_id OR c.minor_id IS NULL)
+                AND (c.minor_id <> $student_minor_id OR c.minor_id IS NULL OR c.minor_id = 0)
+                AND category = 'elective'
                 ORDER BY c.crse_code ASC;
                 ";
 
@@ -185,6 +206,7 @@ class ClassesModel {
 
     public function getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num)
     {
+        # FREE ELECTIVE COURSES
         // Preparar la consulta SQL para la actualización
         $sql0 = "SELECT minor
                 FROM student
@@ -198,38 +220,47 @@ class ClassesModel {
 
         $stmt0->bind_param("s", $student_num);
 
-        $student_minor_id = 0;
+        $student_minor_id = -1;
+        $fetched_student_minor_id = '';
   
         // Ejecutar
         if ($stmt0->execute()) {
             // Sacar la nota
-            $stmt0->bind_result($student_minor_id);
+            $stmt0->bind_result($fetched_student_minor_id);
             $stmt0->fetch();
-
+        
             // Cerrar
             $stmt0->close();
-        } else {
+        
+            // Actualizar $student_minor_id solo si el valor es diferente de -1
+            if ($fetched_student_minor_id !== 0 && $fetched_student_minor_id != NULL) {
+                $student_minor_id = $fetched_student_minor_id;
+            }
+        }else {
             // Error
             echo "Error executing query.";
         }
 
-        $sql = "(SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+        $sql = "(SELECT DISTINCT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM general_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
-                AND c.crse_code NOT IN (
-                    SELECT co.crse_code
-                    FROM cohort co
-                    WHERE co.cohort_year = $studentCohort
-                ))
+                AND sc.category = 'free'
+                )
                 UNION
-                (SELECT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+                (SELECT DISTINCT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
                 AND c.minor_id = $student_minor_id)
-                ORDER BY crse_code ASC;        
-                ";
+                UNION
+                (SELECT DISTINCT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+                FROM ccom_courses c
+                JOIN student_courses sc ON c.crse_code = sc.crse_code
+                WHERE sc.student_num = $student_num
+                AND sc.category = 'free'
+                AND c.minor_id != $student_minor_id)
+                ORDER BY crse_code ASC;";
 
         $result = $conn->query($sql);
 
@@ -242,15 +273,30 @@ class ClassesModel {
 
     public function getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num)
     {
-        $sql = "SELECT cohort.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
+        # GENERAL COURSES
+        $sql = "SELECT DISTINCT cohort.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
                         student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
-                FROM cohort
-                JOIN general_courses ON cohort.crse_code = general_courses.crse_code
-                LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
-                    AND cohort.cohort_year = $studentCohort
-                    AND student_courses.student_num = $student_num
-                WHERE cohort.cohort_year = $studentCohort
-                ORDER BY cohort.crse_code ASC;";
+                        FROM cohort
+                        JOIN general_courses ON cohort.crse_code = general_courses.crse_code
+                        LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
+                            AND cohort.cohort_year = $studentCohort
+                            AND student_courses.student_num = $student_num
+                        WHERE cohort.cohort_year = $studentCohort
+                        AND student_courses.category = 'general'
+                UNION
+                        SELECT DISTINCT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
+                                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                        FROM general_courses JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
+                        WHERE student_courses.category = 'general'
+                        AND student_num = $student_num
+                UNION
+                        SELECT DISTINCT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
+                                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                        FROM ccom_courses JOIN student_courses ON ccom_courses.crse_code = student_courses.crse_code
+                        WHERE student_courses.category = 'general'
+                        AND student_num = $student_num
+                        
+                ORDER BY crse_code ASC;";
 
         $result = $conn->query($sql);
 
