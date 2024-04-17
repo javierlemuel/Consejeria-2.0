@@ -165,11 +165,11 @@ class ClassesModel {
 
         return $result;
 
-        $result = $conn->query($sql);
+        // $result = $conn->query($sql);
 
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+        // if ($result === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
 
         // $courses = array();
 
@@ -276,30 +276,32 @@ class ClassesModel {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
 
-        $courses = array();
+        return $result;
 
-        while ($row = $result->fetch_assoc()) {
-            $courses[] = $row;
-        }
+        // $courses = array();
 
-        $sql2 = "SELECT student_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.category,
-                        student_courses.crse_grade, student_courses.term, student_courses.equivalencia, student_courses.convalidacion
-                FROM student_courses
-                JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
-                WHERE student_num = $student_num AND category = 'elective'
-                ORDER BY crse_code ASC;";
+        // while ($row = $result->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
 
-        $result2 = $conn->query($sql2);
+        // $sql2 = "SELECT student_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.category,
+        //                 student_courses.crse_grade, student_courses.term, student_courses.equivalencia, student_courses.convalidacion
+        //         FROM student_courses
+        //         JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
+        //         WHERE student_num = $student_num AND category = 'elective'
+        //         ORDER BY crse_code ASC;";
 
-        if ($result2 === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+        // $result2 = $conn->query($sql2);
 
-        while ($row = $result2->fetch_assoc()) {
-            $courses[] = $row;
-        }
+        // if ($result2 === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
 
-        return $courses;
+        // while ($row = $result2->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // return $courses;
     }
 
     public function getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num)

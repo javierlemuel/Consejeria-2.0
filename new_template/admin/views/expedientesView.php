@@ -440,16 +440,18 @@
         $date = date("Y-m-d");
         $fileName = "error_log_".$date;
     
-        // Output the text content in a JavaScript block
         echo '<script>';
         echo 'var txtContent = ' . json_encode($_SESSION['registermodeltxt']) . ';';
-        echo 'var txtFileName = ' . json_encode($fileName) . ';'; 
-        echo 'var blob = new Blob([txtContent], { type: "text/plain" });'; 
-        echo 'var url = URL.createObjectURL(blob);';
-        echo 'var newWindow = window.open(url, "_blank");'; 
-        echo 'newWindow.document.title = txtFileName;'; 
+        echo 'var blob = new Blob([txtContent], { type: "text/plain" });';
+        echo 'var a = document.createElement("a");';
+        echo 'a.href = URL.createObjectURL(blob);';
+        echo 'a.download = ' . json_encode($fileName) . ';';
+        echo 'document.body.appendChild(a);';
+        echo 'a.click();';
+        echo 'document.body.removeChild(a);';
+        echo 'URL.revokeObjectURL(a.href);';
         echo '</script>';
-    
+        
         // Clear the session variable
         unset($_SESSION['registermodeltxt']);
     }
