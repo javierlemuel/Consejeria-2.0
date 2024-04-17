@@ -146,6 +146,17 @@ class ClassesModel {
                 AND student_courses.student_num = $student_num     
                 ORDER BY crse_code ASC;";
 
+        // $sql = "SELECT cohort.crse_code as crse_code, ccom_courses.name as name, student_courses.credits as credits, student_courses.crse_grade as crse_grade,
+        // student_courses.equivalencia as equivalencia, student_courses.convalidacion as convalidacion, student_courses.term as term, 
+        // student_courses.category as category
+        // FROM cohort
+        // JOIN ccom_courses ON cohort.crse_code = ccom_courses.crse_code
+        // LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
+        // AND cohort.cohort_year = $studentCohort
+        // AND student_courses.student_num = $student_num
+        // WHERE cohort.cohort_year = $studentCohort
+        // ORDER BY cohort.crse_code ASC;";
+
         $result = $conn->query($sql);
 
         if ($result === false) {
@@ -153,6 +164,63 @@ class ClassesModel {
         }
 
         return $result;
+
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        // $courses = array();
+
+        // while ($row = $result->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // $sql2 = "SELECT sc.crse_code as crse_code, ccom_courses.name as name, sc.credits as credits, sc.crse_grade as crse_grade, sc.equivalencia as equivalencia,
+        //         sc.convalidacion as convalidacion, sc.term as term, sc.category as category
+        //         FROM student_courses sc
+        //         JOIN ccom_courses ON sc.crse_code = ccom_courses.crse_code
+        //         WHERE sc.student_num = $student_num
+        //             AND sc.category = 'mandatory'
+        //             AND NOT EXISTS (
+        //             SELECT 1
+        //             FROM cohort
+        //             JOIN ccom_courses ON cohort.crse_code = ccom_courses.crse_code
+        //             LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
+        //                 AND cohort.cohort_year = $studentCohort
+        //                 AND student_courses.student_num = $student_num
+        //             WHERE cohort.cohort_year = $studentCohort
+        //                 AND sc.crse_code = cohort.crse_code)";
+
+        // $result2 = $conn->query($sql2);
+
+        // if ($result2 === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
+
+        // while ($row = $result2->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // $sql3 = "SELECT sc.crse_code as crse_code, general_courses.name as name, sc.credits as credits, sc.crse_grade as crse_grade, sc.equivalencia as equivalencia,
+        //                 sc.convalidacion as convalidacion, sc.term as term, sc.category as category
+        //         FROM student_courses sc
+        //         JOIN general_courses ON sc.crse_code = general_courses.crse_code
+        //         WHERE sc.student_num = $student_num
+        //             AND sc.category = 'mandatory'";
+
+        // $result3 = $conn->query($sql3);
+
+        // if ($result3 === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
+
+        // while ($row = $result3->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // return $courses;
     }
 
     public function getCohortCoursesWgradesCCOMfree($conn, $studentCohort, $student_num)
@@ -195,13 +263,43 @@ class ClassesModel {
                 ORDER BY c.crse_code ASC;
                 ";
 
-        $result1 = $conn->query($sql1);
+        // $sql = "SELECT student_courses.crse_code, general_courses.name, student_courses.credits, student_courses.category,
+        //                 student_courses.crse_grade, student_courses.term, student_courses.equivalencia, student_courses.convalidacion
+        //         FROM student_courses
+        //         JOIN general_courses ON student_courses.crse_code = general_courses.crse_code
+        //         WHERE student_num = $student_num AND category = 'elective'
+        //         ORDER BY crse_code ASC;";
 
-        if ($result1 === false) {
+        $result = $conn->query($sql1);
+
+        if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
 
-        return $result1;
+        $courses = array();
+
+        while ($row = $result->fetch_assoc()) {
+            $courses[] = $row;
+        }
+
+        $sql2 = "SELECT student_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.category,
+                        student_courses.crse_grade, student_courses.term, student_courses.equivalencia, student_courses.convalidacion
+                FROM student_courses
+                JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
+                WHERE student_num = $student_num AND category = 'elective'
+                ORDER BY crse_code ASC;";
+
+        $result2 = $conn->query($sql2);
+
+        if ($result2 === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        while ($row = $result2->fetch_assoc()) {
+            $courses[] = $row;
+        }
+
+        return $courses;
     }
 
     public function getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num)
@@ -262,6 +360,12 @@ class ClassesModel {
                 AND c.minor_id != $student_minor_id)
                 ORDER BY crse_code ASC;";
 
+        //         $sql = "SELECT student_courses.crse_code, general_courses.name, student_courses.credits, student_courses.category,
+        //         student_courses.crse_grade, student_courses.term, student_courses.equivalencia, student_courses.convalidacion
+        // FROM student_courses
+        // JOIN general_courses ON student_courses.crse_code = general_courses.crse_code
+        // WHERE student_num = $student_num AND category = 'free'
+        // ORDER BY crse_code ASC;";
         $result = $conn->query($sql);
 
         if ($result === false) {
@@ -269,6 +373,31 @@ class ClassesModel {
         }
 
         return $result;
+
+        // $courses = array();
+
+        // while ($row = $result->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // $sql2 = "SELECT student_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.category,
+        //                 student_courses.crse_grade, student_courses.term, student_courses.equivalencia, student_courses.convalidacion
+        //         FROM student_courses
+        //         JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
+        //         WHERE student_num = $student_num AND category = 'free'
+        //         ORDER BY crse_code ASC;";
+
+        // $result2 = $conn->query($sql2);
+
+        // if ($result2 === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
+
+        // while ($row = $result2->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // return $courses;
     }
 
     public function getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num)
@@ -305,6 +434,68 @@ class ClassesModel {
         }
 
         return $result;
+
+        // $sql = "SELECT cohort.crse_code as crse_code, general_courses.name as name, student_courses.credits as credits, student_courses.crse_grade as crse_grade,
+        //                 student_courses.equivalencia as equivalencia, student_courses.convalidacion as convalidacion, student_courses.term as term, 
+        //                 student_courses.category as category
+        //         FROM cohort
+        //         JOIN general_courses ON cohort.crse_code = general_courses.crse_code
+        //         LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
+        //             AND cohort.cohort_year = $studentCohort
+        //             AND student_courses.student_num = $student_num
+        //         WHERE cohort.cohort_year = $studentCohort
+        //         ORDER BY cohort.crse_code ASC;";
+
+        // $courses = array();
+
+        // while ($row = $result->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // $sql2 = "SELECT sc.crse_code as crse_code, general_courses.name as name, sc.credits as credits, sc.crse_grade as crse_grade, sc.equivalencia as equivalencia,
+        //         sc.convalidacion as convalidacion, sc.term as term, sc.category as category
+        //         FROM student_courses sc
+        //         JOIN general_courses ON sc.crse_code = general_courses.crse_code
+        //         WHERE sc.student_num = $student_num
+        //             AND sc.category = 'general'
+        //             AND NOT EXISTS (
+        //             SELECT 1
+        //             FROM cohort
+        //             JOIN general_courses ON cohort.crse_code = general_courses.crse_code
+        //             LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
+        //                 AND cohort.cohort_year = $studentCohort
+        //                 AND student_courses.student_num = $student_num
+        //             WHERE cohort.cohort_year = $studentCohort
+        //                 AND sc.crse_code = cohort.crse_code)";
+
+        // $result2 = $conn->query($sql2);
+
+        // if ($result2 === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
+
+        // while ($row = $result2->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // $sql3 = "SELECT sc.crse_code as crse_code, ccom_courses.name as name, sc.credits as credits, sc.crse_grade as crse_grade, sc.equivalencia as equivalencia,
+        //                 sc.convalidacion as convalidacion, sc.term as term, sc.category as category
+        //         FROM student_courses sc
+        //         JOIN ccom_courses ON sc.crse_code = ccom_courses.crse_code
+        //         WHERE sc.student_num = $student_num
+        //             AND sc.category = 'general'";
+
+        // $result3 = $conn->query($sql3);
+
+        // if ($result3 === false) {
+        //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+        // }
+
+        // while ($row = $result3->fetch_assoc()) {
+        //     $courses[] = $row;
+        // }
+
+        // return $courses;
     }
 
     public function getAllOtherCoursesWgrades($conn, $student_num)

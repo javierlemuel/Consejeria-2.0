@@ -171,6 +171,10 @@ class ExpedientesController {
                     $course_code = $_POST['crse_code'];
                     $department = substr($course_code, 0, 4);
                     $category = $_POST['category'];
+                    if($category == "")
+                    {
+                        $category = $_POST['old_category'];
+                    }
                     if(isset($_POST['level']))
                         $level = $_POST['level'];
                     else
@@ -233,7 +237,11 @@ class ExpedientesController {
                     else # el estudiante no tiene una nota en esa clase y semestre.
                     {
                         $credits = $_POST['credits'];
-                        $type = $_POST['type'];
+                        $category = $_POST['category'];
+                        if($category == '')
+                        {
+                            $category = "free";
+                        }
                         $grade = $_POST['grade'];
                         $status = $_POST['status'];
                         $department = substr($crse_code, 0, 4);
@@ -273,13 +281,12 @@ class ExpedientesController {
                                 $_SESSION['registermodeltxt'] .= "La clase " . $crse_code . "no está en la base de datos, tienes que proveer los creditos y el tipo de clase. \n";
                             }
                             else{
-                                $studentModel->InsertStudentGrade($student_num, $crse_code, $grade, $equivalencia, $convalidacion, $credits, $term, $type, $status, $conn);
+                                $studentModel->InsertStudentGrade($student_num, $crse_code, $grade, $equivalencia, $convalidacion, $credits, $term, $category, $status, $conn);
                             }
                         }
                         else{
                             $credits = $course_info['credits'];
-                            $type = $course_info['type'];
-                            $studentModel->InsertStudentGrade($student_num, $crse_code, $grade, $equivalencia, $convalidacion, $credits, $term, $type, $status, $conn);
+                            $studentModel->InsertStudentGrade($student_num, $crse_code, $grade, $equivalencia, $convalidacion, $credits, $term, $category, $status, $conn);
                         }
                     }
                 }
