@@ -117,7 +117,7 @@
                 <!-- start main content section -->
                 <div x-data="contacts">
                         <div class="flex flex-wrap items-center justify-between gap-4">
-                            <h2 class="text-xl">Expedientes de Estudiantes (<?php echo $_SESSION['status'] ?>)</h2>
+                            <h2 class="text-xl">Expedientes de Estudiantes (<?php if(isset($_SESSION['status'])){echo $_SESSION['status'];}else {echo 'Todos';}?>)</h2>
                             <!-- Comienzo Boton drop down -->
                             <div x-data="dropdown" @click.outside="open = false" class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" @click="toggle">Filtrar por Estatus

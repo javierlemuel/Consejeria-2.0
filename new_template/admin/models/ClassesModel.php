@@ -121,7 +121,7 @@ class ClassesModel {
                     AND cohort.cohort_year = $studentCohort
                     AND student_courses.student_num = $student_num
                 WHERE cohort.cohort_year = $studentCohort
-                AND student_courses.category = 'mandatory'
+
                 UNION
 
                 SELECT DISTINCT student_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
@@ -143,7 +143,8 @@ class ClassesModel {
                 FROM student_courses
                 JOIN general_courses ON student_courses.crse_code = general_courses.crse_code
                 WHERE student_courses.category = 'mandatory'
-                AND student_courses.student_num = $student_num     
+                AND student_courses.student_num = $student_num  
+
                 ORDER BY crse_code ASC;";
 
         // $sql = "SELECT cohort.crse_code as crse_code, ccom_courses.name as name, student_courses.credits as credits, student_courses.crse_grade as crse_grade,
@@ -260,7 +261,16 @@ class ClassesModel {
                 WHERE sc.student_num = $student_num
                 AND (c.minor_id <> $student_minor_id OR c.minor_id IS NULL OR c.minor_id = 0)
                 AND category = 'elective'
-                ORDER BY c.crse_code ASC;
+                
+                UNION
+
+                SELECT DISTINCT c.crse_code, c.name, c.credits, NULL AS minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category, sc.level
+                FROM general_courses c
+                JOIN student_courses sc ON c.crse_code = sc.crse_code
+                WHERE sc.student_num = $student_num
+                AND category = 'elective'
+
+                ORDER BY crse_code ASC;
                 ";
 
         // $sql = "SELECT student_courses.crse_code, general_courses.name, student_courses.credits, student_courses.category,
@@ -413,7 +423,6 @@ class ClassesModel {
                             AND cohort.cohort_year = $studentCohort
                             AND student_courses.student_num = $student_num
                         WHERE cohort.cohort_year = $studentCohort
-                        AND student_courses.category = 'general'
                 UNION
                         SELECT DISTINCT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
                                 student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
@@ -430,11 +439,51 @@ class ClassesModel {
                 ORDER BY crse_code ASC;";
 
         $result = $conn->query($sql);
+        $_SESSION['CISO_credits'] = 0;
+        $_SESSION['HUMA_credits'] = 0;
 
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
 
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $crse_code = $row['crse_code'];
+
+                $sql2 = "SELECT sum(credits) AS sum
+                FROM general_courses
+                WHERE crse_code = '$crse_code'
+                AND type = 'CISO'";
+                $result2 = $conn->query($sql2);
+
+                if ($result2 === false) {
+                    throw new Exception("Error en la consulta SQL: " . $conn->error);
+                }
+                else if ($result2->num_rows > 0) {
+                    while ($row = $result2->fetch_assoc()) {
+                        // Add CISO credit count to session
+                        $_SESSION['CISO_credits'] += $row['sum'];
+                    }
+                }
+
+                $sql3 = "SELECT sum(credits) AS sum
+                FROM general_courses
+                WHERE crse_code = '$crse_code'
+                AND type = 'HUMA'";
+                $result3 = $conn->query($sql3);
+
+                if ($result3 === false) {
+                    throw new Exception("Error en la consulta SQL: " . $conn->error);
+                }
+                else if ($result3->num_rows > 0) {
+                    while ($row = $result3->fetch_assoc()) {
+                        // Add HUMA credit count to session
+                        $_SESSION['HUMA_credits'] += $row['sum'];
+                    }
+                }
+            }
+        }
+        
         return $result;
 
         // $sql = "SELECT cohort.crse_code as crse_code, general_courses.name as name, student_courses.credits as credits, student_courses.crse_grade as crse_grade,

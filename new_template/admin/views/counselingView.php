@@ -316,7 +316,17 @@
                                     <tbody>
                                     <?php
                                         // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                        # CCOM CONCENTRATION COURSES
+                                        $ccom_credits = 0;
                                         foreach ($ccomByCohort as $curso) {
+                                            if (!empty($curso['crse_grade'])) {
+                                                // Check if the input string does not contain specific substrings
+                                                if (strpos($input, 'I') === false && strpos($input, 'F') === false &&
+                                                    strpos($input, 'NP') === false && strpos($input, 'W') === false && strpos($input, 'D') === false)
+                                                {
+                                                        $ccom_credits += intval($curso['credits']);
+                                                }
+                                            }
                                             echo "<tr>";
                                             echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                             echo "<form method='POST' action='index.php'>";
@@ -349,6 +359,12 @@
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
+                                        echo "<tr>";
+                                            echo "<td></td><td></td>";
+                                            echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                            echo "<td style='padding: 5px;'> ". $ccom_credits."</td>";
+                                            echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                        echo "</tr>";
                                     ?>
                                     </tbody>
                                 </table>
@@ -373,8 +389,18 @@
                                     </thead>
                                     <tbody>
                                         <?php
+                                        # GENERAL COURSES
                                         // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                        $general_credits = 0;
                                         foreach ($notccomByCohort as $curso) {
+                                            if (!empty($curso['crse_grade'])) {
+                                                // Check if the input string does not contain specific substrings
+                                                if (strpos($input, 'I') === false && strpos($input, 'F') === false &&
+                                                    strpos($input, 'NP') === false && strpos($input, 'W') === false)
+                                                {
+                                                        $general_credits += intval($curso['credits']);
+                                                }
+                                            }
                                             echo "<tr>";
                                             echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                             echo"<form method='POST' action='index.php'>";
@@ -407,12 +433,21 @@
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
+                                        echo "<tr>";
+                                            echo "<td></td><td></td>";
+                                            echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                            echo "<td style='padding: 5px;'> ". $general_credits."</td>";
+                                            echo "<td>HUMA: ".$_SESSION['HUMA_credits']."</td>
+                                            <td>CISO: ".$_SESSION['CISO_credits']."</td>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td>";
+                                        echo "</tr>";
                                         ?>
                                     </tbody>
                                 </table>
                             </div>
                             <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Electivas de CCOM</h2>
                             <?php
+                                # CCOM ELECTIVE COURSES
                                 if (empty($ccomFreeByNotCohort)) {
                                     echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">El estudiante aún no a tomado ninguna Electiva de CCOM</h2>';
                                 } else {
@@ -438,7 +473,16 @@
                                         <tbody>
                                             <?php
                                             // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                            $elective_credits = 0;
                                             foreach ($ccomFreeByNotCohort as $curso) {
+                                                if (!empty($curso['crse_grade'])) {
+                                                    // Check if the input string does not contain specific substrings
+                                                    if (strpos($input, 'I') === false && strpos($input, 'F') === false &&
+                                                        strpos($input, 'NP') === false && strpos($input, 'W') === false && strpos($input, 'D') === false)
+                                                    {
+                                                            $elective_credits += intval($curso['credits']);
+                                                    }
+                                                }
                                                 echo "<tr>";
                                                 echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                                 echo "<form method='POST' action='index.php'>";
@@ -479,6 +523,12 @@
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
+                                            echo "<tr>";
+                                                    echo "<td></td><td></td>";
+                                                    echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                                    echo "<td style='padding: 5px;'> ". $elective_credits."</td>";
+                                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                            echo "</tr>";
                                             ?>
                                         </tbody>
                                     </table>
@@ -486,6 +536,7 @@
                             <?php }?>
                             <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Electivas Libres</h2>
                             <?php
+                                # FREE ELECTIVE COURSES
                                 if (empty($notccomByNotCohort)) {
                                     echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">El estudiante aún no a tomado ninguna Electiva libre</h2>';
                                 } else {
@@ -510,7 +561,9 @@
                                         <tbody>
                                             <?php
                                             // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                            $free_credits = 0;
                                             foreach ($notccomByNotCohort as $curso) {
+                                                $free_credits += intval($curso['credits']);
                                                 echo "<tr>";
                                                 echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                                 echo "<form method='POST' action='index.php'>";
@@ -543,6 +596,12 @@
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
+                                            echo "<tr>";
+                                                    echo "<td></td><td></td>";
+                                                    echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                                    echo "<td style='padding: 5px;'> ". $free_credits."</td>";
+                                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                            echo "</tr>";
                                             ?>
                                         </tbody>
                                     </table>
@@ -692,6 +751,7 @@
                                                     <?php
                                                     // Itera sobre los datos de los cursos y llena las celdas de la tabla
                                                     foreach ($generalClasses as $curso) {
+                                                        
                                                         echo "<tr>";
                                                         echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                                         echo "<td>" . $curso['crse_code'] . "</td>";
@@ -699,6 +759,7 @@
                                                         echo "<td>" . $curso['credits'] . "</td>";
                                                         echo "</tr>";
                                                     }
+                                                    
                                                     ?>
                                                 </tbody>
                                             </table>
