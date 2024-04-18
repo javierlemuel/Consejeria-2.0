@@ -321,8 +321,8 @@
                                         foreach ($ccomByCohort as $curso) {
                                             if (!empty($curso['crse_grade'])) {
                                                 // Check if the input string does not contain specific substrings
-                                                if (strpos($input, 'I') === false && strpos($input, 'F') === false &&
-                                                    strpos($input, 'NP') === false && strpos($input, 'W') === false && strpos($input, 'D') === false)
+                                                if (strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
+                                                    strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false && strpos($curso['crse_grade'], 'D') === false)
                                                 {
                                                         $ccom_credits += intval($curso['credits']);
                                                 }
@@ -395,8 +395,8 @@
                                         foreach ($notccomByCohort as $curso) {
                                             if (!empty($curso['crse_grade'])) {
                                                 // Check if the input string does not contain specific substrings
-                                                if (strpos($input, 'I') === false && strpos($input, 'F') === false &&
-                                                    strpos($input, 'NP') === false && strpos($input, 'W') === false)
+                                                if (strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
+                                                    strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false)
                                                 {
                                                         $general_credits += intval($curso['credits']);
                                                 }
@@ -477,8 +477,8 @@
                                             foreach ($ccomFreeByNotCohort as $curso) {
                                                 if (!empty($curso['crse_grade'])) {
                                                     // Check if the input string does not contain specific substrings
-                                                    if (strpos($input, 'I') === false && strpos($input, 'F') === false &&
-                                                        strpos($input, 'NP') === false && strpos($input, 'W') === false && strpos($input, 'D') === false)
+                                                    if (strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
+                                                        strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false && strpos($curso['crse_grade'], 'D') === false)
                                                     {
                                                             $elective_credits += intval($curso['credits']);
                                                     }
