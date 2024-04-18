@@ -118,6 +118,9 @@ class ExpedientesController {
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn);
                 }
                 if(isset($_POST['makecounseling']) && !empty($_POST['makecounseling'])) {
+                    if(isset($_POST['updateGrade']))
+                        unset($_POST['updateGrade']);
+
                     $currentDateTime = date("Y-m-d H:i:s");
                     $logMessage = "\n" . $currentDateTime . "\n";
                     #error_log($logMessage, 3, $archivoRegistro);
@@ -145,7 +148,9 @@ class ExpedientesController {
                                 if($results == TRUE)
                                 {
                                     #error_log("La clase $class se anadio a recommended courses. \n", 3, $archivoRegistro);
-                                    $_SESSION['registermodeltxt'] .= "La clase $class se anadio a recommended courses. \n";
+                                    $_SESSION['registermodeltxt'] .= "La clase $class se añadió a 'Recommended Courses'. \n";
+                                    if (sizeof($selectedClasses) > 1)
+                                        $_SESSION['consejeria_msg'] = "Clases fueron añadidas a recomendación!!";
                                 }
                                 else
                                 {
@@ -154,6 +159,8 @@ class ExpedientesController {
                                 }
                             }
                         }
+
+                        
                     }
                     else
                     {

@@ -114,6 +114,18 @@
             <!-- end header section -->
             <!-- start main content section -->
             <div class="animate__animated p-6" :class="[$store.app.animation]">
+            <div style='text-align: center'>
+                        <?php 
+                            if(isset($_SESSION['student_edit_msg'])) 
+                            {
+                                if(strpos($_SESSION['student_edit_msg'], 'No') !== false)
+                                    echo "<h2 style='color:red; bold' class='text-xl'>".$_SESSION['student_edit_msg']."</h2>";
+                                else
+                                    echo "<h2 style='color:limegreen; bold' class='text-xl'>".$_SESSION['student_edit_msg']."</h2>";
+                                unset($_SESSION['student_edit_msg']);
+                            }
+                        ?>
+                    </div>
                 <form action="index.php" class="space-y-5" method="POST">
                     <input type="hidden" name="action" value="editStudent">
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

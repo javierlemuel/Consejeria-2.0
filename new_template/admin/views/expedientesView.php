@@ -114,6 +114,18 @@
             <!-- end header section -->
 
             <div class="animate__animated p-6" :class="[$store.app.animation]">
+            <div style='text-align: center'>
+                        <?php 
+                            if(isset($_SESSION['students_list_msg'])) 
+                            {
+                                if(strpos($_SESSION['students_list_msg'], 'No') !== false || strpos($_SESSION['students_list_msg'], 'Error') !== false)
+                                    echo "<h2 style='color:red; bold' class='text-xl'>".$_SESSION['students_list_msg']."</h2>";
+                                else
+                                    echo "<h2 style='color:limegreen; bold' class='text-xl'>".$_SESSION['students_list_msg']."</h2>";
+                                unset($_SESSION['students_list_msg']);
+                            }
+                        ?>
+                    </div>
                 <!-- start main content section -->
                 <div x-data="contacts">
                         <div class="flex flex-wrap items-center justify-between gap-4">

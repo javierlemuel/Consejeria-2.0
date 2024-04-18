@@ -117,6 +117,18 @@
             <div class="animate__animated p-6" :class="[$store.app.animation]">
                 <!-- start main content section -->
                 <div class="flex-1 text-sm ">
+                    <div style='text-align: center'>
+                        <?php 
+                            if(isset($_SESSION['consejeria_msg'])) 
+                            {
+                                if(strpos($_SESSION['consejeria_msg'], 'No') !== false)
+                                    echo "<h2 style='color:red; bold' class='text-xl'>".$_SESSION['consejeria_msg']."</h2>";
+                                else
+                                    echo "<h2 style='color:limegreen; bold' class='text-xl'>".$_SESSION['consejeria_msg']."</h2>";
+                                unset($_SESSION['consejeria_msg']);
+                            }
+                        ?>
+                    </div>
                     <div>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em;">Nombre: <?php echo $studentData['name1'] . " " . $studentData['last_name1'] . " " . $studentData['last_name2']; ?></h2>
                         <!-- formateo de nuermo de estudiante-->
@@ -294,6 +306,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </form>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases de CCOM</h2>
                         <form method="POST" action="index.php">
                             <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
@@ -606,6 +619,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                        </form>
                             <?php }?>
                             <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Otras Clases</h2>
                             <?php
@@ -613,6 +627,7 @@
                                     echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">No hay otras clases que el estudiante haya tomado</h2>';
                                 } else {
                                 ?>
+                                <form method="post" action="index.php">
                                 <!-- basic table -->
                                 <div class="table-responsive">
                                     <table style="font-size: 12px; border-collapse: collapse;">
@@ -768,6 +783,7 @@
                                 </div>
                             </div>
                             <input type='hidden' name='makecounseling' value='makecounseling'>
+                            <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
                             <button type="submit" name="action" value="studentCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Someter Consejeria</button>
                         </form>
                         <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Cancelar</button>

@@ -114,9 +114,11 @@ class StudentModel {
         // Verificar si la inserción se realizó con éxito
         if ($result === true) {
             // Inserción exitosa
+            $_SESSION['students_list_msg'] = "El estudiante ".$numero." fue insertado!!";
             return TRUE;
         } else {
             // Error en la inserción
+            $_SESSION['students_list_msg'] = "No se pudo insertar el estudiante ".$numero;
             return FALSE;
         }
     }
@@ -265,6 +267,11 @@ class StudentModel {
     
         // Cerrar la conexión
         $stmt->close();
+
+        if($result == true)
+            $_SESSION['student_edit_msg'] = "El estudiante ".$numeroEst." fue editado!!";
+        else
+            $_SESSION['student_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst;
     
         // Devolver true si la consulta se ejecutó correctamente, o false en caso contrario
         return $result !== false;
@@ -323,10 +330,12 @@ class StudentModel {
             // Insert exitoso
             #error_log("Estudiante insertado correctamente en la base de datos.\n", 3, $archivoRegistro);
             $_SESSION['registermodeltxt'] .= "Estudiante ".$student_num." insertado correctamente en la base de datos.\n";
+            $_SESSION['students_list_msg'] = "Estudiante(s) fue(ron) insertado(s)!!";
         } else {
             // querie fallo
             #error_log("Error al insertar estudiante en la base de datos: " . $conn->error . "\n", 3, $archivoRegistro);
             $_SESSION['registermodeltxt'] .= "Error al insertar estudiante ".$student_num." en la base de datos: " . $conn->error . "\n";
+            $_SESSION['students_list_msg'] = "Error al insertar estudiante(s) ".$student_num." en la base de datos: " . $conn->error;
         }
     }
     
@@ -387,12 +396,15 @@ class StudentModel {
             // Cerrar la declaración
             $stmt->close();
 
+            $_SESSION['consejeria_msg'] = "Recomendación de ".$class." añadida!!";
+
             return TRUE;
         } 
         else
         {
             // Cerrar la declaración
             $stmt->close();
+            $_SESSION['consejeria_msg'] = "No se pudo añadir recomendación de ".$class.".";
             return FALSE;
         }
         
@@ -432,12 +444,14 @@ class StudentModel {
             // Cerrar la declaración
             $stmt->close();
     
+            $_SESSION['consejeria_msg'] = "Recomendación  de ".$class." fue borrada!!";
             return TRUE;
         } 
         else
         {
             // Cerrar la declaración
             $stmt->close();
+            $_SESSION['consejeria_msg'] = "No se pudo borrar la recomendación de ".$class.".";
             return FALSE;
         }
     }  
@@ -538,15 +552,20 @@ class StudentModel {
                 // Verificar si la actualización fue exitosa
                 if ($stmt1->affected_rows > 0) {
                     $stmt1->close();
+                    $_SESSION['students_list_msg'] = "Cursos de estudiantes fueron actualizados!!";
                     return TRUE; // La actualización fue exitosa
+                    
+                    
                 } else {
                     $stmt1->close();
+                    $_SESSION['students_list_msg'] = "No hubo cambios en la base de datos";
                     return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
                 }
             } else {
                 // Ocurrió un error al ejecutar la consulta
                 // Manejar el error según sea necesario
-                echo "Error executing SQL statement: " . $stmt1->error . "<br>";
+                //echo "Error executing SQL statement: " . $stmt1->error . "<br>";
+                $_SESSION['students_list_msg'] = "Error al insertar cursos de estudiantes en la base de datos: " . $conn->error;
                 $stmt1->close();
                 return FALSE;
             }
@@ -577,9 +596,11 @@ class StudentModel {
                 // Verificar si la actualización fue exitosa
                 if ($stmt1->affected_rows > 0) {
                     $stmt1->close();
+                    $_SESSION['consejeria_msg'] = "Curso $course_code fue actualizado!!";
                     return TRUE; // La actualización fue exitosa
                 } else {
                     $stmt1->close();
+                    $_SESSION['consejeria_msg'] = "No pudo actualizar el curso $course_code!!";
                     return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
                 }
             } else {
@@ -639,14 +660,17 @@ class StudentModel {
             // Verificar si la inserción fue exitosa
             if ($stmt->affected_rows > 0) {
                 $stmt->close();
+                $_SESSION['consejeria_msg'] = "Curso $course_code y nota fueron insertados!!";
                 return TRUE; // La inserción fue exitosa
             } else {
                 $stmt->close();
+                $_SESSION['consejeria_msg'] = "No se pudo insertar nota y curso $course_code.";
                 return FALSE; // La inserción no tuvo ningún efecto (ninguna fila afectada)
             }
         } else {
             // Ocurrió un error al ejecutar la consulta
             $stmt->close();
+            $_SESSION['consejeria_msg'] = "No se pudo insertar nota y curso $course_code.";
             return FALSE;
         }
     }
