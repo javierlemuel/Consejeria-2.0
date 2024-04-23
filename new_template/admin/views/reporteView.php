@@ -118,7 +118,7 @@
             <div class="animate__animated p-6" :class="[$store.app.animation]" style='padding: 5% 10%'>
                 <!-- start main content section -->
 
-                <div style='text-align:center; font-size: 35px'><h2>Reportes Generales: <?php echo $term ?></h2></div>
+                <div style='text-align:center; font-size: 35px'><h2>Reportes Generales: Semestre <?php echo $term ?></h2></div>
                 <br><br><br>
 
                 <table style='font-size: 20px'>
@@ -168,7 +168,7 @@
 
 
                 <br><br><br><br>
-                <div style='text-align:center; font-size: 35px'><h2>Reportes de Estudiantes por Curso de CCOM</h2></div>
+                <div style='text-align:center; font-size: 35px'><h2>Reportes de Estudiantes Apuntados por Curso de CCOM</h2></div>
                 <br><br><br>
 
                 <table style='font-size: 20px'>

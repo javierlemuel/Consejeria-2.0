@@ -1,6 +1,20 @@
 <?php
 // models/StudentModel.php
 class StudentModel {
+
+    public function getCohorts($conn)
+    {
+        $sql = "SELECT DISTINCT cohort_year FROM cohort ORDER BY cohort_year;";
+
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        return $result;
+    }
+
     public function getStudentsByPageAndStatusAndSearch($conn, $perPage, $currentPage, $status, $search) {
         $offset = ($currentPage - 1) * $perPage;
     
@@ -316,10 +330,26 @@ class StudentModel {
             $combinedDigits = $fourthDigit . $fifthDigit;
         }
 
-        if(intval($combinedDigits) <= 21)
-            $cohort_year = '2017';
-        else    
-            $cohort_year = '2022';
+        $cohorts = $this->getCohorts($conn);
+
+        $cohort_year = 2017;
+
+
+        echo "Combined Digits: ".$combinedDigits."\n";
+        foreach($cohorts as $cohort)
+        {
+            $year = $cohort['cohort_year'][2].$cohort['cohort_year'][3];
+            echo "YEAR END: ".$year."\n";
+            if($combinedDigits >= $year)
+                $cohort_year = $cohort['cohort_year'];
+        }
+
+        echo "COHORT YEAR: ".$cohort_year;
+
+        // if(intval($combinedDigits) <= 21)
+        //     $cohort_year = '2017';
+        // else    
+        //     $cohort_year = '2022';
     
         // Ejecuta el query de inserción
         $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, minor, cohort_year, status, edited_date)

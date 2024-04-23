@@ -164,7 +164,8 @@ class ReporteModel {
    {
         $sql = "SELECT COUNT(edited_date) AS count
                 FROM student
-                WHERE edited_date != NULL";
+                WHERE edited_date is not NULL
+                AND edited_date != '0000-00-00'";
         $result = $conn->query($sql);
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);

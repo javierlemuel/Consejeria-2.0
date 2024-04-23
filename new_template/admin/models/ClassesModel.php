@@ -28,7 +28,7 @@ class ClassesModel {
 
     public function getCohorts($conn)
     {
-        $sql = "SELECT DISTINCT cohort_year FROM cohort;";
+        $sql = "SELECT DISTINCT cohort_year FROM cohort ORDER BY cohort_year;";
 
         $result = $conn->query($sql);
 
@@ -688,7 +688,7 @@ class ClassesModel {
         //Borramos los edit flags de los estudiantes
         $sql2 = "UPDATE student
                 SET edited_date = NULL
-                WHERE edited_date != NULL";
+                WHERE edited_date is not NULL";
         $result2 = $conn->query($sql2);
         if ($result2 === false) {
             throw new Exception("Error en la consulta SQL KHE: " . $conn->error);
