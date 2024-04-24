@@ -215,7 +215,7 @@
                                                                     <input x-model="params.nombre" id="nombre" name="nombre" type="text" class="form-input" maxlength="15" required/>
                                                                 </div>
                                                                 <div>
-                                                                    <label for="nombre2">Segundo nombre</label>
+                                                                    <label for="nombre2">Segundo Nombre</label>
                                                                     <input id="nombre2" name="nombre2" type="text" class="form-input" maxlength="15"/>
                                                                 </div>
                                                                 <div>
@@ -325,11 +325,11 @@
                                 <thead>
                                     <tr>
                                         <th>Estudiante</th>
-                                        <th>Numero de estudiante</th>
-                                        <th>Recomendacion</th>
-                                        <th>Consejeria</th>
+                                        <th>Número de estudiante</th>
+                                        <th>Recomendación</th>
+                                        <th>Consejería</th>
                                         <th>Estatus</th>
-                                        <th>Ultima Actualizacion</th>
+                                        <th>Ultima Actualización</th>
                                         <th></th>
                                         <th></th>
                                     </tr>
