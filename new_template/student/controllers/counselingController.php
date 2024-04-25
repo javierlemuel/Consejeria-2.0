@@ -75,9 +75,10 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
 
             $selected_courses = $counselingModel->getStudentSelectedCourses($conn, $student_num);
             if ($selected_courses != null) {
-                $selectedCourses = json_encode($selected_courses);
+                //$selectedCourses = json_encode($selected_courses);
+                $_SESSION['selectedCourses'] = json_encode($selected_courses);
             } else {
-                $selectedCourses = json_encode('');
+                $_SESSION['selectedCourses'] = json_encode('');
             }
 
 

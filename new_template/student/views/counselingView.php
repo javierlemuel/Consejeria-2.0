@@ -30,7 +30,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
     <div x-cloak class="fixed inset-0 z-50 bg-[black]/60 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
 
     <!-- screen loader -->
-    <!-- <div class="screen_loader animate__animated fixed inset-0 z-[60] grid place-content-center bg-[#fafafa] dark:bg-[#060818]">
+    <div class="screen_loader animate__animated fixed inset-0 z-[60] grid place-content-center bg-[#fafafa] dark:bg-[#060818]">
         <svg width="64" height="64" viewBox="0 0 135 135" xmlns="http://www.w3.org/2000/svg" fill="#4361ee">
             <path d="M67.447 58c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm9.448 9.447c0 5.523 4.477 10 10 10 5.522 0 10-4.477 10-10s-4.478-10-10-10c-5.523 0-10 4.477-10 10zm-9.448 9.448c-5.523 0-10 4.477-10 10 0 5.522 4.477 10 10 10s10-4.478 10-10c0-5.523-4.477-10-10-10zM58 67.447c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z">
                 <animateTransform attributeName="transform" type="rotate" from="0 67 67" to="-360 67 67" dur="2.5s" repeatCount="indefinite" />
@@ -39,16 +39,17 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                 <animateTransform attributeName="transform" type="rotate" from="0 67 67" to="360 67 67" dur="8s" repeatCount="indefinite" />
             </path>
         </svg>
-    </div> -->
+    </div>
 
     <!-- scroll to top button -->
     <div class="fixed bottom-6 z-50 ltr:right-6 rtl:left-6" x-data="scrollToTop">
         <template x-if="showTopButton">
             <button type="button" class="btn btn-outline-primary animate-pulse rounded-full bg-[#fafafa] p-2 dark:bg-[#060818] dark:hover:bg-primary" @click="goToTop">
-                <svg width="24" height="24" class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                <!-- <svg width="24" height="24" class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" d="M12 20.75C12.4142 20.75 12.75 20.4142 12.75 20L12.75 10.75L11.25 10.75L11.25 20C11.25 20.4142 11.5858 20.75 12 20.75Z" fill="currentColor" />
                     <path d="M6.00002 10.75C5.69667 10.75 5.4232 10.5673 5.30711 10.287C5.19103 10.0068 5.25519 9.68417 5.46969 9.46967L11.4697 3.46967C11.6103 3.32902 11.8011 3.25 12 3.25C12.1989 3.25 12.3897 3.32902 12.5304 3.46967L18.5304 9.46967C18.7449 9.68417 18.809 10.0068 18.6929 10.287C18.5768 10.5673 18.3034 10.75 18 10.75L6.00002 10.75Z" fill="currentColor" />
-                </svg>
+                </svg> -->
             </button>
         </template>
     </div>
@@ -181,12 +182,12 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                 <!-- end footer section -->
             </div>
         </div>
-
         <script src="assets/js/alpine-collaspe.min.js"></script>
         <script src="assets/js/alpine-persist.min.js"></script>
         <script defer src="assets/js/alpine-ui.min.js"></script>
         <script defer src="assets/js/alpine-focus.min.js"></script>
         <script defer src="assets/js/alpine.min.js"></script>
+        <script src="assets/js/custom.js"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
 
@@ -263,9 +264,6 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                         }
                     },
 
-                    removeMessage(value) {
-                        this.messages = this.messages.filter((d) => d.id !== value);
-                    },
                 }));
 
 
@@ -322,7 +320,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
             $(document).ready(() => {
                 const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
 
-                var selectedCourses_db = <?php echo $selectedCourses ?>;
+                var selectedCourses_db = <?php echo $_SESSION['selectedCourses'] ?>;
                 console.log("courses db: ", selectedCourses_db);
                 //retrieve the list of courses in session storage 
                 if (sessionStorage.getItem('selectedCourses') || selectedCourses_db.length > 0) {
@@ -432,33 +430,6 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                 });
 
 
-                // $('#counseling_form').submit(function(event) {
-                //     //stop the form to be submited
-                //     event.preventDefault();
-                //     var modal = document.getElementById("confirmModal");
-                //     modal.style.display = "block";
-
-                //     document.getElementById("confirmYes").addEventListener("click", function() {
-                //         // Submit the form or perform other actions
-                //         document.getElementById("counseling_form").submit();
-                //     });
-
-                //     // Function to handle "No" button click
-                //     document.getElementById("confirmNo").addEventListener("click", function() {
-                //         // Close the modal
-                //         modal.style.display = "none";
-                //     });
-                // });
-
-                // async function showAlert() {
-                //     new window.Swal({
-                //         icon: 'success',
-                //         title: 'Consejeria Confirmada!',
-                //         text: '',
-                //         padding: '2em',
-                //     });
-                // }
-
                 // //if the Confirmar Consejeria buttton is disabled, disable the checkbox input and the remove course option
                 if ($('#counseling_button').prop('disabled')) {
                     $('input[type="checkbox"]').prop('disabled', true);
@@ -468,18 +439,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                 checkForConfirmDialog();
             });
         </script>
-        <!-- dropdown script -->
-        <script>
-            document.addEventListener("alpine:init", () => {
-                Alpine.data("dropdown", (initialOpenState = false) => ({
-                    open: initialOpenState,
 
-                    toggle() {
-                        this.open = !this.open;
-                    },
-                }));
-            });
-        </script>
 </body>
 
 </html>

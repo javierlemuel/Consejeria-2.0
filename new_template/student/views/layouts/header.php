@@ -9,17 +9,18 @@
                 </a>
 
                 <a href="javascript:;" class="collapse-icon flex flex-none rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary ltr:ml-2 rtl:mr-2 dark:bg-dark/40 dark:text-[#d0d2d6] dark:hover:bg-dark/60 dark:hover:text-primary lg:hidden" @click="$store.app.toggleSidebar()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 7L4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                        <path opacity="0.5" d="M20 12L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                        <path d="M20 17L4 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+
+                    <svg class="m-auto h-5 w-5" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.5" d="M16.9998 19L10.9998 12L16.9998 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </a>
             </div>
-            <div class="hidden ltr:mr-2 rtl:ml-2 sm:block">
-                <ul class="flex items-center space-x-4 rtl:space-x-reverse text-white-light dark:text-[#d0d2d6]">
+            <div class="hidden ltr:mr-2 rtl:ml-2 sm:block topnav" id="navbar">
+                <!-- <ul class="flex items-center space-x-4 rtl:space-x-reverse text-white-light dark:text-[#d0d2d6]"> -->
+                <ul class="hidden lg:flex lg:mx-auto lg:flex lg:items-center lg:w-auto lg:space-x-6 items-center space-x-4 rtl:space-x-reverse text-white-light dark:text-[#d0d2d6]">
                     <li>
-                        <a href="index.php?page=counseling" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent hover:border-primary text-lg font-bold">
+                        <a href="index.php?page=counseling" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">
                             Consejería
                         </a>
                     </li>
@@ -35,7 +36,7 @@
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
                                 <?php
                                 foreach ($_SESSION['cohortes'] as $year) {
-                                    echo '<li><a href="index.php?page=' . $year . '" @click="toggle" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent hover:border-primary text-lg font-bold">Cohorte' . $year . '</a></li>';
+                                    echo '<li><a href="index.php?page=' . $year . '" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">Cohorte' . $year . '</a></li>';
                                 }
                                 ?>
                             </ul>
@@ -43,20 +44,42 @@
                     </li>
 
                     <li>
-                        <a href="index.php?page=expediente" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent hover:border-primary text-lg font-bold">
+                        <a href="index.php?page=expediente" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">
                             Expediente
                         </a>
                     </li>
                     <li>
-                        <a href="index.php?page=links" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent hover:border-primary text-lg font-bold">
+                        <a href="index.php?page=links" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent  text-lg font-bold">
                             Enlaces Frecuentes
                         </a>
                     </li>
                 </ul>
 
             </div>
+
+
             <div x-data="header" class="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
                 <div class="sm:ltr:mr-auto sm:rtl:ml-auto" x-data="{ search: false }" @click.outside="search = false">
+                </div>
+
+
+                <!-- <a href="javascript:;" class="collapse-icon flex flex-none rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary ltr:ml-2 rtl:mr-2 dark:bg-dark/40 dark:text-[#d0d2d6] dark:hover:bg-dark/60 dark:hover:text-primary lg:hidden" @click="$store.app.toggleSidebar()">
+
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 7L4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path opacity="0.5" d="M20 12L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M20 17L4 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </a> -->
+
+                <div class="lg:hidden ">
+                    <button id="toggleButton" class="navbar-burger flex items-center text-blue-600 collapse-icon flex flex-none rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary ltr:ml-2 rtl:mr-2 dark:bg-dark/40 dark:text-[#d0d2d6] dark:hover:bg-dark/60 dark:hover:text-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 7L4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            <path opacity="0.5" d="M20 12L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            <path d="M20 17L4 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
                 </div>
 
 
@@ -101,7 +124,7 @@
                                 </button> -->
                             </div>
                         </li>
-                        <template x-if="!messages.length">
+                        <template>
                             <li class="mb-5">
                                 <div class="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
                                     <div class="mx-auto mb-4 rounded-full text-primary ring-4 ring-primary/30">
@@ -144,8 +167,58 @@
                 </div>
             </div>
         </div>
+        <!-- Responsive Navbar -->
 
+        <ul id="responsiveNav" class="hidden lg:hidden bg-gray-800 py-4 px-6 text-white relative flex w-full items-center  px-5 py-2.5" style="background-color: #2b2b2b;">
+            <li>
+                <a href="index.php?page=counseling" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">
+                    Consejería
+                </a>
+            </li>
+
+            <li>
+                <div x-data="{ active: null }">
+                    <div>
+                        <button type="button" class="block p-2 text-white  dark:bg-dark/40 border-b border-transparent text-lg font-bold" x-on:click="active === 1 ? active = null : active = 1">Secuencia Curricular
+
+                        </button>
+                        <div x-cloak x-show="active === 1" x-collapse>
+                            <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                <?php
+                                foreach ($_SESSION['cohortes'] as $year) {
+                                    echo '<li><a href="index.php?page=' . $year . '" class="block p-2 ml-3 hover:text-primary dark:bg-dark/40  border-b border-transparent text-lg">Cohorte' . $year . '</a></li>';
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <a href="index.php?page=expediente" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">
+                    Expediente
+                </a>
+            </li>
+            <li>
+                <a href="index.php?page=links" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent  text-lg font-bold">
+                    Enlaces Frecuentes
+                </a>
+            </li>
         </ul>
+
+
+
     </div>
+
 </header>
 <!-- end header section -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Toggle responsive navbar links on button click
+        $("#toggleButton").click(function() {
+            $("#responsiveNav").toggle();
+        });
+    });
+</script>

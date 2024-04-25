@@ -19,7 +19,6 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/perfect-scrollbar.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
     <link defer rel="stylesheet" type="text/css" media="screen" href="assets/css/animate.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/estilos.css" />
     <script src="assets/js/perfect-scrollbar.min.js"></script>
     <script defer src="assets/js/popper.min.js"></script>
     <script defer src="assets/js/tippy-bundle.umd.min.js"></script>
@@ -197,7 +196,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
     <script defer src="assets/js/alpine.min.js"></script>
     <script src="assets/js/custom.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="assets/js/courses.js"></script>
+
 
     <script>
         document.addEventListener('alpine:init', () => {
@@ -264,39 +263,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                     }
                 },
 
-                messages: [{
-                        id: 1,
-                        image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-success-light dark:bg-success text-success dark:text-success-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span>',
-                        title: 'Congratulations!',
-                        message: 'Your OS has been updated.',
-                        time: '1hr',
-                    },
-                    {
-                        id: 2,
-                        image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-info-light dark:bg-info text-info dark:text-info-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>',
-                        title: 'Did you know?',
-                        message: 'You can switch between artboards.',
-                        time: '2hr',
-                    },
-                    {
-                        id: 3,
-                        image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-danger-light dark:bg-danger text-danger dark:text-danger-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>',
-                        title: 'Something went wrong!',
-                        message: 'Send Reposrt',
-                        time: '2days',
-                    },
-                    {
-                        id: 4,
-                        image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-warning-light dark:bg-warning text-warning dark:text-warning-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">    <circle cx="12" cy="12" r="10"></circle>    <line x1="12" y1="8" x2="12" y2="12"></line>    <line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span>',
-                        title: 'Warning',
-                        message: 'Your password strength is low.',
-                        time: '5days',
-                    },
-                ],
 
-                removeMessage(value) {
-                    this.messages = this.messages.filter((d) => d.id !== value);
-                },
             }));
         });
         // elec script
@@ -336,20 +303,78 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
         }
 
         $(document).ready(() => {
-            let storedArrayJSON = sessionStorage.getItem('selectedCourses');
-            let courseList = JSON.parse(storedArrayJSON);
-            console.log("courses: ", courseList);
-
             const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
 
-            //verifica si hay clases selecccionadas con los checkboxes
-            if (courseList.length > 0) {
-                //por cada checkbox seleccionado
-                courseList.forEach((selectedCourse) => {
-                    //si la clase no existe en el array de clases seleccionadas la anade al array y al sidebar
+            var selectedCourses_db = <?php echo $_SESSION['selectedCourses'] ?>;
+            console.log("courses db: ", selectedCourses_db);
+            //retrieve the list of courses in session storage 
+            if (sessionStorage.getItem('selectedCourses') || selectedCourses_db.length > 0) {
+                //if(sessionStorage.getItem('selectedCourses') != null || selectedCourses_db != null) {
+                let courseList = [];
+                //courseList = JSON.parse(sessionStorage.getItem('selectedCourses'));
+                console.log("courses session storage: ", courseList);
+                if (selectedCourses_db != null) {
+                    //copy the course list in the db
+                    courseList = selectedCourses_db;
+                    console.log("courses db2: ", courseList);
+                } else {
+                    //copy the course list in the session storage
+                    courseList = JSON.parse(sessionStorage.getItem('selectedCourses'));
+                    console.log("courses session storage: ", courseList);
+                }
 
-                    console.log("each selected course: ", selectedCourse);
-                    const courseCode = selectedCourse;
+                if (courseList.length > 0) {
+                    //por cada checkbox seleccionado
+                    courseList.forEach((selectedCourse) => {
+                        //si la clase no existe en el array de clases seleccionadas la anade al array y al sidebar
+
+                        console.log("each selected course: ", selectedCourse);
+                        const courseCode = selectedCourse;
+
+                        let category = '';
+                        if (courseCode.startsWith("CCOM")) {
+                            category = $('#concentracion');
+                        } else if (generales.some(substr => courseCode.startsWith(substr))) {
+                            category = $('#generales');
+                        } else if (courseCode.startsWith("HUMA")) {
+                            category = $('#humanidades');
+                        } else if (courseCode.startsWith("CISO")) {
+                            category = $('#cienciasSociales');
+                        }
+                        let html = `<li id="${courseCode}">
+                            <h3 style="font-size: 12px;" class="justify-between -mx-4 mb-2 flex items-center  py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]" style="text-size: 14px;">
+                            ${courseCode}
+                            <a onclick="clearCourse(${courseCode})"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.5" d="M11.5956 22.0001H12.4044C15.1871 22.0001 16.5785 22.0001 17.4831 21.1142C18.3878 20.2283 18.4803 18.7751 18.6654 15.8686L18.9321 11.6807C19.0326 10.1037 19.0828 9.31524 18.6289 8.81558C18.1751 8.31592 17.4087 8.31592 15.876 8.31592H8.12405C6.59127 8.31592 5.82488 8.31592 5.37105 8.81558C4.91722 9.31524 4.96744 10.1037 5.06788 11.6807L5.33459 15.8686C5.5197 18.7751 5.61225 20.2283 6.51689 21.1142C7.42153 22.0001 8.81289 22.0001 11.5956 22.0001Z" fill="currentColor" />
+                                <path d="M3 6.38597C3 5.90152 3.34538 5.50879 3.77143 5.50879L6.43567 5.50832C6.96502 5.49306 7.43202 5.11033 7.61214 4.54412C7.61688 4.52923 7.62232 4.51087 7.64185 4.44424L7.75665 4.05256C7.8269 3.81241 7.8881 3.60318 7.97375 3.41617C8.31209 2.67736 8.93808 2.16432 9.66147 2.03297C9.84457 1.99972 10.0385 1.99986 10.2611 2.00002H13.7391C13.9617 1.99986 14.1556 1.99972 14.3387 2.03297C15.0621 2.16432 15.6881 2.67736 16.0264 3.41617C16.1121 3.60318 16.1733 3.81241 16.2435 4.05256L16.3583 4.44424C16.3778 4.51087 16.3833 4.52923 16.388 4.54412C16.5682 5.11033 17.1278 5.49353 17.6571 5.50879H20.2286C20.6546 5.50879 21 5.90152 21 6.38597C21 6.87043 20.6546 7.26316 20.2286 7.26316H3.77143C3.34538 7.26316 3 6.87043 3 6.38597Z" fill="currentColor" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.42543 11.4815C9.83759 11.4381 10.2051 11.7547 10.2463 12.1885L10.7463 17.4517C10.7875 17.8855 10.4868 18.2724 10.0747 18.3158C9.66253 18.3592 9.29499 18.0426 9.25378 17.6088L8.75378 12.3456C8.71256 11.9118 9.01327 11.5249 9.42543 11.4815Z" fill="currentColor" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5747 11.4815C14.9868 11.5249 15.2875 11.9118 15.2463 12.3456L14.7463 17.6088C14.7051 18.0426 14.3376 18.3592 13.9254 18.3158C13.5133 18.2724 13.2126 17.8855 13.2538 17.4517L13.7538 12.1885C13.795 11.7547 14.1625 11.4381 14.5747 11.4815Z" fill="currentColor" />
+                            </svg></a>
+                            </h3>
+                            <input type="hidden" name="selectedCoursesList[]" value="${courseCode}">
+                            </li>`;
+                        category.append(html);
+
+                        $(`input[type="checkbox"][value=${selectedCourse}]`).prop("checked", true);
+
+
+                    });
+                }
+            }
+
+            $('input[type="checkbox"]').change(function() {
+
+                // Retrieve the previously selected values from sessionStorage
+                let selectedCourses = JSON.parse(sessionStorage.getItem('selectedCourses')) || [];
+
+                // Get the value of the current checkbox
+                const courseCode = $(this).val();
+
+                // If the checkbox is checked and its value is not already in the selectedCourses array, add it and update sessionStorage
+                if ($(this).prop('checked') && !selectedCourses.includes(courseCode)) {
+                    selectedCourses.push(courseCode);
+                    sessionStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
+                    console.log("cursos en sessionStorage: ", sessionStorage.getItem('selectedCourses'));
 
                     let category = '';
                     if (courseCode.startsWith("CCOM")) {
@@ -362,40 +387,41 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                         category = $('#cienciasSociales');
                     }
                     let html = `<li id="${courseCode}">
-                     <h3 style="font-size: 12px;" class="justify-between -mx-4 mb-2 flex items-center  py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]" style="text-size: 14px;">
-                     ${courseCode}
-                     <a onclick="clearCourse(${courseCode})"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                         <path opacity="0.5" d="M11.5956 22.0001H12.4044C15.1871 22.0001 16.5785 22.0001 17.4831 21.1142C18.3878 20.2283 18.4803 18.7751 18.6654 15.8686L18.9321 11.6807C19.0326 10.1037 19.0828 9.31524 18.6289 8.81558C18.1751 8.31592 17.4087 8.31592 15.876 8.31592H8.12405C6.59127 8.31592 5.82488 8.31592 5.37105 8.81558C4.91722 9.31524 4.96744 10.1037 5.06788 11.6807L5.33459 15.8686C5.5197 18.7751 5.61225 20.2283 6.51689 21.1142C7.42153 22.0001 8.81289 22.0001 11.5956 22.0001Z" fill="currentColor" />
-                         <path d="M3 6.38597C3 5.90152 3.34538 5.50879 3.77143 5.50879L6.43567 5.50832C6.96502 5.49306 7.43202 5.11033 7.61214 4.54412C7.61688 4.52923 7.62232 4.51087 7.64185 4.44424L7.75665 4.05256C7.8269 3.81241 7.8881 3.60318 7.97375 3.41617C8.31209 2.67736 8.93808 2.16432 9.66147 2.03297C9.84457 1.99972 10.0385 1.99986 10.2611 2.00002H13.7391C13.9617 1.99986 14.1556 1.99972 14.3387 2.03297C15.0621 2.16432 15.6881 2.67736 16.0264 3.41617C16.1121 3.60318 16.1733 3.81241 16.2435 4.05256L16.3583 4.44424C16.3778 4.51087 16.3833 4.52923 16.388 4.54412C16.5682 5.11033 17.1278 5.49353 17.6571 5.50879H20.2286C20.6546 5.50879 21 5.90152 21 6.38597C21 6.87043 20.6546 7.26316 20.2286 7.26316H3.77143C3.34538 7.26316 3 6.87043 3 6.38597Z" fill="currentColor" />
-                         <path fill-rule="evenodd" clip-rule="evenodd" d="M9.42543 11.4815C9.83759 11.4381 10.2051 11.7547 10.2463 12.1885L10.7463 17.4517C10.7875 17.8855 10.4868 18.2724 10.0747 18.3158C9.66253 18.3592 9.29499 18.0426 9.25378 17.6088L8.75378 12.3456C8.71256 11.9118 9.01327 11.5249 9.42543 11.4815Z" fill="currentColor" />
-                         <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5747 11.4815C14.9868 11.5249 15.2875 11.9118 15.2463 12.3456L14.7463 17.6088C14.7051 18.0426 14.3376 18.3592 13.9254 18.3158C13.5133 18.2724 13.2126 17.8855 13.2538 17.4517L13.7538 12.1885C13.795 11.7547 14.1625 11.4381 14.5747 11.4815Z" fill="currentColor" />
-                     </svg></a>
-                     </h3>
-                     <input type="hidden" name="selectedCoursesList[]" value="${courseCode}">
-                    </li>`;
+                                <h3 style="font-size: 12px;" class="justify-between -mx-4 mb-2 flex items-center  py-3 px-7 uppercase dark:bg-dark dark:bg-opacity-[0.08]" style="text-size: 14px;">
+                                ${courseCode}
+                                <a onclick="clearCourse(${courseCode})"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5" d="M11.5956 22.0001H12.4044C15.1871 22.0001 16.5785 22.0001 17.4831 21.1142C18.3878 20.2283 18.4803 18.7751 18.6654 15.8686L18.9321 11.6807C19.0326 10.1037 19.0828 9.31524 18.6289 8.81558C18.1751 8.31592 17.4087 8.31592 15.876 8.31592H8.12405C6.59127 8.31592 5.82488 8.31592 5.37105 8.81558C4.91722 9.31524 4.96744 10.1037 5.06788 11.6807L5.33459 15.8686C5.5197 18.7751 5.61225 20.2283 6.51689 21.1142C7.42153 22.0001 8.81289 22.0001 11.5956 22.0001Z" fill="currentColor" />
+                                    <path d="M3 6.38597C3 5.90152 3.34538 5.50879 3.77143 5.50879L6.43567 5.50832C6.96502 5.49306 7.43202 5.11033 7.61214 4.54412C7.61688 4.52923 7.62232 4.51087 7.64185 4.44424L7.75665 4.05256C7.8269 3.81241 7.8881 3.60318 7.97375 3.41617C8.31209 2.67736 8.93808 2.16432 9.66147 2.03297C9.84457 1.99972 10.0385 1.99986 10.2611 2.00002H13.7391C13.9617 1.99986 14.1556 1.99972 14.3387 2.03297C15.0621 2.16432 15.6881 2.67736 16.0264 3.41617C16.1121 3.60318 16.1733 3.81241 16.2435 4.05256L16.3583 4.44424C16.3778 4.51087 16.3833 4.52923 16.388 4.54412C16.5682 5.11033 17.1278 5.49353 17.6571 5.50879H20.2286C20.6546 5.50879 21 5.90152 21 6.38597C21 6.87043 20.6546 7.26316 20.2286 7.26316H3.77143C3.34538 7.26316 3 6.87043 3 6.38597Z" fill="currentColor" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.42543 11.4815C9.83759 11.4381 10.2051 11.7547 10.2463 12.1885L10.7463 17.4517C10.7875 17.8855 10.4868 18.2724 10.0747 18.3158C9.66253 18.3592 9.29499 18.0426 9.25378 17.6088L8.75378 12.3456C8.71256 11.9118 9.01327 11.5249 9.42543 11.4815Z" fill="currentColor" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5747 11.4815C14.9868 11.5249 15.2875 11.9118 15.2463 12.3456L14.7463 17.6088C14.7051 18.0426 14.3376 18.3592 13.9254 18.3158C13.5133 18.2724 13.2126 17.8855 13.2538 17.4517L13.7538 12.1885C13.795 11.7547 14.1625 11.4381 14.5747 11.4815Z" fill="currentColor" />
+                                </svg></a>
+                                </h3>
+                                <input type="hidden" name="selectedCoursesList[]" value="${courseCode}">
+                            </li>`;
                     category.append(html);
+                }
 
+                // If the checkbox is unchecked and its value is in the selectedCourses array, remove it and update sessionStorage
+                //console.log()
+                if (!$(this).prop('checked') && selectedCourses.includes(courseCode)) {
+                    console.log("entra al if de unchecked y curso en la lista: ", courseCode);
+                    clearCourse(courseCode);
+                    // selectedCourses = selectedCourses.filter(item => item !== courseCode);
+                    // sessionStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
+                    // // Remove the corresponding <li> element
+                    // $('li#' + value).remove();
 
-                });
-
-
-            }
-            const UncheckedCheckboxes = $('input[type="checkbox"]:not(:checked)');
-            console.log("verificar if not checked: ", UncheckedCheckboxes);
-            UncheckedCheckboxes.each((i, notSelectedCourse) => {
-                if (courseList.includes(notSelectedCourse.value)) {
-                    console.log("curso no seleccionado: ", notSelectedCourse.value);
-                    const course = $(`#${notSelectedCourse.value}`);
-                    console.log("li encontrado: ", course);
-                    const index = courseList.indexOf(notSelectedCourse.value);
-                    if (index > -1) {
-                        courseList.splice(index, 1);
-                    }
-                    course.remove();
                 }
             });
 
-        })
+            // //if the Confirmar Consejeria buttton is disabled, disable the checkbox input and the remove course option
+            if ($('#counseling_button').prop('disabled')) {
+                $('input[type="checkbox"]').prop('disabled', true);
+            }
+            counselingButton();
+
+            checkForConfirmDialog();
+        });
     </script>
 </body>
 
