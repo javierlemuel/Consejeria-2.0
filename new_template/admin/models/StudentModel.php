@@ -886,9 +886,9 @@ class StudentModel {
 
                     if($checker1 == false) # If student hasn't passed this course already or is seeing the course in term before the recommendations term
                     {
-                        $sql5 = "SELECT * FROM ccom_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort'
+                        $sql5 = "SELECT * FROM ccom_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort' AND type = 'pre'
                         UNION
-                                 SELECT * FROM general_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort'";
+                                 SELECT * FROM general_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort' AND type = 'pre'";
                         $res5 = $conn->query($sql5);
                         if ($res5 === false) {
                             throw new Exception("Error en la consulta SQL5: " . $conn->error);
