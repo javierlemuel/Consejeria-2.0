@@ -259,21 +259,21 @@
 
 
                 <!-- Classes -->
-                <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: '<?php echo $category ?>'}"> 
+                <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: getSessionTab('<?php echo $category ?>') }"> 
                 <div class="mx-10 mb-5 sm:mb-0">
                     <ul class="w-24 m-auto text-center font-semibold">
                         <li>
                             </li>
                         <li>
-                            <a href="?classes" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'concentracion'}" @click="tab='concentracion'">Cursos de CCOM</a>
+                            <a href="?classes" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'concentracion'}" @click="setSessionTab('concentracion')">Cursos de CCOM</a>
                         <li>
-                            <a href="?ccomelectives" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'electivas'}">Electivas CCOM</a>
+                            <a href="?ccomelectives" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'electivas'}" @click="setSessionTab('electivas')">Electivas CCOM</a>
                         </li>
                         <li>
-                            <a href="?generalclasses" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'generales'}">Cursos generales</a>
+                            <a href="?generalclasses" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'generales'}" @click="setSessionTab('generales')">Cursos generales</a>
                         </li>
                         <li>
-                            <a href="?offer" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'oferta'}">Cursos en oferta</a>
+                            <a href="?offer" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'oferta'}" @click="setSessionTab('oferta')">Cursos en oferta</a>
                         </li>
                     </ul>
                 </div>
@@ -398,6 +398,17 @@
     <script src="assets/js/custom.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
+    <script>
+    // Function to retrieve the current tab from sessionStorage
+    function getSessionTab(defaultTab) {
+        return sessionStorage.getItem('currentTab') || defaultTab;
+    }
+
+    // Function to set the current tab in sessionStorage
+    function setSessionTab(tab) {
+        sessionStorage.setItem('currentTab', tab);
+    }
+    </script>
 
     <script>
 

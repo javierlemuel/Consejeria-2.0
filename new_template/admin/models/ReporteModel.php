@@ -182,7 +182,7 @@ class ReporteModel {
    public function getStudentsPerClass($conn){
         $term = $this->getTerm($conn);
         $sql = "SELECT crse_code, COUNT(*) AS count
-        FROM ccom_courses NATURAL JOIN recommended_courses
+        FROM ccom_courses NATURAL JOIN will_take
         WHERE crse_code LIKE 'CCOM%'
         AND term = '$term'
         GROUP BY crse_code;";

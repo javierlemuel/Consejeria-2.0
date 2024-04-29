@@ -149,7 +149,7 @@
                             <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                         </tr>
                         <tr>
-                            <td style='text-align:center'>Estudiantes que NO realizaron su Consejería</td>
+                            <td style='text-align:center'>Estudiantes activos que NO realizaron su Consejería</td>
                             <td style='text-align:center'><?php echo $studentsNoConsejeria  ?></td>
                             <td style='text-align:center; vertical-align:middle'><a href='?reports&code=noCons'>
                             <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
