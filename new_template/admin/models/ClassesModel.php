@@ -627,9 +627,11 @@ class ClassesModel {
     public function addToOffer($conn,$courseID)
     {
         //Verifica que el curso no exista ya en la oferta
+        $term = $this->getTerm($conn);
         $sql = "SELECT term
                 FROM offer
-                WHERE crse_code = '$courseID'";
+                WHERE crse_code = '$courseID'
+                AND term = '$term'";
         $result = $conn->query($sql);   
 
         if ($result->num_rows == 0)
@@ -662,8 +664,10 @@ class ClassesModel {
     }
 
     public function removeFromOffer($conn,$courseID){
+        $term = $this->getTerm($conn);
         $sql = "DELETE FROM offer
-                WHERE crse_code = '$courseID'";
+                WHERE crse_code = '$courseID'
+                AND term = '$term'";
         $result = $conn->query($sql);
 
         if ($result === false) {
