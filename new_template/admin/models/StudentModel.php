@@ -810,7 +810,8 @@ class StudentModel {
    public function getPrevTerm($conn){
     $sql = "SELECT term
             FROM offer
-            WHERE crse_code = 'CCOM3001'";
+            WHERE crse_code = 'CCOM3001'
+            AND term not in (SELECT term FROM offer WHERE crse_code = 'XXXX')";
 
     $result = $conn->query($sql);
 
