@@ -866,8 +866,6 @@ class StudentModel {
                 }
                 if ($res3->num_rows == 0) # If course not recommended in current semester
                 {
-                    if($num = 840226314)
-                        echo "{{$crse_code}} has not been recommended yet \n";
                     # Find that course in student's courses
                     $sql4 = "SELECT * FROM student_courses WHERE student_num = $num AND crse_code = '$crse_code'";
                     $res4 = $conn->query($sql4);
@@ -884,8 +882,6 @@ class StudentModel {
                             if($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm)
                             {
                                 $checker1 = true; # Dismiss a class if student has passed it or is currently seeing it
-                                if($num = 840226314)
-                                    echo "Student already saw the course \n";
                             }
                         }
                     }
