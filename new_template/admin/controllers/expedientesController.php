@@ -25,7 +25,8 @@ class ExpedientesController {
         if(isset($_GET['autorecommend']))
         {
             // Entrar función de auto-recomendación de cursos en oferta a todos los estudiantes
-            $studentModel->generateAutoReports($conn);
+            $date = date("Y-m-d");
+            $studentModel->generateAutoReports($conn, $date);
             
         }
 

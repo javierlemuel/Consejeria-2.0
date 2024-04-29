@@ -825,7 +825,7 @@ class StudentModel {
     return $term;
     }
 
-    public function generateAutoReports($conn)
+    public function generateAutoReports($conn, $date)
     { 
         # CONSIDER adding error log lines
         $term = $this->getTerm($conn);
@@ -866,6 +866,8 @@ class StudentModel {
                 }
                 if ($res3->num_rows == 0) # If course not recommended in current semester
                 {
+                    if($num = 840226314)
+                        echo "{{$crse_code}} has not been recommended yet \n";
                     # Find that course in student's courses
                     $sql4 = "SELECT * FROM student_courses WHERE student_num = $num AND crse_code = '$crse_code'";
                     $res4 = $conn->query($sql4);
@@ -880,7 +882,11 @@ class StudentModel {
                         foreach($res4 as $res4)
                         {
                             if($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm)
+                            {
                                 $checker1 = true; # Dismiss a class if student has passed it or is currently seeing it
+                                if($num = 840226314)
+                                    echo "Student already saw the course \n";
+                            }
                         }
                     }
 
@@ -907,6 +913,7 @@ class StudentModel {
                                     throw new Exception("Error en la consulta SQL6: " . $conn->error);
                                 }
                                 $req_status = '';
+                                $req_term = '';
                                 if($res6->num_rows > 0)
                                 {
                                     foreach($res6 as $res6)
@@ -929,6 +936,12 @@ class StudentModel {
                             $res7 = $conn->query($sql7);
                             if ($res7 === false) {
                                 throw new Exception("Error en la consulta SQL7: " . $conn->error);
+                            }
+
+                            $sql8 = "UPDATE student SET edited_date = '$date' WHERE student_num = $num";
+                            $res8 = $conn->query($sql8);
+                            if ($res8 === false) {
+                                throw new Exception("Error en la consulta SQL8: " . $conn->error);
                             }
                         }
 
