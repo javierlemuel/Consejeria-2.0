@@ -32,6 +32,7 @@ class ExpedientesController {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST')
         {
+            $date = date("Y-m-d");
             $action = isset($_POST['action']) ? $_POST['action'] : '';
             if ($action === 'addStudent') {
                 // Obtén y procesa los datos para agregar un estudiante

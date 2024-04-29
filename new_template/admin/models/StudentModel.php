@@ -120,7 +120,7 @@ class StudentModel {
         $edited = date("Y-m-d");
 
         // Vincular los parámetros con los valores
-        $stmt->bind_param("ssssssssssss", $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday, $edited, $edited);
+        $stmt->bind_param("ssssssssssss", $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday, $edited, 0);
 
         // Ejecutar la sentencia
         $result = $stmt->execute();
@@ -352,8 +352,9 @@ class StudentModel {
         //     $cohort_year = '2022';
     
         // Ejecuta el query de inserción
+        $date = date("Y-m-d");
         $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, minor, cohort_year, status, edited_date)
-                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', 0, 0, $cohort_year, 'Activo', '0000-00-00')";
+                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', 0, 0, $cohort_year, 'Activo', '$date')";
     
         // Ejecuta el query
         if ($conn->query($query) === TRUE) {
@@ -410,15 +411,16 @@ class StudentModel {
         {
             // Obtener la fecha actual
             $date = date("Y-m-d");
+            $cc = 1;
 
             // Consulta SQL para actualizar la columna conducted_counseling
-            $sql = "UPDATE student SET conducted_counseling = ? WHERE student_num = ?";
+            $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
 
             // Preparar la declaración
             $stmt = $conn->prepare($sql);
 
             // Vincular los parámetros
-            $stmt->bind_param("si", $date, $student_num);
+            $stmt->bind_param("isi", $cc, $date, $student_num);
 
             // Ejecutar la consulta
             $result = $stmt->execute();
@@ -458,15 +460,16 @@ class StudentModel {
         {
             // Obtener la fecha actual
             $date = date("Y-m-d");
+            $cc = 1;
     
             // Consulta SQL para actualizar la columna conducted_counseling
-            $sql = "UPDATE student SET conducted_counseling = ? WHERE student_num = ?";
+            $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
     
             // Preparar la declaración
             $stmt = $conn->prepare($sql);
     
             // Vincular los parámetros
-            $stmt->bind_param("ss", $date, $student_num);
+            $stmt->bind_param("isi", $cc, $date, $student_num);
     
             // Ejecutar la consulta
             $result = $stmt->execute();
@@ -583,6 +586,13 @@ class StudentModel {
                 if ($stmt1->affected_rows > 0) {
                     $stmt1->close();
                     $_SESSION['students_list_msg'] = "Cursos de estudiantes fueron actualizados!!";
+                    $date = date("Y-m-d");
+                    $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                    $result = $conn->query($sql2);
+
+                    if ($result === false) {
+                            throw new Exception("Error en la consulta SQL: " . $conn->error);
+                    }
                     return TRUE; // La actualización fue exitosa
                     
                     
@@ -627,6 +637,13 @@ class StudentModel {
                 if ($stmt1->affected_rows > 0) {
                     $stmt1->close();
                     $_SESSION['consejeria_msg'] = "Curso $course_code fue actualizado!!";
+                    $date = date("Y-m-d");
+                    $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                    $result = $conn->query($sql2);
+
+                    if ($result === false) {
+                            throw new Exception("Error en la consulta SQL: " . $conn->error);
+                    }
                     return TRUE; // La actualización fue exitosa
                 } else {
                     $stmt1->close();
@@ -691,6 +708,13 @@ class StudentModel {
             if ($stmt->affected_rows > 0) {
                 $stmt->close();
                 $_SESSION['consejeria_msg'] = "Curso $course_code y nota fueron insertados!!";
+                $date = date("Y-m-d");
+                $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                $result = $conn->query($sql2);
+
+                if ($result === false) {
+                        throw new Exception("Error en la consulta SQL: " . $conn->error);
+                }
                 return TRUE; // La inserción fue exitosa
             } else {
                 $stmt->close();
