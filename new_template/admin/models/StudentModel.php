@@ -335,16 +335,16 @@ class StudentModel {
         $cohort_year = 2017;
 
 
-        echo "Combined Digits: ".$combinedDigits."\n";
+        //echo "Combined Digits: ".$combinedDigits."\n";
         foreach($cohorts as $cohort)
         {
             $year = $cohort['cohort_year'][2].$cohort['cohort_year'][3];
-            echo "YEAR END: ".$year."\n";
+            //echo "YEAR END: ".$year."\n";
             if($combinedDigits >= $year)
                 $cohort_year = $cohort['cohort_year'];
         }
 
-        echo "COHORT YEAR: ".$cohort_year;
+        //echo "COHORT YEAR: ".$cohort_year;
 
         // if(intval($combinedDigits) <= 21)
         //     $cohort_year = '2017';
@@ -353,7 +353,7 @@ class StudentModel {
     
         // Ejecuta el query de inserción
         $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, minor, cohort_year, status, edited_date)
-                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', '0000-00-00', 0, $cohort_year, 'Activo', '0000-00-00')";
+                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', 0, 0, $cohort_year, 'Activo', '0000-00-00')";
     
         // Ejecuta el query
         if ($conn->query($query) === TRUE) {
@@ -788,6 +788,160 @@ class StudentModel {
 
         return;
 
+    }
+
+    public function getTerm($conn){
+        $sql = "SELECT term
+                FROM offer
+                WHERE crse_code = 'XXXX'";
+
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        foreach ($result as $res)
+            $term = $res['term'];
+
+        return $term;
+   }
+
+   public function getPrevTerm($conn){
+    $sql = "SELECT term
+            FROM offer
+            WHERE crse_code = 'CCOM3001'";
+
+    $result = $conn->query($sql);
+
+    if ($result === false) {
+        throw new Exception("Error en la consulta SQL: " . $conn->error);
+    }
+
+    foreach ($result as $res)
+        $term = $res['term'];
+
+    return $term;
+    }
+
+    public function generateAutoReports($conn)
+    { 
+        # CONSIDER adding error log lines
+        $term = $this->getTerm($conn);
+
+        # Find all the students that are not inactive in the database
+        $sql1 = 'SELECT student_num, cohort_year, status
+                FROM student
+                WHERE status != "Inactivo"';
+        
+        $result = $conn->query($sql1);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL1: " . $conn->error);
+        }
+
+        foreach($result as $student)
+        {
+            $cohort = $student['cohort_year'];
+            # Find all the courses currently in offer for the following semester
+            # Select only the courses that are found in that student's cohort
+            $sql2 = "SELECT * FROM offer WHERE term = '$term' AND crse_code != 'XXXX'
+            AND crse_code in (SELECT crse_code FROM cohort WHERE cohort_year = '$cohort')";
+            $res2 = $conn->query($sql2);
+
+            if ($res2 === false) {
+                throw new Exception("Error en la consulta SQL2: " . $conn->error);
+            }
+
+            foreach($res2 as $offer_course)
+            {
+                $num = $student['student_num'];
+                $crse_code = $offer_course['crse_code'];
+                # Find if that student has that course recommended already in current semester
+                $sql3 = "SELECT * FROM recommended_courses WHERE term = '$term' AND student_num = $num AND crse_code = '$crse_code'";
+                $res3 = $conn->query($sql3);
+                if ($res3 === false) {
+                    throw new Exception("Error en la consulta SQL3: " . $conn->error);
+                }
+                if ($res3->num_rows == 0) # If course not recommended in current semester
+                {
+                    # Find that course in student's courses
+                    $sql4 = "SELECT * FROM student_courses WHERE student_num = $num AND crse_code = '$crse_code'";
+                    $res4 = $conn->query($sql4);
+                    if ($res4 === false) {
+                        throw new Exception("Error en la consulta SQL4: " . $conn->error);
+                    }
+
+                    $checker1 = false;
+                    $prevTerm = $this->getPrevTerm($conn);
+                    if($res4->num_rows > 0) # If student has seen this course before
+                    {
+                        foreach($res4 as $res4)
+                        {
+                            if($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm)
+                                $checker1 = true; # Dismiss a class if student has passed it or is currently seeing it
+                        }
+                    }
+
+                    if($checker1 == false) # If student hasn't passed this course already or is seeing the course in term before the recommendations term
+                    {
+                        $sql5 = "SELECT * FROM ccom_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort'
+                        UNION
+                                 SELECT * FROM general_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort'";
+                        $res5 = $conn->query($sql5);
+                        if ($res5 === false) {
+                            throw new Exception("Error en la consulta SQL5: " . $conn->error);
+                        }
+                        $checker2 = true;
+
+                        if($res5->num_rows > 0) # If the course has requirements in this cohort year
+                        {
+                            foreach($res5 as $course5)
+                            {
+                                $req_crse_code = $course5['req_crse_code'];
+                                # Find each req in the student's courses
+                                $sql6 = "SELECT * FROM student_courses WHERE student_num = $num AND crse_code = '$req_crse_code'";
+                                $res6 = $conn->query($sql6);
+                                if ($res6 === false) {
+                                    throw new Exception("Error en la consulta SQL6: " . $conn->error);
+                                }
+                                $req_status = '';
+                                if($res6->num_rows > 0)
+                                {
+                                    foreach($res6 as $res6)
+                                        $req_status =  $res6['crse_status'];
+                                }
+
+                                if($req_status == 'P') # If req has been passed, then continue to next req
+                                    continue;
+                                else
+                                    $checker2 = false;
+                            }
+                        }
+
+                        if($checker2 == true) # If the course's requirements have been met, insert into recommendations
+                        {
+                            $sql7 = "INSERT INTO recommended_courses VALUES($num, '$crse_code', '$term')";
+                            $res7 = $conn->query($sql7);
+                            if ($res7 === false) {
+                                throw new Exception("Error en la consulta SQL7: " . $conn->error);
+                            }
+                        }
+
+    
+                    }
+                    else    
+                        continue; # Otherwise, go to next course in offer
+                }
+
+
+            }
+
+        }
+
+       
+    $_SESSION['students_list_msg'] = 'Auto recomendaciones han sido actualizadas!!';
+    return;
     }
 
 }

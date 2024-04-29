@@ -22,6 +22,13 @@ class ExpedientesController {
         $_SESSION['registermodeltxt'] = "";
         //
 
+        if(isset($_GET['autorecommend']))
+        {
+            // Entrar función de auto-recomendación de cursos en oferta a todos los estudiantes
+            $studentModel->generateAutoReports($conn);
+            
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST')
         {
             $action = isset($_POST['action']) ? $_POST['action'] : '';

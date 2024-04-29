@@ -171,6 +171,9 @@ session_start()
                                             </div>
                                         </div>
                                     </div>
+                                    <li>
+                                        <a href="?autorecommend">Auto-recomendación</a>
+                                    </li>
                                 </ul>
                             </li>
 
