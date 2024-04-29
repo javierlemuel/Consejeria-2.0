@@ -910,10 +910,13 @@ class StudentModel {
                                 if($res6->num_rows > 0)
                                 {
                                     foreach($res6 as $res6)
+                                    {
                                         $req_status =  $res6['crse_status'];
+                                        $req_term = $res6['term'];
+                                    }
                                 }
 
-                                if($req_status == 'P') # If req has been passed, then continue to next req
+                                if($req_status == 'P' || $req_term == $prevTerm) # If req has been passed, then continue to next req
                                     continue;
                                 else
                                     $checker2 = false;
