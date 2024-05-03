@@ -178,7 +178,7 @@
                             </select>
                         </div>
                         <div>
-                            <label for="minor">Minor</label>
+                            <label for="minor">Concentración Menor</label>
                             <select class="form-select text-white-dark" name="minor">
                                 <!-- JAVIER -->
                                 <option value="0"<?php if ($studentData['minor'] == 0) echo 'selected'; ?>>N/A</option>
@@ -188,7 +188,7 @@
                             </select>
                         </div>
                         <div>
-                            <label for="graduacion">Termino de graduacion</label>
+                            <label for="graduacion">"Term" de graduación</label>
                             <input type="text" class="form-input" name="graduacion" maxlength="3" value="<?php echo $studentData['grad_term'] !== null ? $studentData['grad_term'] : ''; ?>" />
                         </div>
                     </div>
@@ -209,6 +209,7 @@
                             <option value="Activo" <?php if ($studentData['status'] == "Activo") echo 'selected'; ?>>Activo</option>
                             <option value="Inactivo" <?php if ($studentData['status'] == "Inactivo") echo 'selected'; ?>>Inactivo</option>
                             <option value="Graduado" <?php if ($studentData['status'] == "Graduado") echo 'selected'; ?>>Graduado</option>
+                            <option value="Graduando" <?php if ($studentData['status'] == "Graduando") echo 'selected'; ?>>Candidato A Graduación</option>
                         </select>
                     </div>
                     <div>
@@ -227,7 +228,7 @@
                 <form method="POST" action="index.php">
                     <input type="hidden" name="action" value="studentCounseling">
                     <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
-                    <button style="margin-top: 1em" type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2">Consejeria</button>
+                    <button style="margin-top: 1em" type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2">Consejería</button>
                 </form>
                 <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Cancelar</button>
             </div>

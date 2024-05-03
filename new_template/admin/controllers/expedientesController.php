@@ -185,6 +185,7 @@ class ExpedientesController {
                     $_SESSION['registermodeltxt'] .= $logMessage;
 
                     $course_code = $_POST['crse_code'];
+                    $credits = $_POST['credits'];
                     $department = substr($course_code, 0, 4);
                     $category = $_POST['category'];
                     if($category == "")
@@ -200,7 +201,6 @@ class ExpedientesController {
                     $conva = $_POST['convalidacion'];
                     $term = $_POST['term'];
                     $old_term = $_POST['old_term'];
-                    $credits = $_POST['credits'];
 
                     if($department == "CCOM")
                     {
@@ -522,7 +522,10 @@ class ExpedientesController {
                                 {
                                     
                                     if ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
-                                        $type = 'general';
+                                        if($course_info['type'] == 'FREE')
+                                            $type = 'free';
+                                        else
+                                            $type = 'general';
                                     } else {
                                         $type = $course_info['type'];
                                     }

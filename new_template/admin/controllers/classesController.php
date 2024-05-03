@@ -25,11 +25,13 @@ class ClassesController{
             require_once(__DIR__ . '/../views/listaView.php');
         }
         elseif(isset($_GET['ccomelectives'])){
+            $term = $classesModel->getTerm($conn);
             $courses = $classesModel->getCcomElectives($conn);
             $category = 'electivas';
         }
 
         elseif(isset($_GET['generalclasses'])){
+            $term = $classesModel->getTerm($conn);
             $courses = $classesModel->getGeneralCourses($conn);
             $category = 'generales';
         }
@@ -148,6 +150,7 @@ class ClassesController{
         {
             $courses = $classesModel->getCcomCourses($conn);
             $category = 'concentracion';
+            $term = $classesModel->getTerm($conn);
         }
 
         if(!isset($_GET['lista']))

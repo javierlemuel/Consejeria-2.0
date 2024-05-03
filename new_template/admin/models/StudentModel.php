@@ -53,12 +53,13 @@ class StudentModel {
             $student_num = $row['student_num'];
             $formatted_student_num = substr($student_num, 0, 3) . '-' . substr($student_num, 3, 2) . '-' . substr($student_num, 5);
             $row['formatted_student_num'] = $formatted_student_num;
+            $term = $this->getTerm($conn);
 
             //JAVIER (Add si el estudiante hizo consejeria)
-            $sql2 = "SELECT DISTINCT will_take.student_num
-                FROM will_take NATURAL JOIN student
-                WHERE will_take.student_num = $student_num
-                AND student.name1 LIKE '$searchKeyword'";
+            $sql2 = "SELECT DISTINCT recommended_courses.student_num
+                FROM recommended_courses 
+                WHERE student_num = $student_num
+                AND term = '$term'";
              $result2 = $conn->query($sql2);
 
             if ($result2 === false) {
@@ -70,7 +71,7 @@ class StudentModel {
             foreach($result2 as $res)
                 $counseling = 1;
 
-            $row['conducted_counseling'] = $counseling;
+            $row['given_counseling'] = $counseling;
             //
 
             $students[] = $row;
@@ -411,7 +412,7 @@ class StudentModel {
         {
             // Obtener la fecha actual
             $date = date("Y-m-d");
-            $cc = 1;
+            $cc = 0;
 
             // Consulta SQL para actualizar la columna conducted_counseling
             $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
@@ -460,7 +461,7 @@ class StudentModel {
         {
             // Obtener la fecha actual
             $date = date("Y-m-d");
-            $cc = 1;
+            $cc = 0;
     
             // Consulta SQL para actualizar la columna conducted_counseling
             $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
@@ -619,6 +620,11 @@ class StudentModel {
             $sql1 = "UPDATE student_courses 
                     SET credits = ?, category = ?, level = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
+
+            echo "CREDITS: ". $credits.'/n';  
+            echo "STUDENT_NUM: ". $student_num.'/n'; 
+            echo "CRSE_CODE: ". $course_code.'/n';  
+            echo "TERM: ". $old_term.'/n';     
             
             // Preparar la sentencia
             $stmt1 = $conn->prepare($sql1);
@@ -629,9 +635,9 @@ class StudentModel {
             }
             
             // Vincular los parámetros con los valores
-            $stmt1->bind_param("sssssssssss", $credits, $category, $level, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
+            $stmt1->bind_param("issssssssss", $credits, $category, $level, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
             
-            // Ejecutar la sentencia
+            // Ejecutar la sentencias
             if ($stmt1->execute()) {
                 // Verificar si la actualización fue exitosa
                 if ($stmt1->affected_rows > 0) {
@@ -958,7 +964,9 @@ class StudentModel {
                                 throw new Exception("Error en la consulta SQL7: " . $conn->error);
                             }
 
-                            $sql8 = "UPDATE student SET edited_date = '$date' WHERE student_num = $num";
+                            $cc = 0;
+
+                            $sql8 = "UPDATE student SET conducted_counseling = $cc, edited_date = '$date' WHERE student_num = $num";
                             $res8 = $conn->query($sql8);
                             if ($res8 === false) {
                                 throw new Exception("Error en la consulta SQL8: " . $conn->error);

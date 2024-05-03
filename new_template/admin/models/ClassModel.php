@@ -40,7 +40,7 @@ class ClassModel {
         $sql = "UPDATE ccom_courses
                 SET crse_code = '$course_id',
                 name = '$course_name',
-                credits = '$credits',
+                credits = $credits,
                 type = '$type',
                 level = '$level',
                 minor_id = '$minor'

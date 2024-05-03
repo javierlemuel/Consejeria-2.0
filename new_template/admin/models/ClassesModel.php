@@ -113,7 +113,7 @@ class ClassesModel {
     public function getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num)
     {
         # CCOM CONCENTRATION COURSES
-        $sql = "SELECT DISTINCT cohort.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
+        $sql = "SELECT DISTINCT cohort.crse_code, ccom_courses.name, student_courses.credits, student_courses.crse_grade,
                 student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                 FROM cohort
                 JOIN ccom_courses ON cohort.crse_code = ccom_courses.crse_code
@@ -124,7 +124,7 @@ class ClassesModel {
 
                 UNION
 
-                SELECT DISTINCT student_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
+                SELECT DISTINCT student_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.crse_grade,
                 student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                 FROM student_courses
                 JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
@@ -138,7 +138,7 @@ class ClassesModel {
 
                 UNION
 
-                SELECT DISTINCT student_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
+                SELECT DISTINCT student_courses.crse_code, general_courses.name, student_courses.credits, student_courses.crse_grade,
                 student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                 FROM student_courses
                 JOIN general_courses ON student_courses.crse_code = general_courses.crse_code
@@ -255,7 +255,7 @@ class ClassesModel {
             echo "Error executing query.";
         }
 
-        $sql1 = "SELECT DISTINCT c.crse_code, c.name, c.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category, sc.level
+        $sql1 = "SELECT DISTINCT c.crse_code, c.name, sc.credits, c.minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category, sc.level
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -264,7 +264,7 @@ class ClassesModel {
                 
                 UNION
 
-                SELECT DISTINCT c.crse_code, c.name, c.credits, NULL AS minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category, sc.level
+                SELECT DISTINCT c.crse_code, c.name, sc.credits, NULL AS minor_id, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category, sc.level
                 FROM general_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -351,20 +351,20 @@ class ClassesModel {
             echo "Error executing query.";
         }
 
-        $sql = "(SELECT DISTINCT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+        $sql = "(SELECT DISTINCT c.crse_code, c.name, sc.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM general_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
                 AND sc.category = 'free'
                 )
                 UNION
-                (SELECT DISTINCT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+                (SELECT DISTINCT c.crse_code, c.name, sc.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
                 AND c.minor_id = $student_minor_id)
                 UNION
-                (SELECT DISTINCT c.crse_code, c.name, c.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
+                (SELECT DISTINCT c.crse_code, c.name, sc.credits, sc.crse_grade, sc.equivalencia, sc.convalidacion, sc.term, sc.category
                 FROM ccom_courses c
                 JOIN student_courses sc ON c.crse_code = sc.crse_code
                 WHERE sc.student_num = $student_num
@@ -415,7 +415,7 @@ class ClassesModel {
     public function getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num)
     {
         # GENERAL COURSES
-        $sql = "SELECT DISTINCT cohort.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
+        $sql = "SELECT DISTINCT cohort.crse_code, general_courses.name, student_courses.credits, student_courses.crse_grade,
                         student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                         FROM cohort
                         JOIN general_courses ON cohort.crse_code = general_courses.crse_code
@@ -424,13 +424,13 @@ class ClassesModel {
                             AND student_courses.student_num = $student_num
                         WHERE cohort.cohort_year = $studentCohort
                 UNION
-                        SELECT DISTINCT general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade,
+                        SELECT DISTINCT general_courses.crse_code, general_courses.name, student_courses.credits, student_courses.crse_grade,
                                 student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                         FROM general_courses JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
                         WHERE student_courses.category = 'general'
                         AND student_num = $student_num
                 UNION
-                        SELECT DISTINCT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade,
+                        SELECT DISTINCT ccom_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.crse_grade,
                                 student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
                         FROM ccom_courses JOIN student_courses ON ccom_courses.crse_code = student_courses.crse_code
                         WHERE student_courses.category = 'general'
@@ -560,7 +560,14 @@ class ClassesModel {
                     SELECT crse_code
                     FROM general_courses
                 )
-                AND student_num = $student_num;
+                AND student_num = $student_num
+
+                UNION
+
+                SELECT * 
+                FROM student_courses
+                WHERE student_num = $student_num
+                AND category = 'other'
                 ";
 
         $result = $conn->query($sql);

@@ -164,6 +164,7 @@
                     <option value='CIBI' >Ciencias Biólogicas</option>
                     <option value='CISO' >Ciencias Sociales</option>
                     <option value='HUMA' >Humanidades</option>
+                    <option value='FREE' >Electiva Libre</option>
                 <?php } ?>
             </select>
         </div>

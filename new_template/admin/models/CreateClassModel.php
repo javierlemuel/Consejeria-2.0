@@ -48,7 +48,7 @@ class CreateClassModel {
             if ($result->num_rows == 0)
             {
                 $sql = "INSERT INTO general_courses
-                        VALUES('$crse_code', '$crse_name', $cred, '$type', '$required')";
+                        VALUES('$crse_code', '$crse_name', $cred, $required, '$type')";
                 
                 $result = $conn->query($sql);
                 if ($result === false) {

@@ -203,6 +203,7 @@
                                         <option value='CIBI' <?php if($class['type']=='CIBI'){echo 'selected';} ?>>Ciencias Biólogicas</option>
                                         <option value='CISO' <?php if($class['type']=='CISO'){echo 'selected';} ?>>Ciencias Sociales</option>
                                         <option value='HUMA' <?php if($class['type']=='HUMA'){echo 'selected';} ?>>Humanidades</option>
+                                        <option value='FREE' <?php if($class['type']=='FREE'){echo 'selected';} ?>>Electiva Libre</option>
                                     <?php } ?>
                                 </select>
                             </div>

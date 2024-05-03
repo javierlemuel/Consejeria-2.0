@@ -142,6 +142,7 @@
                                     <li><a href="?status=Activos&search=<?php echo $searchKeyword?>" @click="toggle">Activos</a></li>
                                     <li><a href="?status=Inactivos&search=<?php echo $searchKeyword?>" @click="toggle">Inactivos</a></li>
                                     <li><a href="?status=Graduados&search=<?php echo $searchKeyword?>" @click="toggle">Graduados</a></li>
+                                    <li><a href="?status=Graduandos&search=<?php echo $searchKeyword?>" @click="toggle">Graduandos</a></li>
                                 </ul>
                             </div>
                             <!-- Final del boton de dropdown-->
@@ -277,6 +278,7 @@
                                                                     <option>Activo</option>    
                                                                     <option>Inactivo</option>
                                                                     <option>Graduado</option>
+                                                                    <option>Graduando</option>
                                                                 </select>
                                                             </div>
                                                             <div class="mb-5">
@@ -340,14 +342,18 @@
                                             <td><?= $student['name1'] ?> <?= $student['name2'] ?> <?= $student['last_name1'] ?> <?= $student['last_name2'] ?></td>
                                             <td><?= $student['formatted_student_num'] ?></td>
                                             <td>
-                                                <?php if ($student['conducted_counseling'] == "0"): ?>
+                                                <?php if ($student['status'] == 'Graduando' || $student['status'] == 'Graduado'): ?>
+                                                    <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
+                                                <?php elseif ($student['given_counseling'] == "0"): ?>
                                                     <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
                                                 <?php else: ?>
                                                     <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
-                                                <?php if ($student['conducted_counseling'] == 0): ?>
+                                                <?php if ($student['status'] == 'Graduando' || $student['status'] == 'Graduado'): ?>
+                                                    <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
+                                                <?php elseif ($student['conducted_counseling'] == 0): ?>
                                                     <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
                                                 <?php else: ?>
                                                     <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
@@ -358,6 +364,8 @@
                                                     <span class="badge whitespace-nowrap badge-outline-danger">Inactivo</span>
                                                 <?php elseif ($student['status'] == 'Graduado'): ?>
                                                     <span class="badge whitespace-nowrap badge-outline-primary">Graduado</span>
+                                                <?php elseif ($student['status'] == 'Graduando'): ?>
+                                                    <span class="badge whitespace-nowrap badge-outline-primary">Graduando</span>    
                                                 <?php else: ?>
                                                     <span class="badge whitespace-nowrap badge-outline-success">Activo</span>
                                                 <?php endif; ?>
@@ -374,7 +382,7 @@
                                                 <form method="POST" action="index.php">
                                                     <input type="hidden" name="action" value="studentCounseling">
                                                     <input type="hidden" name="student_num" value="<?= $student['student_num'] ?>">
-                                                    <button type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2" x-text="params.id ? 'Update' : 'Consejeria'"></button>
+                                                    <button type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2" x-text="params.id ? 'Update' : 'Consejería'"></button>
                                                 </form>
                                             </td>
                                         </tr>
