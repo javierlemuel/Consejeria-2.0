@@ -227,7 +227,7 @@
                                 <?php if((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
                                 <label for="minor">Minor</label>
                                 <select name='minor' class='form-select text-white-dark'>
-                                    <option value='NULL'>No Minor</option>
+                                    <option value='0'>No Minor</option>
                                     <?php foreach($minors as $minor) { ?>
                                         <option value='<?php echo $minor["ID"]; ?>' <?php if($class['minor_id']==strval($minor["ID"])){echo 'selected';} ?>>
                                     <?php echo $minor['name']; ?></option>

@@ -188,7 +188,7 @@
         <div>
         <label for="minor">Minor</label>
         <select name='minor' class='form-select text-white-dark'>
-            <option value='NULL'>No Minor</option>
+            <option value='0'>No Minor</option>
             <?php foreach($minors as $minor) { ?>
                 <option value='<?php echo $minor["ID"]; ?>'>
             <?php echo $minor['name']; ?></option>
