@@ -261,6 +261,7 @@
             <div class='flex-1 text-sm' x-show='tab === "req"'>
                 <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
                     <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
+                    <h1 style='font-size: 20px; font-weight: bold'><?php echo $course ?></h1><br>
                     <?php $object = new ClassController(); 
                           $requisitos = $object->getRequisitos($course); 
                           if ($requisitos->num_rows > 0)

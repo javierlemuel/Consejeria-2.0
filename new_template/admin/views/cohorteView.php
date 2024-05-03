@@ -127,7 +127,11 @@
                                      elseif ($_GET['message'] == "NoDelS") echo 'El cohorte no se pudo remover. Existe en "Students"';
                                      elseif ($_GET['message'] == "NoDelCR") echo 'El cohorte no se pudo remover. Existe en "CCOM Requirements"';
                                      elseif ($_GET['message'] == "NoDelGR") echo 'El cohorte no se pudo remover. Existe en "General Requirements"';?>
-                        </h2> <br>
+                        </h2> 
+                        <?php if ($_GET['message'] == 'success')
+                            echo "<h2 style='color:limegreen; bold' class='text-xl'> El curso fue insertado en el cohorte!! </h2>";
+                        ?>
+                        <br>
                     </div>
                 <?php } ?>
 

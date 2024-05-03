@@ -292,7 +292,7 @@ class ExpedientesController {
 
                         $course_info = $classModel->selectCourseWNull($conn, $crse_code);
                         if($course_info == NULL){
-                            if($credits == '' or $type == ''){
+                            if($credits == '' or $category == ''){
                                 #error_log("La clase " . $crse_code . "no está en la base de datos, tienes que proveer los creditos y el tipo de clase. \n", 3, $archivoRegistro);
                                 $_SESSION['registermodeltxt'] .= "La clase " . $crse_code . "no está en la base de datos, tienes que proveer los creditos y el tipo de clase. \n";
                             }
@@ -564,7 +564,7 @@ class ExpedientesController {
                                     $result = $studentModel->studentAlreadyHasGrade($studentNumber, $class, $conn);
                                 else
                                     $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);//el estudiante ya tiene una nota en esa clase y en ese semestre
-                                
+                                  
                                 if ($result == TRUE)
                                 {
                                     $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);

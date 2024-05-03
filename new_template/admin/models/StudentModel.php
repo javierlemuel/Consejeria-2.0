@@ -395,6 +395,7 @@ class StudentModel {
     }
 
     public function insertRecomendation($student_num, $class, $term, $conn) {
+        #insertRecommendation
         // Preparar la consulta SQL
         $sql = "INSERT INTO recommended_courses (student_num, crse_code, term) VALUES (?, ?, ?)";
         
@@ -414,7 +415,7 @@ class StudentModel {
             $date = date("Y-m-d");
             $cc = 0;
 
-            // Consulta SQL para actualizar la columna conducted_counseling
+            // Consulta SQL para actualizar la columna conducted_counseling y edited_date del estudiante
             $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
 
             // Preparar la declaración
@@ -424,6 +425,13 @@ class StudentModel {
             $stmt->bind_param("isi", $cc, $date, $student_num);
 
             // Ejecutar la consulta
+            $result = $stmt->execute();
+
+            // Borrar cursos que el estudiante seleccionó para próximo semestre
+            $term = $this->getTerm($conn);
+            $sql2 = 'DELETE FROM will_take WHERE student_num = ? AND term = ?';
+            $stmt = $conn->prepare($sql2);
+            $stmt->bind_param("ss", $student_num, $term);
             $result = $stmt->execute();
 
             // Cerrar la declaración
@@ -444,6 +452,7 @@ class StudentModel {
     }
 
     public function deleteRecomendation($student_num, $class, $term, $conn) {
+        #deleteRecommendation
         // Preparar la consulta SQL
         $sql = "DELETE FROM recommended_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
         
@@ -463,7 +472,7 @@ class StudentModel {
             $date = date("Y-m-d");
             $cc = 0;
     
-            // Consulta SQL para actualizar la columna conducted_counseling
+            // Consulta SQL para actualizar la columna conducted_counseling y edited_date del estudiante
             $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
     
             // Preparar la declaración
@@ -473,6 +482,13 @@ class StudentModel {
             $stmt->bind_param("isi", $cc, $date, $student_num);
     
             // Ejecutar la consulta
+            $result = $stmt->execute();
+
+            // Borrar cursos que el estudiante seleccionó para próximo semestre
+            $term = $this->getTerm($conn);
+            $sql2 = 'DELETE FROM will_take WHERE student_num = ? AND term = ?';
+            $stmt = $conn->prepare($sql2);
+            $stmt->bind_param("ss", $student_num, $term);
             $result = $stmt->execute();
     
             // Cerrar la declaración
@@ -492,17 +508,22 @@ class StudentModel {
     
     public function studentAlreadyHasGrade($student_num, $code, $conn) {
         // Preparar la consulta SQL
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+        foreach($language_generals as $lg)
+            if($lg == $code)
+                $code = $this->validateLanguageGenerals($conn, $code);
+
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ?";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
-        $stmt->bind_param("ss", $student_num, $code);
+        $stmt->bind_param("is", $student_num, $code);
         // Ejecutar la sentencia
         $stmt->execute();
         // Obtener el resultado de la consulta
         $result = $stmt->get_result();
         // Verificar si se encontraron resultados
-        $stmt->close();
         if ($result->num_rows > 0) {
             return TRUE;
         } else {
@@ -512,17 +533,23 @@ class StudentModel {
 
     public function studentAlreadyHasGradeWithSemester($student_num, $code, $term, $conn) {
         // Preparar la consulta SQL
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+        foreach($language_generals as $lg)
+            if($lg == $code)
+                $code = $this->validateLanguageGenerals($conn, $code);
+
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
-        $stmt->bind_param("sss", $student_num, $code, $term);
+        $stmt->bind_param("iss", $student_num, $code, $term);
         // Ejecutar la sentencia
         $stmt->execute();
         // Obtener el resultado de la consulta
         $result = $stmt->get_result();
         // Verificar si se encontraron resultados
-        $stmt->close();
+        //$stmt->close();
         if ($result->num_rows > 0) {
             return TRUE;
         } else {
@@ -532,6 +559,16 @@ class StudentModel {
 
     public function UpdateStudentGradeCSV($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
         // Preparar la consulta SQL para la actualización
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+        foreach($language_generals as $lg)
+            if($lg == $course_code)
+            {
+                $old_course_code = $course_code;
+                $course_code = $this->validateLanguageGenerals($conn, $course_code);
+                $equi .= $old_course_code;
+            }
+
         $sql0 = "SELECT crse_grade, term
                 FROM student_courses
                 WHERE student_num = ? AND crse_code = ?";
@@ -542,9 +579,10 @@ class StudentModel {
             return FALSE;
         }
 
-        $stmt0->bind_param("ss", $student_num, $course_code);
+        $stmt0->bind_param("is", $student_num, $course_code);
 
         $crse_grade = '';
+        $old_term = '';
   
         // Ejecutar
         if ($stmt0->execute()) {
@@ -553,17 +591,19 @@ class StudentModel {
             $stmt0->fetch();
 
             // Cerrar
-            $stmt0->close();
+           // $stmt0->close();
         } else {
             // Error
             echo "Error executing query.";
         }
 
         $checker = false;
-        if (strpos($grade, 'D') == true && strpos($grade, 'F') == true)
+        if (strpos($grade, 'D') == true || strpos($grade, 'F') == true)
             if(strpos($crse_grade, 'W') == true)
                 $checker = true;
 
+        # $crse_grade is the grade they currently have
+        # $grade is the grade being inserted
         if(($crse_grade > $grade) && $checker == false)
         {
             $sql1 = "UPDATE student_courses 
@@ -621,10 +661,11 @@ class StudentModel {
                     SET credits = ?, category = ?, level = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
 
-            echo "CREDITS: ". $credits.'/n';  
-            echo "STUDENT_NUM: ". $student_num.'/n'; 
-            echo "CRSE_CODE: ". $course_code.'/n';  
-            echo "TERM: ". $old_term.'/n';     
+            $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+            foreach($language_generals as $lg)
+                if($lg == $course_code)
+                    $course_code = $this->validateLanguageGenerals($conn, $course_code);   
             
             // Preparar la sentencia
             $stmt1 = $conn->prepare($sql1);
@@ -691,6 +732,16 @@ class StudentModel {
         }
         else
             $level = 'NULL';
+
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+        foreach($language_generals as $lg)
+            if($lg == $course_code)
+            {
+                $old_course_code = $course_code;
+                $course_code = $this->validateLanguageGenerals($conn, $course_code);
+                $equi .= $old_course_code;
+            }
 
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, category, level, crse_grade, crse_status, term, equivalencia, convalidacion)
@@ -785,6 +836,12 @@ class StudentModel {
 
     public function alreadyHasGradeInTerm($student_num, $class, $term, $conn) {
         // Preparar la consulta SQL
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+        foreach($language_generals as $lg)
+            if($lg == $class)
+                $class = $this->validateLanguageGenerals($conn, $class);
+
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
@@ -987,6 +1044,19 @@ class StudentModel {
        
     $_SESSION['students_list_msg'] = 'Auto recomendaciones han sido actualizadas!!';
     return;
+    }
+
+    public function validateLanguageGenerals($conn, $crse_code)
+    {
+        if($crse_code == 'INGL3101' || $crse_code == 'INGL3103' || $crse_code == 'INGL3011')
+            return 'INGL0001';
+        if($crse_code == 'INGL3102' || $crse_code == 'INGL3104' || $crse_code == 'INGL3012')
+            return 'INGL0002';
+        if($crse_code == 'ESPA3101' || $crse_code == 'ESPA3003')
+            return 'ESPA0001';
+        if($crse_code == 'ESPA3102' || $crse_code == 'ESPA3004')
+            return 'ESPA0002';
+
     }
 
 }
