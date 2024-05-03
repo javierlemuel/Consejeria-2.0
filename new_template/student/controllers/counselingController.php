@@ -66,6 +66,7 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
                 }
             }
 
+            //get the student counseling status to create counseling button
             $conducted_counseling = $counselingModel->getCounselingStatus($conn, $student_num);
             if ($conducted_counseling === 1) {
                 $_SESSION['counseling_button'] = '<button type="submit" value="Submit" id="counseling_button" class="btn btn-warning self-end" disabled>Confirmar Consejeria</button>';
@@ -73,9 +74,11 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
                 $_SESSION['counseling_button']  = '<button type="submit" value="Submit" id="counseling_button" class="btn btn-warning self-end">Confirmar Consejeria</button>';
             }
 
+            $_SESSION['conducted_counseling'] = $conducted_counseling;
+
+            //get the selected courses for the next term
             $selected_courses = $counselingModel->getStudentSelectedCourses($conn, $student_num);
             if ($selected_courses != null) {
-                //$selectedCourses = json_encode($selected_courses);
                 $_SESSION['selectedCourses'] = json_encode($selected_courses);
             } else {
                 $_SESSION['selectedCourses'] = json_encode('');
