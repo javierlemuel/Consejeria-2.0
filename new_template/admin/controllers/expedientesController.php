@@ -634,7 +634,7 @@ class ExpedientesController {
             $_SESSION['page'] = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         if(isset($_GET['page']))
             $_SESSION['page'] = $_GET['page'];
-        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : $_SESSION['page'];
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : (int)$_SESSION['page'];
  
 
         // Obtener los parámetros del filtro de estado y búsqueda
