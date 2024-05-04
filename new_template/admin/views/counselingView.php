@@ -203,8 +203,9 @@
                                             echo "<td style='padding: 5px;'>" . $recomendedCourse['credits'] . "</td>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "<input type='hidden' name='selectedTerm' value=" . $selectedTerm . ">";
+                                            if($privileges == 1) {
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</button></td>";
-                                            echo "</form>";
+                                            }echo "</form>";
                                             echo "</tr>";
                                         }
                                         ?>
