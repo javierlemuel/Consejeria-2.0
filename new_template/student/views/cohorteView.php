@@ -106,9 +106,9 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                             <th>PRIMER SEMESTRE</th>
                                         </tr>
                                         <tr>
-                                            <th>CODIGO</th>
+                                            <th>CÓDIGO</th>
                                             <th>NOMBRE</th>
-                                            <th>CREDITOS</th>
+                                            <th>CRÉDITOS</th>
                                         </tr>
                                     </thead>
                                     <tbody>";
@@ -146,9 +146,9 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                             <th>SEGUNDO SEMESTRE</th>
                                         </tr>
                                         <tr>
-                                            <th>CODIGO</th>
+                                            <th>CÓDIGO</th>
                                             <th>NOMBRE</th>
-                                            <th>CREDITOS</th>
+                                            <th>CRÉDITOS</th>
                                         </tr>
                                     </thead>
                                     <tbody>";

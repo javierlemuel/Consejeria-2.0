@@ -87,25 +87,25 @@ if (session_status() == PHP_SESSION_NONE) {
                     <div class="flex-1 text-sm ">
                         <template x-if="tab === 'info'">
                             <div>
-                                <h4 class="font-semibold text-2xl mb-4">Informacion Basica:</h4>
+                                <h4 class="font-semibold text-2xl mb-4">Información Básica:</h4>
                                 <p class="mb-4"><b>Nombre:</b> <?php echo $studentInfo["full_student_name"]; ?></p>
-                                <p class="mb-4"><b>Correo Electronico:</b> <?php echo $studentInfo["email"]; ?></p>
-                                <p class="mb-4"><b>Numero de Estudiante:</b> <?php echo $studentInfo["formatted_student_num"]; ?></p>
-                                <p class="mb-4"><b>Major:</b> CCOM</p>
+                                <p class="mb-4"><b>Correo Electrónico:</b> <?php echo $studentInfo["email"]; ?></p>
+                                <p class="mb-4"><b>Número de Estudiante:</b> <?php echo $studentInfo["formatted_student_num"]; ?></p>
+                                <p class="mb-4"><b>Concentración:</b> CCOM</p>
                                 <?php if ($studentInfo["minor"] != 0) {
-                                    echo '<p class="mb-4"><b>Minor:</b> ' . $minor['name'] . '</p>';
+                                    echo '<p class="mb-4"><b>Concentración Menor:</b> ' . $minor['name'] . '</p>';
                                     //var_dump($minor);
                                 }
 
                                 ?>
-                                <p class="mb-4">Si alguna de esta informacion esta incorrecta favor de avisarle a la consejera. </p>
+                                <p class="mb-4">Si alguna de esta información está incorrecta, favor de avisarle a la consejera. </p>
                             </div>
                         </template>
                         <template x-if="tab === 'expediente'">
                             <div>
                                 <div class="row flex">
                                     <div class="grid-cols-1" style="width:70%;">
-                                        <h4 class="font-bold text-2xl mb-4">Expediente academico</h4>
+                                        <h4 class="font-bold text-2xl mb-4">Expediente académico</h4>
                                     </div>
 
                                 </div>
@@ -113,17 +113,17 @@ if (session_status() == PHP_SESSION_NONE) {
                                 <!-- start expediente table -->
                                 <!-- clases de concentracion -->
                                 <div class="table-responsive">
-                                    <h4 class="font-semibold text-xl mb-4">Cursos de Concentracion</h4>
+                                    <h4 class="font-semibold text-xl mb-4">Cursos de Concentración</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>
                                                 <th class="text-center">Curso</th>
-                                                <th>Descripcion</th>
-                                                <th>Creditos</th>
+                                                <th>Descripción</th>
+                                                <th>Créditos</th>
                                                 <th class="text-center">Notas</th>
                                                 <th class="text-center">Matriculado</th>
                                                 <th class="text-center">Recomendado</th>
-                                                <th class="text-center">Convalidacion</th>
+                                                <th class="text-center">Convalidación</th>
                                                 <th class="text-center">Equivalencia</th>
                                             </tr>
                                         </thead>
@@ -155,7 +155,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <tfoot>
                                             <tr>
                                                 <th>
-                                                    <div>Creditos Totales:</div>
+                                                    <div>Créditos Totales:</div>
                                                 </th>
                                                 <th>
                                                     <div><?php echo $ccomCredits ?></div>
@@ -177,12 +177,12 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <thead>
                                             <tr>
                                                 <th>Curso</th>
-                                                <th>Descripcion</th>
-                                                <th>Creditos</th>
+                                                <th>Descripción</th>
+                                                <th>Créditos</th>
                                                 <th class="text-center">Notas</th>
                                                 <th class="text-center">Matriculado</th>
                                                 <th class="text-center">Recomendado</th>
-                                                <th class="text-center">Convalidacion</th>
+                                                <th class="text-center">Convalidación</th>
                                                 <th class="text-center">Equivalencia</th>
                                             </tr>
                                         </thead>
@@ -212,7 +212,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <tfoot>
                                             <tr>
                                                 <th>
-                                                    <div>Creditos Totales:</div>
+                                                    <div>Créditos Totales:</div>
                                                 </th>
                                                 <th>
                                                     <div><?php echo $generalCredits ?></div>
@@ -234,12 +234,12 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <thead>
                                             <tr>
                                                 <th>Curso</th>
-                                                <th>Descripcion</th>
-                                                <th>Creditos</th>
+                                                <th>Descripción</th>
+                                                <th>Créditos</th>
                                                 <th class="text-center">Notas</th>
                                                 <th class="text-center">Matriculado</th>
                                                 <th class="text-center">Recomendado</th>
-                                                <th class="text-center">Convalidacion</th>
+                                                <th class="text-center">Convalidación</th>
                                                 <th class="text-center">Equivalencia</th>
                                             </tr>
                                         </thead>
@@ -267,7 +267,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <tfoot>
                                             <tr>
                                                 <th>
-                                                    <div>Creditos Totales:</div>
+                                                    <div>Créditos Totales:</div>
                                                 </th>
                                                 <th>
                                                     <div><?php echo $ccomElectives_credits ?></div>
@@ -289,12 +289,12 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <thead>
                                             <tr>
                                                 <th>Curso</th>
-                                                <th>Descripcion</th>
-                                                <th>Creditos</th>
+                                                <th>Descripción</th>
+                                                <th>Créditos</th>
                                                 <th class="text-center">Notas</th>
                                                 <th class="text-center">Matriculado</th>
                                                 <th class="text-center">Recomendado</th>
-                                                <th class="text-center">Convalidacion</th>
+                                                <th class="text-center">Convalidación</th>
                                                 <th class="text-center">Equivalencia</th>
                                             </tr>
                                         </thead>
@@ -323,7 +323,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <tfoot>
                                             <tr>
                                                 <th>
-                                                    <div>Creditos Totales:</div>
+                                                    <div>Créditos Totales:</div>
                                                 </th>
                                                 <th>
                                                     <div><?php echo $freeElectives_credits ?></div>
@@ -344,11 +344,11 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <thead>
                                             <tr>
                                                 <th>Curso</th>
-                                                <th>Creditos</th>
+                                                <th>Créditos</th>
                                                 <th class="text-center">Notas</th>
                                                 <th class="text-center">Matriculado</th>
                                                 <th class="text-center">Recomendado</th>
-                                                <th class="text-center">Convalidacion</th>
+                                                <th class="text-center">Convalidación</th>
                                                 <th class="text-center">Equivalencia</th>
                                             </tr>
                                         </thead>
@@ -376,7 +376,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <tfoot>
                                             <tr>
                                                 <th>
-                                                    <div>Creditos Totales:</div>
+                                                    <div>Créditos Totales:</div>
                                                 </th>
                                                 <th>
                                                     <div><?php echo $otherCourses_credits ?></div>
@@ -401,7 +401,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
             <!-- start footer section -->
             <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
-                © <span id="footer-year">2022</span>. UPRA All rights reserved.
+                © <span id="footer-year">2024</span>. UPRA All rights reserved.
             </div>
             <!-- end footer section -->
         </div>

@@ -72,7 +72,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                         <!-- <div class="border border-[#d3d3d3] rounded dark:border-[#1b2e4b]"> -->
                         <div>
                             <div class="my-5">
-                                <h5 class="text-lg font-bold dark:text-white-light">Enlaces Cursos Electivos y de Educacion General</h5>
+                                <h5 class="text-lg font-bold dark:text-white-light">Enlaces Cursos Electivos y de Educación General</h5>
                                 <ul class="mb-3 mx-4">
                                     <li>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
@@ -149,7 +149,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
 
             <!-- start footer section -->
             <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
-                © <span id="footer-year">2022</span>. UPRA All rights reserved.
+                © <span id="footer-year">2024</span>. UPRA All rights reserved.
             </div>
             <!-- end footer section -->
         </div>

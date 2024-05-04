@@ -79,7 +79,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                             </button>
                                             <div x-cloak x-show="active === 1" x-collapse>
                                                 <div class="space-y-2 p-4 text-white-dark text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
-                                                    <h5 class="m-0">Para realizar la consejeria academica siga los siguientes pasos:</h5>
+                                                    <h5 class="m-0">Para realizar la consejería académica siga los siguientes pasos:</h5>
                                                     <ol class="list-inside list-decimal space-y-3 font-semibold">
                                                         <li>Consulte su expediente</li>
                                                         <li>Verifique su cohorte correspondiente.</li>
@@ -103,7 +103,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                 //crea array con categoria de cursos
                                 $courseCategories = array(
                                     "recomendadas",
-                                    "concentracion",
+                                    "concentraciÓn",
                                     "generales",
                                 );
                                 //variable to control that only the first tab in the accoridon is open by default
@@ -127,14 +127,14 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                                                 <th>Seleccionar</th>
                                                                 <th>Curso</th>
                                                                 <th>Nombre</th>
-                                                                <th>Creditos</th>
+                                                                <th>Créditos</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <!-- create rows with the course info -->
                                                             <?php if ($category == 'RECOMENDADAS') {
                                                                 $courses = array_slice($recommendedCourses, 0);
-                                                            } elseif ($category == 'CONCENTRACION') {
+                                                            } elseif ($category == 'CONCENTRACIÓN') {
                                                                 $courses = array_slice($concentrationCourses, 0);
                                                             } elseif ($category == 'GENERALES') {
                                                                 $courses = array_slice($generalCourses, 0);

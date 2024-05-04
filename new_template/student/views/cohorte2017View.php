@@ -76,7 +76,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                             <ul class="flex flex-wrap mt-3 mb-5 border-b border-white-light dark:border-[#191e3a]">
                                 <li>
                                     <a href="javascript:" class="p-5 py-3 -mb-[1px] flex items-center hover:border-b border-transparent hover:!border-secondary hover:text-secondary" :class="{'border-b !border-secondary text-secondary active' : tab === '1'}" @click="tab = '1'">
-                                        PPRIMER AÑO</a>
+                                        PRIMER AÑO</a>
                                 </li>
                                 <li>
                                     <a href="javascript:" class="p-5 py-3 -mb-[1px] flex items-center hover:border-b border-transparent hover:!border-secondary hover:text-secondary" :class="{'border-b !border-secondary text-secondary active' : tab === '2'}" @click="tab = '2'">
@@ -108,9 +108,9 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                             <th>PRIMER SEMESTRE</th>
                                         </tr>
                                         <tr>
-                                            <th>CODIGO</th>
+                                            <th>CÓDIGO</th>
                                             <th>NOMBRE</th>
-                                            <th>CREDITOS</th>
+                                            <th>CRÉDITOS</th>
                                         </tr>
                                     </thead>
                                     <tbody>";
@@ -147,9 +147,9 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                     <th>SEGUNDO SEMESTRE</th>
                                 </tr>
                                 <tr>
-                                    <th>CODIGO</th>
+                                    <th>CÓDIGO</th>
                                     <th>NOMBRE</th>
-                                    <th>CREDITOS</th>
+                                    <th>CRÉDITOS</th>
                                 </tr>
                             </thead>
                                     <tbody>";
