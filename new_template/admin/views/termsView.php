@@ -120,12 +120,12 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
             <div class="animate__animated p-6" :class="[$store.app.animation]">
                 <!-- start main content section -->
                 <div>
-                    <h2 class="m-0 dark:text-white-dark font-bold" style="font-size: large;">Guía de terminos por año y semestre</h2>
+                    <h2 class="m-0 dark:text-white-dark font-bold" style="font-size: large;">Guía de términos por año y semestre</h2>
                     <div class="table-responsive">
                         <table class="table-striped">
                             <thead>
                                 <tr>
-                                    <th>Termino</th>
+                                    <th>Término</th>
                                     <th>Año</th>
                                     <th>Semestre</th>
                                 </tr>
