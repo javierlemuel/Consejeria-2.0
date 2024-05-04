@@ -697,11 +697,12 @@ class ClassesModel {
                 AND term = '$term'";
         $result = $conn->query($sql);
 
+        echo "ENTERED FUNCTION";
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
 
-        return $result;
+        return 'DelOfferSuccess';
     }
 
     public function setNewTerm($conn, $term)
@@ -761,6 +762,8 @@ class ClassesModel {
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
+
+        $term = '';
         
         while ($row = $result->fetch_assoc()) {
             $term = $row['term'];

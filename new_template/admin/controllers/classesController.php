@@ -56,7 +56,7 @@ class ClassesController{
             $courseID = $_GET['code'];
             $message = $classesModel->addToOffer($conn,$courseID);
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getCcomCourses($conn, $term);
+            $courses = $classesModel->getCcomCourses($conn);
             $category = 'concentracion';
             header('Location: ?classes&message='.$message);
             die;
@@ -64,12 +64,13 @@ class ClassesController{
 
         elseif(isset($_GET['removeOffer']) && isset($_GET['code']))
         {
+            echo "HEY";
             $courseID = $_GET['code'];
-            $classesModel->removeFromOffer($conn,$courseID);
+            $message = $classesModel->removeFromOffer($conn,$courseID);
             $term = $classesModel->getTerm($conn);
             $courses = $classesModel->getOfferCourses($conn, $term);
             $category = 'oferta';
-            header('Location: ?offer');
+            header('Location: ?offer&message='.$message);
             die;
         }
 

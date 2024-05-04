@@ -128,6 +128,8 @@
                                         echo "<h2 style='color:limegreen; bold' class='text-xl'>El curso fue añadido a la oferta!</h2>";
                                      elseif ($_GET['message'] == "DelSuccess") 
                                         echo "<h2 style='color:limegreen; bold' class='text-xl'>El curso fue eliminado!</h2>";
+                                    elseif ($_GET['message'] == "DelOfferSuccess") 
+                                        echo "<h2 style='color:limegreen; bold' class='text-xl'>El curso fue removido de la oferta actual!</h2>";
                                 ?>
                         <br>
                     </div>
@@ -345,7 +347,7 @@
                 }   
                 if($category == 'oferta' && $privileges == 1)
                 { ?>
-                <td style='text-align:center; vertical-align:middle; horizontal-align: middle'><a href='?removeOffer&code=$courseCode'>
+                <td style='text-align:center; vertical-align:middle; horizontal-align: middle'><a href='?removeOffer&code=<?php echo $courseCode ?>'>
                 <span class='badge whitespace-nowrap badge-outline-danger'>Remueve de oferta</span>
                 <?php } 
 
