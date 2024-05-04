@@ -4,6 +4,7 @@
         header("Location: ../index.php");
         exit;
     }
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
 ?>
 <!DOCTYPE html>
@@ -149,6 +150,7 @@
                             <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                                 <div class="flex gap-3">
                                     <div>
+                                    <?php if ($privileges == 1) {?>
                                         <button type="button" class="btn btn-primary" @click="editUser">
                                             <svg
                                                 width="24"
@@ -174,6 +176,7 @@
                                             </svg>
                                             Crear estudiante
                                         </button>
+                                    <?php } ?>
                                         <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="addContactModal && '!block'">
                                             <div class="flex min-h-screen items-center justify-center px-4" @click.self="addContactModal = false">
                                                 <div

@@ -4,6 +4,8 @@
         header("Location: ../index.php");
         exit;
     }
+
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -240,6 +242,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             <div></div>
                         <div style='padding: 0px 30%'>
+                        <?php if ($privileges == 1) {?>
                         <button type="submit" class="btn btn-primary !mt-6">Actualizar</button>
                         </form>
                         <form action="?removeCourse" method="POST">
@@ -247,6 +250,7 @@
                             <button type="submit" class="btn btn-danger !mt-6">Eliminar</button>
                             
                         </form>
+                        <?php } ?>
                         </div>
 
                         
@@ -290,10 +294,12 @@
                                     <div>
                                         <br>
                                         <div>
+                                        <?php if ($privileges == 1) {?>
                                         <button class='badge whitespace-nowrap badge-outline-primary' type='submit' name='action' value='edit'>Editar</button>
                                         </div>
                                         <div>
                                         <button class='badge whitespace-nowrap badge-outline-danger' type='submit' name='action' value='delete'>Eliminar</button>
+                                        <?php } ?>
                                         </div>
                                     </div>
                             </div>
@@ -303,6 +309,7 @@
                       ?>
                       <br><hr><br>
 
+                      <?php if ($privileges == 1) {?>
                       <form style="space-y-5" action='?addReq' method='POST'>
                              <input type='hidden' name='course' value='<?php echo $course ?>'>
                              <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -328,6 +335,7 @@
                              </div>
                             
                       </form>
+                      <?php } ?>
                     </div>  
                 </div>
             </div>

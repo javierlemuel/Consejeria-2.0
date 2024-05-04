@@ -4,6 +4,8 @@
         header("Location: ../index.php");
         exit;
     }
+
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -141,7 +143,9 @@
                     <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                     <div class="flex gap-3">
                     <div x-data="modal">
-                <button type="button" class="btn btn-primary !mt-6" @click='toggle'>Crear minor nuevo</button>
+                <?php if ($privileges == 1) {?>        
+                    <button type="button" class="btn btn-primary !mt-6" @click='toggle'>Crear minor nuevo</button>
+                <?php } ?>
                 <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="open && '!block'">
                     <div class="flex min-h-screen items-start justify-center px-4" @click.self="open = false">
                         <div
@@ -161,10 +165,6 @@
                                 <div class="py-5 text-center text-white dark:text-white-light">
                                     <label style='color:black' for='name'>Título del Minor</label>
                                     <input class='form-input' style='color:black' name='name' type='text' required>
-                                </div>
-                                <div class="py-5 text-center text-white dark:text-white-light">
-                                    <label style='color:black' for='cohort'>Cantidad de créditos requeridos</label>
-                                    <input class='form-input' style='color:black' min="1" max="21" name='credits' type='number' required>
                                 </div>
                                 <div class="flex justify-center gap-4 p-5">
                                 <button type="submit" class="btn btn-primary !mt-6">Crear Minor</button>
@@ -228,18 +228,19 @@
             </select>
             </td>
             <td style='text-align:center'>
-            <!-- <a href='?addOffer&code=$courseCode'>
-                    <span class='badge whitespace-nowrap badge-outline-primary'>Añade a oferta</span>
-            </a> -->
-            <button type='submit' class='badge whitespace-nowrap badge-outline-primary'>Actualizar título</button>
+            <?php if ($privileges == 1) {?>
+                <button type='submit' class='badge whitespace-nowrap badge-outline-primary'>Actualizar título</button>
+            <?php } ?>
             </td>                                       
             
             </form>
             <td style='text-align:center'>
+            <?php if ($privileges == 1) {?>
             <form action='?minor&delete' method='POST'>
                 <input type='hidden' value='<?php echo $minor['ID']?>' name='minorID'>
                 <button type='submit' class='badge whitespace-nowrap badge-outline-danger'>Eliminar</button>
             </form>
+            <?php } ?>
             </td>
             </tr>
             <?php

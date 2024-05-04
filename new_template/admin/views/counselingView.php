@@ -4,6 +4,8 @@
         header("Location: ../index.php");
         exit;
     }
+
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -213,6 +215,7 @@
                         }
                         ?>
                         <!-- Añadir Calificacion para el estuidante -->
+                        <?php if ($privileges == 1) {?>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Añadir Calificación</h2>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1em; text-align: center; margin-top: 1em; margin-bottom: 1em;">Si la clase existe en la base de datos no tiene que proveer los créditos. Si no se provee el semestre se inserta con el semestre actual.</h2>
                             <div class="table-responsive">
@@ -263,6 +266,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                        <?php } ?>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Que Toma Actualmente</h2>
                         <form method="POST" action="index.php">
                             <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
@@ -293,7 +297,9 @@
                                                 echo "<td style='padding: 5px;'>" . $curso['term'] . "</td>";
                                                 echo "<input type='hidden' name='term' value='" . $curso['term'] . "'/>";
                                                 echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                                if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                                }
                                                 echo "</tr>";
                                                 echo "<input type='hidden' name='equivalencia' value=''/>";
                                                 echo "<input type='hidden' name='convalidacion' value=''/>";
@@ -371,8 +377,9 @@
                                             echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                             echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                            if ($privileges == 1) {
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                            echo "</tr>";
+                                            } echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
@@ -448,8 +455,9 @@
                                             echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                             echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                            if ($privileges == 1) {
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                            echo "</tr>";
+                                            }echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
@@ -540,8 +548,9 @@
                                                 echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                                if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                echo "</tr>";
+                                                }echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
@@ -616,8 +625,9 @@
                                                 echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                                if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                echo "</tr>";
+                                                }echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
@@ -690,7 +700,7 @@
                                                 echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
-                                                if($curso['db'] == 'yes')
+                                                if($curso['db'] == 'yes' && $privileges == 1)
                                                     echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
                                                 echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
@@ -701,6 +711,7 @@
                                     </table>
                                 </div>
                             <?php }?>
+                            <?php if ($privileges == 1) {?>
                             <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases a recomendar</h2>
                             <!-- Vertical line tabs -->
                             <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'home'}">
@@ -819,7 +830,8 @@
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
                             <button type="submit" name="action" value="openCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Re-abrir Consejería en Frontend</button>
                         </form>
-                        <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Cancelar</button>
+                        <?php } ?>
+                        <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Volver a Estudiantes</button>
                     </div>
                 </div>
                 <!-- end main content section -->

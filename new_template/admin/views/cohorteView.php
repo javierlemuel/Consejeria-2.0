@@ -5,6 +5,7 @@
         header("Location: ../index.php");
         exit;
     }
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 
 <!DOCTYPE html>
@@ -141,10 +142,12 @@
                     <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                         <div class="flex gap-3">
                             <div>
+                            <?php if ($privileges == 1) {?>    
                             <form action="?removeCohort" method="POST">
                             <input type='hidden' value='<?php echo $cohort?>' name='cohort'>
                             <button type="submit" class="btn btn-danger !mt-6">Eliminar</button>
                             </form>
+                            <?php } ?>
                             </div>
                             
                         </div>
@@ -175,12 +178,14 @@
                         <li>
                             <a href="?cohort=<?php echo $cohort ?>&year=4" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'cuarto'}">4to Año</a>
                         </li>
+                        <?php if ($privileges == 1) {?>
                         <li>
                             <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'add'}" @click="tab='add'">Añadir Curso</a>
-                        </li> <!--tab de add class -->
+                        </li> 
                         <li>
                             <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'req'}" @click="tab='req'">Créditos</a>
-                        </li> <!--tab de add class -->
+                        </li> 
+                        <?php } ?>
                     </ul>
                 </div>
 
@@ -212,6 +217,7 @@
                             <td style='text-align:left'><?php echo $course['name'] ?></td>
                             <td style='text-align:center'><?php echo $course['credits'] ?></td>
                             <td style='text-align:center'>
+                            <?php if ($privileges == 1) {?>
                             <a style='cursor: pointer' title='Remover' href='?cohort=<?php echo $cohort ?>&courseID=<?php echo $course['crse_code']?>&year=<?php echo $year?>'>
                             <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
@@ -235,7 +241,8 @@
                             d='M14.5747 11.4815C14.9868 11.5249 15.2875 11.9118 15.2463 12.3456L14.7463 17.6088C14.7051 18.0426 14.3376 18.3592 13.9254 18.3158C13.5133 18.2724 13.2126 17.8855 13.2538 17.4517L13.7538 12.1885C13.795 11.7547 14.1625 11.4381 14.5747 11.4815Z'
                             fill='currentColor'
                         />
-                    </svg></a></td>
+                    </svg></a>
+                        <?php } ?> </td>
                         </tr>
                     <?php } ?>
                     <td></td><td></td>
@@ -263,6 +270,7 @@
                         <td style='text-align:left'><?php echo $course['name'] ?></td>
                         <td style='text-align:center'><?php echo $course['credits'] ?></td>
                         <td style='text-align:center'>
+                        <?php if ($privileges == 1) {?>
                         <a style='cursor: pointer' title='Remover' href='?cohort=<?php echo $cohort ?>&courseID=<?php echo $course['crse_code']?>&year=<?php echo $year?>'>
                         <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
@@ -286,7 +294,8 @@
                             d='M14.5747 11.4815C14.9868 11.5249 15.2875 11.9118 15.2463 12.3456L14.7463 17.6088C14.7051 18.0426 14.3376 18.3592 13.9254 18.3158C13.5133 18.2724 13.2126 17.8855 13.2538 17.4517L13.7538 12.1885C13.795 11.7547 14.1625 11.4381 14.5747 11.4815Z'
                             fill='currentColor'
                         />
-                    </svg></a></td>
+                    </svg></a>
+                    <?php } ?> </td>
                     </tr>
                 <?php } ?>
                 <td></td><td></td>

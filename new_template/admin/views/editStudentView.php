@@ -4,6 +4,7 @@
         header("Location: ../index.php");
         exit;
     }
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -223,14 +224,16 @@
                         </select>
                     </div>
                     </div>
+                    <?php if ($privileges == 1) {?>
                     <button type="submit" class="btn btn-primary !mt-6">Someter Cambios</button>
+                    <?php } ?>
                 </form>
                 <form method="POST" action="index.php">
                     <input type="hidden" name="action" value="studentCounseling">
                     <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
                     <button style="margin-top: 1em" type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2">Consejería</button>
                 </form>
-                <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Cancelar</button>
+                <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Volver a Estudiantes</button>
             </div>
         </div>
     </div>

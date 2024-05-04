@@ -4,6 +4,8 @@
         header("Location: ../index.php");
         exit;
     }
+
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -139,7 +141,9 @@
                     <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                     <div class="flex gap-3">
                     <div x-data="modal">
-                <button type="button" class="btn btn-primary !mt-6" @click='toggle'>Crear cohorte nuevo</button>
+                <?php if ($privileges == 1) {?>        
+                    <button type="button" class="btn btn-primary !mt-6" @click='toggle'>Crear cohorte nuevo</button>
+                <?php } ?>
                 <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="open && '!block'">
                     <div class="flex min-h-screen items-start justify-center px-4" @click.self="open = false">
                         <div

@@ -35,7 +35,6 @@ class MinorController{
 
     public function addMinor()
     {
-        echo "Test";
         try {
             global $conn;
             $minorModel = new MinorModel();

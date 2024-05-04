@@ -4,6 +4,8 @@
         header("Location: ../index.php");
         exit;
     }
+
+    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -153,7 +155,9 @@
                     <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                     <div class="flex gap-3">
                     <div x-data="modal">
-                <button type="button" class="btn btn-primary !mt-6" @click="toggle">Crear term nuevo</button>
+                <?php if ($privileges == 1) {?>
+                    <button type="button" class="btn btn-primary !mt-6" @click="toggle">Crear term nuevo</button>
+                <?php } ?>     
                 <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="open && '!block'">
                     <div class="flex min-h-screen items-start justify-center px-4" @click.self="open = false">
                         <div
@@ -199,6 +203,7 @@
                                 <div class="flex gap-3">
                                     <div>
                                         <form action="?createclass=CCOM" method="POST">
+                                        <?php if ($privileges == 1) {?>
                                         <button type="submit" class="btn btn-primary">
                                         <svg
                                                     class="shrink-0 group-hover:!text-primary"
@@ -221,10 +226,12 @@
                                                     />
                                                 </svg> 
                                             &nbsp Crear curso (CCOM)
-                                        </button> </form>
+                                        </button> 
+                                    <?php } ?> </form>
                                     </div>
                                     <div>
                                         <form action="?createclass=General" method="POST">
+                                        <?php if ($privileges == 1) {?>    
                                         <button type="submit" class="btn btn-primary">
                                         <svg
                                                     class="shrink-0 group-hover:!text-primary"
@@ -247,7 +254,8 @@
                                                     />
                                                 </svg> 
                                             &nbsp Crear curso (General)
-                                        </button> </form>
+                                        </button> 
+                                    <?php } ?> </form>
                                     </div>
                                    
                                 </div>
@@ -318,11 +326,11 @@
                 <td style='text-align:center'>$courseName</td>
                 <td style='text-align:center'>$credits</td> ";
                 
-                if($category !== 'oferta')
+                if($category !== 'oferta' && $privileges == 1)
                     echo "<td style='text-align:center; vertical-align:middle'><a href='?addOffer&code=$courseCode'>
                     <span class='badge whitespace-nowrap badge-outline-primary'>Añade a oferta</span>";
                 
-                else {
+                elseif ($category == 'oferta') {
                     echo "<td style='text-align:center; vertical-align:middle'>
                     <a href='?lista&class=$courseCode'>
                         <svg class='shrink-0 group-hover:!text-primary' width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' style='display: block; margin: auto'>
@@ -333,10 +341,13 @@
                         </svg>
                          ($matriculados)
                     </a>
-                    </td>     
+                    </td>  ";
+                }   
+                if($category == 'oferta' && $privileges == 1)
+                { ?>
                 <td style='text-align:center; vertical-align:middle; horizontal-align: middle'><a href='?removeOffer&code=$courseCode'>
-                <span class='badge whitespace-nowrap badge-outline-danger'>Remueve de oferta</span>";
-                }
+                <span class='badge whitespace-nowrap badge-outline-danger'>Remueve de oferta</span>
+                <?php } 
 
                 echo"</a>
                 </td>                                                    

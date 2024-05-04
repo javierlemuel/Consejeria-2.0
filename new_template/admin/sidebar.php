@@ -40,6 +40,7 @@ session_start()
                         <li>
                             <a href="index.php">Lista</a>
                         </li>
+                        <?php if (isset($_SESSION['privileges']) && $_SESSION['privileges'] == 1) { ?>
                         <div x-data="app">
                             <li>
                                 <a @click="openUploadModal">Actualizar Estudiantes por CSV</a>
@@ -115,6 +116,7 @@ session_start()
                         <li>
                             <a href="?autorecommend">Auto-recomendación</a>
                         </li>
+                        <?php } ?>
                     </ul>
                 </li>
 
