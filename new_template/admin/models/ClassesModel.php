@@ -113,8 +113,12 @@ class ClassesModel {
     public function getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num)
     {
         # CCOM CONCENTRATION COURSES
+        # Union of ccom student courses found in their cohort
+        # With ccom student courses not found in cohort but set to mandatory category
+        # And general student courses not found in cohort and set to mandatory category
         $sql = "SELECT DISTINCT cohort.crse_code, ccom_courses.name, student_courses.credits, student_courses.crse_grade,
-                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category, 
+                cohort.crse_year as year, cohort.crse_semester as sem
                 FROM cohort
                 JOIN ccom_courses ON cohort.crse_code = ccom_courses.crse_code
                 LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
@@ -125,7 +129,8 @@ class ClassesModel {
                 UNION
 
                 SELECT DISTINCT student_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.crse_grade,
-                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category,
+                5 as year, 1 as sem
                 FROM student_courses
                 JOIN ccom_courses ON student_courses.crse_code = ccom_courses.crse_code
                 WHERE student_courses.category = 'mandatory'
@@ -139,13 +144,14 @@ class ClassesModel {
                 UNION
 
                 SELECT DISTINCT student_courses.crse_code, general_courses.name, student_courses.credits, student_courses.crse_grade,
-                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category,
+                5 as year, 1 as sem
                 FROM student_courses
                 JOIN general_courses ON student_courses.crse_code = general_courses.crse_code
                 WHERE student_courses.category = 'mandatory'
                 AND student_courses.student_num = $student_num  
 
-                ORDER BY crse_code ASC;";
+                ORDER BY year, sem;";
 
         // $sql = "SELECT cohort.crse_code as crse_code, ccom_courses.name as name, student_courses.credits as credits, student_courses.crse_grade as crse_grade,
         // student_courses.equivalencia as equivalencia, student_courses.convalidacion as convalidacion, student_courses.term as term, 
@@ -415,8 +421,12 @@ class ClassesModel {
     public function getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num)
     {
         # GENERAL COURSES
+        # Union of general student courses found in their cohort
+        # General student courses not in their cohort
+        # And ccom student courses that have been set to general category
         $sql = "SELECT DISTINCT cohort.crse_code, general_courses.name, student_courses.credits, student_courses.crse_grade,
-                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                        student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category, 
+                        general_courses.type as type, cohort.crse_year as year, cohort.crse_semester as sem
                         FROM cohort
                         JOIN general_courses ON cohort.crse_code = general_courses.crse_code
                         LEFT JOIN student_courses ON cohort.crse_code = student_courses.crse_code
@@ -425,18 +435,21 @@ class ClassesModel {
                         WHERE cohort.cohort_year = $studentCohort
                 UNION
                         SELECT DISTINCT general_courses.crse_code, general_courses.name, student_courses.credits, student_courses.crse_grade,
-                                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category,
+                                general_courses.type as type, 1 as year, 1 as sem
                         FROM general_courses JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
                         WHERE student_courses.category = 'general'
                         AND student_num = $student_num
+                        AND student_courses.crse_code not in (SELECT DISTINCT crse_code FROM cohort WHERE cohort_year = $studentCohort)
                 UNION
                         SELECT DISTINCT ccom_courses.crse_code, ccom_courses.name, student_courses.credits, student_courses.crse_grade,
-                                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category
+                                student_courses.equivalencia, student_courses.convalidacion, student_courses.term, student_courses.category,
+                                ccom_courses.type as type, 1 as year, 1 as sem
                         FROM ccom_courses JOIN student_courses ON ccom_courses.crse_code = student_courses.crse_code
                         WHERE student_courses.category = 'general'
                         AND student_num = $student_num
                         
-                ORDER BY crse_code ASC;";
+                ORDER BY type, year, sem;";
 
         $result = $conn->query($sql);
         $_SESSION['CISO_credits'] = 0;
