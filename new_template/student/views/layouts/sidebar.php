@@ -192,28 +192,24 @@
 
         //retrieve the list of courses in session storage 
         if (courseList.length > 0) {
+            //por cada checkbox seleccionado
+            courseList.forEach((selectedCourse) => {
+                //si la clase no existe en el array de clases seleccionadas la anade al array y al sidebar
 
-            console.log("courses session storage: ", courseList);
+                console.log("each selected course: ", selectedCourse);
+                const courseCode = selectedCourse;
 
-            if (courseList.length > 0) {
-                //por cada checkbox seleccionado
-                courseList.forEach((selectedCourse) => {
-                    //si la clase no existe en el array de clases seleccionadas la anade al array y al sidebar
-
-                    console.log("each selected course: ", selectedCourse);
-                    const courseCode = selectedCourse;
-
-                    let category = '';
-                    if (courseCode.startsWith("CCOM")) {
-                        category = $('#concentracion');
-                    } else if (generales.some(substr => courseCode.startsWith(substr))) {
-                        category = $('#generales');
-                    } else if (courseCode.startsWith("HUMA")) {
-                        category = $('#humanidades');
-                    } else if (courseCode.startsWith("CISO")) {
-                        category = $('#cienciasSociales');
-                    }
-                    let html = `<li id="${courseCode}">
+                let category = '';
+                if (courseCode.startsWith("CCOM")) {
+                    category = $('#concentracion');
+                } else if (generales.some(substr => courseCode.startsWith(substr))) {
+                    category = $('#generales');
+                } else if (courseCode.startsWith("HUMA")) {
+                    category = $('#humanidades');
+                } else if (courseCode.startsWith("CISO")) {
+                    category = $('#cienciasSociales');
+                }
+                let html = `<li id="${courseCode}">
                             <h3 style="font-size: 12px;" class="justify-between -mx-4 mb-2 flex items-center  py-3 px-7 font uppercase dark:bg-dark dark:bg-opacity-[0.08]" style="text-size: 14px;">
                             ${courseCode}
                             <a onclick="clearCourse(${courseCode})"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -225,14 +221,14 @@
                             </h3>
                             <input type="hidden" name="selectedCoursesList[]" value="${courseCode}">
                             </li>`;
-                    category.append(html);
+                category.append(html);
 
-                    $(`input[type="checkbox"][value=${selectedCourse}]`).prop("checked", true);
+                $(`input[type="checkbox"][value=${selectedCourse}]`).prop("checked", true);
 
 
-                });
-            }
+            });
         }
+
 
         $('input[type="checkbox"]').change(function() {
 

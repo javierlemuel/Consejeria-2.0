@@ -268,33 +268,6 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
             });
 
 
-            //clear course takes the course to be remove 
-            const clearCourse = (course) => {
-
-                //retrieve the list of courses stored in sessionStorage
-                let selectedCourses = JSON.parse(sessionStorage.getItem('selectedCourses'))
-
-                //remove the li element that correspong to the course to be removed
-                console.log("course to remove: ", course);
-                if (typeof course == 'object') {
-                    course = course.id;
-                }
-                $('#' + course).remove();
-
-                //uncheck the checkbox of te removed course
-                const index = selectedCourses.indexOf(course);
-                let checkbox = $(`input[type="checkbox"][value=${course}]`);
-                if (index > -1) {
-                    //uncheck el checkbox de la lista
-                    checkbox.prop('checked', false);
-                    console.log("el checkbox unchecked: ", checkbox);
-                    selectedCourses.splice(index, 1);
-                }
-
-                //remove the course form the list in the sessionStorage
-                selectedCourses = selectedCourses.filter(item => item !== course);
-                sessionStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
-            }
 
 
             document.addEventListener("alpine:init", () => {
@@ -318,8 +291,10 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
             // $(document).ready(() => {
             //     const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
 
-            //     if (<?php echo $_SESSION['conducted_counseling'] ?> == 1) {
-            //         var selectedCourses_db = <?php echo $_SESSION['selectedCourses'] ?>;
+            //     if (<?php //echo $_SESSION['conducted_counseling'] 
+                        ?> == 1) {
+            //         var selectedCourses_db = <?php //echo $_SESSION['selectedCourses'] 
+                                                ?>;
             //         console.log("courses db: ", selectedCourses_db);
             //     } else {
             //         var courseList = JSON.parse(sessionStorage.getItem('selectedCourses'));
