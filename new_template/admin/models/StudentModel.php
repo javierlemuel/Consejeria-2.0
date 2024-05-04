@@ -505,6 +505,33 @@ class StudentModel {
             return FALSE;
         }
     }  
+
+    public function openCounseling($student_num, $conn)
+    {
+        $sql = "UPDATE student SET conducted_counseling = ? WHERE student_num = ?";
+    
+        // Preparar la declaración
+        $stmt = $conn->prepare($sql);
+        $cc = 0;
+
+        // Vincular los parámetros
+        $stmt->bind_param("ii", $cc, $student_num);
+
+        // Ejecutar la consulta
+        $result = $stmt->execute();
+        // Borrar cursos que el estudiante seleccionó para próximo semestre
+        $term = $this->getTerm($conn);
+        $sql2 = 'DELETE FROM will_take WHERE student_num = ? AND term = ?';
+        $stmt = $conn->prepare($sql2);
+        $stmt->bind_param("ss", $student_num, $term);
+        $result = $stmt->execute();
+
+        // Cerrar la declaración
+        $stmt->close();
+
+        return;
+    }
+
     
     public function studentAlreadyHasGrade($student_num, $code, $conn) {
         // Preparar la consulta SQL

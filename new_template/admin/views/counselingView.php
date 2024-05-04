@@ -799,7 +799,7 @@
                         </form>
                         <br> 
                         <form method="POST" action="index.php">
-                            <input type='hidden' name='opencounseling' value='opencounseling'>
+                            <input type='hidden' name='openCounseling' value='openCounseling'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
                             <button type="submit" name="action" value="openCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Re-abrir Consejería en Frontend</button>
                         </form>
