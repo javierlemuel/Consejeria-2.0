@@ -239,10 +239,11 @@
                                                 <td style='padding: 5px;'>
                                                     <select name='category' class='form-input'>
                                                         <option value=''></option>
-                                                        <option value='mandatory'>mandatoria</option>
-                                                        <option value='free'>libre</option>
-                                                        <option value='general'>general</option>
-                                                        <option value='elective'>electiva</option>
+                                                        <option value='mandatory'>Concentración CCOM</option>
+                                                        <option value='elective'>Electiva CCOM</option>
+                                                        <option value='general'>General</option>
+                                                        <option value='elective'>Electiva Libre</option>
+                                                        <option value='other'>Otras Clases</option>
                                                     </select>
                                                 </td>
                                                 <td style='padding: 5px;'><input type='text' name='grade' class='form-input' style='width: 4em;' value='' required></td>
@@ -568,8 +569,8 @@
                                         <thead>
                                             <tr>
                                                 <th style="padding: 5px;"></th>
-                                                <th style="padding: 5px;">Nombre</th>
                                                 <th style="padding: 5px;">Código Del Curso</th>
+                                                <th style="padding: 5px;">Nombre</th>
                                                 <th style="padding: 5px;">Créditos</th>
                                                 <th style="padding: 5px;">Categoría</th>
                                                 <th style="padding: 5px;">Nota</th>
@@ -646,7 +647,9 @@
                                             <tr>
                                                 <th style="padding: 5px;"></th>
                                                 <th style="padding: 5px;">Código Del Curso</th>
+                                                <th style="padding: 5px;">Nombre</th>
                                                 <th style="padding: 5px;">Créditos</th>
+                                                <th style="padding: 5px;">Categoría</th>
                                                 <th style="padding: 5px;">Nota</th>
                                                 <th style="padding: 5px;">Semestre</th>
                                                 <th style="padding: 5px;">Equivalencia</th>
@@ -662,20 +665,33 @@
                                                 echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                                 echo"<form method='POST' action='index.php'>";
                                                 echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
+                                                echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
                                                 echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
-                                                echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
-                                                echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
+                                                echo "<td style='padding: 5px;'> <input type='number' name='credits' class='form-input' style='width: 5em;' value='" . $curso['credits'] . "'/></td>";
+                                                echo "<td style='padding: 5px;'> 
+                                                <select name='category' class='form-input' style='width: 8em;'>";
+                                                    $options = array("", "mandatory", "free", "general", "elective");
+                                                ?>
+                                                    <option value=""<?php if ($curso['category'] == '') echo 'selected'; ?>></option>
+                                                    <option value="mandatory"<?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
+                                                    <option value="elective"<?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
+                                                    <option value="general"<?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
+                                                    <option value="free"<?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
+                                                    <option value="other"<?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
+                                                <?php
+                                                echo "</select></td>";
                                                 if (in_array($curso['crse_grade'], ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                     echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
                                                 } else {
                                                     echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
                                                 }echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "'/></td>";
                                                 echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
-                                                echo "<input type='hidden' name='category' value='" . $curso['category'] . "'/>";
+                                                echo "<input type='hidden' name='old_category' value= '". $curso['category'] . "'/>";
                                                 echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
-                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                                if($curso['db'] == 'yes')
+                                                    echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
                                                 echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";

@@ -564,7 +564,7 @@ class ClassesModel {
 
     public function getAllOtherCoursesWgrades($conn, $student_num)
     {
-        $sql = "SELECT *
+        $sql = "SELECT student_courses.*, 'no' as db, '' as name
                 FROM student_courses
                 WHERE crse_code NOT IN (
                     SELECT crse_code
@@ -577,9 +577,16 @@ class ClassesModel {
 
                 UNION
 
-                SELECT * 
-                FROM student_courses
-                WHERE student_num = $student_num
+                SELECT sc.*, 'yes' as db, cc.name as name
+                FROM student_courses as sc JOIN ccom_courses as cc ON sc.crse_code = cc.crse_code
+                WHERE sc.student_num = $student_num
+                AND category = 'other'
+
+                UNION
+
+                SELECT sc.*, 'yes' as db, gc.name as name
+                FROM student_courses as sc JOIN general_courses as gc ON sc.crse_code = gc.crse_code
+                WHERE sc.student_num = $student_num
                 AND category = 'other'
                 ";
 
