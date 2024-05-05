@@ -73,7 +73,8 @@
                                 <div>
                                     <label for="student_num">Numero de Estudiante</label>
                                     <div class="relative text-white-dark">
-                                        <input id="student_num" type="password" name="student_num" required placeholder="840######" class="form-input ps-10 placeholder:text-white-dark" />
+                                        <!-- <input id="student_num" type="password" name="student_num" required placeholder="840######" class="form-input ps-10 placeholder:text-white-dark" /> -->
+                                        <input id="student_num" name="student_num" type="password" placeholder="840######" class="form-input ps-10 placeholder:text-white-dark" x-model="params.numero" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 9);" maxlength="9" required />
                                     </div>
                                 </div>
                                 <div>
