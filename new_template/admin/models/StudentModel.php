@@ -732,6 +732,48 @@ class StudentModel {
             }
     }
 
+    public function deleteStudentGrade($student_num, $course_code, $term, $conn) {
+        $sql1 = "DELETE FROM student_courses 
+                WHERE student_num = ? AND crse_code = ? AND term = ?";
+        
+        // Preparar la sentencia
+        $stmt1 = $conn->prepare($sql1);
+        if (!$stmt1) {
+            // Manejar el error de preparación de la consulta
+            echo "Error preparing SQL statement: " . $conn->error . "<br>";
+            return FALSE;
+        }
+        
+        // Vincular los parámetros con los valores
+        $stmt1->bind_param("sss", $student_num, $course_code, $term);
+        
+        // Ejecutar la sentencia
+        if ($stmt1->execute()) {
+            // Verificar si la eliminación fue exitosa
+            if ($stmt1->affected_rows > 0) {
+                $stmt1->close();
+                $_SESSION['consejeria_msg'] = "Curso $course_code fue eliminado!!";
+                $date = date("Y-m-d");
+                $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                $result = $conn->query($sql2);
+    
+                if ($result === false) {
+                        throw new Exception("Error en la consulta SQL: " . $conn->error);
+                }
+                return TRUE; // La eliminación fue exitosa
+            } else {
+                $stmt1->close();
+                $_SESSION['consejeria_msg'] = "No pudo eliminar el curso $course_code!!";
+                return FALSE; // La eliminación no tuvo ningún efecto (ninguna fila afectada)
+            }
+        } else {
+            // Ocurrió un error al ejecutar la consulta
+            // Manejar el error según sea necesario
+            $stmt1->close();
+            return FALSE;
+        }
+    }
+
     public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn) {
         
         $course_level = '';

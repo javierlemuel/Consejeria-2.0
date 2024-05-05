@@ -226,8 +226,12 @@ class ExpedientesController {
                     }
 
                     $result = $studentModel->studentAlreadyHasGrade($student_num, $course_code, $conn);
-
-                    if($result == TRUE)
+                    
+                    if($grade == "")
+                    {
+                        $studentModel->deleteStudentGrade($student_num, $course_code, $term, $conn);
+                    }
+                    elseif($result == TRUE)
                     {
                         $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn);
                     }
@@ -605,7 +609,7 @@ class ExpedientesController {
                                     $result = $studentModel->studentAlreadyHasGrade($studentNumber, $class, $conn);
                                 else
                                     $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);//el estudiante ya tiene una nota en esa clase y en ese semestre
-                                  
+
                                 if ($result == TRUE)
                                 {
                                     $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);

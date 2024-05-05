@@ -369,9 +369,9 @@
                                         echo "</select></td>";
                                                 echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
                                             if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
-                                                echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . ($curso['crse_grade'] ?? '') . "' required/></td>";
+                                                echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . ($curso['crse_grade'] ?? '') . "'/></td>";
                                             } else {
-                                                echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "' required/> </td>";
+                                                echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/> </td>";
                                             }
                                             echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "' required/></td>";
                                             echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
