@@ -120,8 +120,9 @@ class StudentModel {
 
         $edited = date("Y-m-d");
 
+        $cc = 0;
         // Vincular los parámetros con los valores
-        $stmt->bind_param("ssssssssssss", $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday, $edited, 0);
+        $stmt->bind_param("ssssssssssss", $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday, $edited, $cc);
 
         // Ejecutar la sentencia
         $result = $stmt->execute();
@@ -623,6 +624,8 @@ class StudentModel {
             // Error
             echo "Error executing query.";
         }
+
+        $stmt0->close();
 
         $checker = false;
         if (strpos($grade, 'D') == true || strpos($grade, 'F') == true)

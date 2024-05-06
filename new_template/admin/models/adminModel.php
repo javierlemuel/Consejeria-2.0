@@ -72,8 +72,8 @@ class AdminModel {
         
         $result = $conn->query($sql);
 
-        if ($priv == 0 || $priv == '0')
-            $_SESSION['privileges'] = 0;
+        // if ($priv == 0 || $priv == '0')
+        //     $_SESSION['privileges'] = 0;
 
         if ($result === false) {
             return "failure";
