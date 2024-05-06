@@ -258,7 +258,7 @@ class StudentModel {
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 $stmt->close();
-                $_SESSION['students_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst." por email repetido";
+                $_SESSION['student_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst." por email repetido";
                 return;
             }
         }
