@@ -992,7 +992,7 @@ class StudentModel {
         # Find all the students that are not inactive in the database
         $sql1 = 'SELECT student_num, cohort_year, status
                 FROM student
-                WHERE status != "Inactivo"';
+                WHERE status = "Activo"';
         
         $result = $conn->query($sql1);
 
