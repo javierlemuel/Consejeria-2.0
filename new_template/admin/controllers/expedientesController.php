@@ -1,6 +1,5 @@
 <?php
-if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
-{
+if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
     header("Location: ../index.php");
     exit;
 }
@@ -12,8 +11,10 @@ require_once(__DIR__ . '/../models/MinorModel.php');
 require_once(__DIR__ . '/../config/database.php');
 require_once(__DIR__ . '/../models/CohorteModel.php');
 
-class ExpedientesController {
-    public function index() {
+class ExpedientesController
+{
+    public function index()
+    {
         global $conn;
         $studentModel = new StudentModel();
         //JAVIER
@@ -22,16 +23,13 @@ class ExpedientesController {
         $_SESSION['registermodeltxt'] = "";
         //
 
-        if(isset($_GET['autorecommend']))
-        {
+        if (isset($_GET['autorecommend'])) {
             // Entrar función de auto-recomendación de cursos en oferta a todos los estudiantes
             $date = date("Y-m-d");
             $studentModel->generateAutoReports($conn, $date);
-            
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST')
-        {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $date = date("Y-m-d");
             $action = isset($_POST['action']) ? $_POST['action'] : '';
             if ($action === 'addStudent') {
@@ -49,17 +47,12 @@ class ExpedientesController {
 
                 // Llama al modelo para insertar el estudiante en la base de datos
                 $success = $studentModel->insertStudent($conn, $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday);
-                if($success == TRUE)
-                {
+                if ($success == TRUE) {
                     $mensaje = "studentAdded";
-                }
-                else
-                {
+                } else {
                     $mensaje = "studentNotAdded";
                 }
-            }
-            elseif ($action === 'selecteStudent')
-            {
+            } elseif ($action === 'selecteStudent') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();
 
@@ -69,9 +62,7 @@ class ExpedientesController {
                 $cohorts = $classesModel->getCohorts($conn);
                 require_once(__DIR__ . '/../views/editStudentView.php');
                 return;
-            }
-            elseif ($action === 'editStudent')
-            {
+            } elseif ($action === 'editStudent') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();
 
@@ -98,9 +89,7 @@ class ExpedientesController {
                 $cohorts = $classesModel->getCohorts($conn);
                 require_once(__DIR__ . '/../views/editStudentView.php');
                 return;
-            }
-            elseif ($action === 'studentCounseling')
-            {
+            } elseif ($action === 'studentCounseling') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();
                 require_once(__DIR__ . '/../models/ClassModel.php');
@@ -113,21 +102,20 @@ class ExpedientesController {
                 $studentCohort = $studentData['cohort_year'];
                 $studentRecommendedTerms = $studentModel->studentRecommendedTerms($student_num, $conn);
 
-                if(isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
+                if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
-                }
-                else{
+                } else {
                     $studentRecommendedClasses = NULL;
                 }
-                if(isset($_POST['deleteRecomendation']) && !empty($_POST['deleteRecomendation'])) {
+                if (isset($_POST['deleteRecomendation']) && !empty($_POST['deleteRecomendation'])) {
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $crse_code = $_POST['crse_code'];
                     $deleteResult = $studentModel->deleteRecomendation($student_num, $crse_code, $selectedTerm, $conn); // clases recomendadas en ese term
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn);
                 }
-                if(isset($_POST['makecounseling']) && !empty($_POST['makecounseling'])) {
-                    if(isset($_POST['updateGrade']))
+                if (isset($_POST['makecounseling']) && !empty($_POST['makecounseling'])) {
+                    if (isset($_POST['updateGrade']))
                         unset($_POST['updateGrade']);
 
                     $currentDateTime = date("Y-m-d H:i:s");
@@ -137,48 +125,36 @@ class ExpedientesController {
 
                     $term = $classesModel->getTerm($conn);
 
-                    if (isset($_POST['seleccion']) && is_array($_POST['seleccion']))
-                    {
+                    if (isset($_POST['seleccion']) && is_array($_POST['seleccion'])) {
                         // Obtiene los valores de los checkboxes seleccionados
                         $selectedClasses = $_POST['seleccion'];
 
-                        foreach ($selectedClasses as $class)
-                        {
+                        foreach ($selectedClasses as $class) {
                             $result = $studentModel->alreadyRecomended($student_num, $class, $term, $conn);
 
-                            if($result == TRUE)
-                            {
+                            if ($result == TRUE) {
                                 #error_log("La clase $class ya estaba recomendada para este semestre. \n", 3, $archivoRegistro);
                                 $_SESSION['registermodeltxt'] .= "La clase $class ya estaba recomendada para este semestre. \n";
-                            }
-                            else
-                            {
+                            } else {
                                 $results = $studentModel->insertRecomendation($student_num, $class, $term, $conn);
-                                if($results == TRUE)
-                                {
+                                if ($results == TRUE) {
                                     #error_log("La clase $class se anadio a recommended courses. \n", 3, $archivoRegistro);
                                     $_SESSION['registermodeltxt'] .= "La clase $class se añadió a 'Recommended Courses'. \n";
                                     if (sizeof($selectedClasses) > 1)
                                         $_SESSION['consejeria_msg'] = "Clases fueron añadidas a recomendación!!";
-                                }
-                                else
-                                {
+                                } else {
                                     #error_log("Hubo un error insertando la clase. \n", 3, $archivoRegistro);
                                     $_SESSION['registermodeltxt'] .= "Hubo un error insertando la clase. \n";
                                 }
                             }
                         }
-
-                        
-                    }
-                    else
-                    {
+                    } else {
                         // No se seleccionaron clases
                         #error_log("No se seleccionaron clases \n", 3, $archivoRegistro);
                         $_SESSION['registermodeltxt'] .= "No se seleccionaron clases \n";
                     }
                 }
-                if(isset($_POST['updateGrade']) && !empty($_POST['updateGrade'])) {
+                if (isset($_POST['updateGrade']) && !empty($_POST['updateGrade'])) {
                     $currentDateTime = date("Y-m-d H:i:s");
                     $logMessage = "\n" . $currentDateTime . "\n";
                     #error_log($logMessage, 3, $archivoRegistro);
@@ -188,11 +164,10 @@ class ExpedientesController {
                     $credits = $_POST['credits'];
                     $department = substr($course_code, 0, 4);
                     $category = $_POST['category'];
-                    if($category == "")
-                    {
+                    if ($category == "") {
                         $category = $_POST['old_category'];
                     }
-                    if(isset($_POST['level']))
+                    if (isset($_POST['level']))
                         $level = $_POST['level'];
                     else
                         $level = 'NULL';
@@ -202,64 +177,47 @@ class ExpedientesController {
                     $term = $_POST['term'];
                     $old_term = $_POST['old_term'];
 
-                    if($department == "CCOM")
-                    {
-                        if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
-                        {
+                    if ($department == "CCOM") {
+                        if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                             $status = "NP";
-                        }
-                        else
-                        {
+                        } else {
                             $status = "P";
                         }
-                    }
-                    else
-                    {
-                        if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
-                        {
+                    } else {
+                        if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                             $status = "NP";
-                        }
-                        else
-                        {
+                        } else {
                             $status = "P";
                         }
                     }
 
                     $result = $studentModel->studentAlreadyHasGrade($student_num, $course_code, $conn);
-                    
-                    if($grade == "")
-                    {
+
+                    if ($grade == "") {
                         $studentModel->deleteStudentGrade($student_num, $course_code, $term, $conn);
-                    }
-                    elseif($result == TRUE)
-                    {
+                    } elseif ($result == TRUE) {
                         $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn);
-                    }
-                    else
-                    {
+                    } else {
                         $studentModel->InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn);
                     }
                 }
-                if(isset($_POST['insertGrade']) && !empty($_POST['insertGrade'])) {
+                if (isset($_POST['insertGrade']) && !empty($_POST['insertGrade'])) {
                     $crse_code = $_POST['crse_code'];
                     $crse_code = strtoupper($crse_code);
                     $term = $_POST['term'];
-                    if($term == '')
-                    {
+                    if ($term == '') {
                         $term = $classesModel->getTerm($conn);
                     }
                     $studentAlreadyHasGradeInTerm = $studentModel->alreadyHasGradeInTerm($student_num, $crse_code, $term, $conn); # revisa si ya el estudiante a tiene nota en esta clase y semestre
-                    if($studentAlreadyHasGradeInTerm == TRUE) # el estudiante ya tiene una nota en esa clase y semestre.
+                    if ($studentAlreadyHasGradeInTerm == TRUE) # el estudiante ya tiene una nota en esa clase y semestre.
                     {
                         #error_log("El estudiante $student_num ya tiene una calificacion en el curso $crse_code en el term $term. No se actualizo nada.\n", 3, $archivoRegistro);
                         $_SESSION['registermodeltxt'] .= "El estudiante $student_num ya tiene una calificacion en el curso $crse_code en el term $term. No se actualizo nada.\n";
-                    }
-                    else # el estudiante no tiene una nota en esa clase y semestre.
+                    } else # el estudiante no tiene una nota en esa clase y semestre.
                     {
                         $credits = $_POST['credits'];
                         $category = $_POST['category'];
-                        if($category == '')
-                        {
+                        if ($category == '') {
                             $category = "free";
                         }
                         $grade = $_POST['grade'];
@@ -268,43 +226,31 @@ class ExpedientesController {
                         $equivalencia = $_POST['equivalencia'];
                         $convalidacion = $_POST['convalidacion'];
 
-                        if($status == '')
-                        {
-                            if($department == "CCOM")
-                            {
-                                if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
-                                {
+                        if ($status == '') {
+                            if ($department == "CCOM") {
+                                if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                     $status = "NP";
-                                }
-                                else
-                                {
+                                } else {
                                     $status = "P";
                                 }
-                            }
-                            else
-                            {
-                                if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
-                                {
+                            } else {
+                                if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                     $status = "NP";
-                                }
-                                else
-                                {
+                                } else {
                                     $status = "P";
                                 }
                             }
                         }
 
                         $course_info = $classModel->selectCourseWNull($conn, $crse_code);
-                        if($course_info == NULL){
-                            if($credits == '' or $category == ''){
+                        if ($course_info == NULL) {
+                            if ($credits == '' or $category == '') {
                                 #error_log("La clase " . $crse_code . "no está en la base de datos, tienes que proveer los creditos y el tipo de clase. \n", 3, $archivoRegistro);
                                 $_SESSION['registermodeltxt'] .= "La clase " . $crse_code . "no está en la base de datos, tienes que proveer los creditos y el tipo de clase. \n";
-                            }
-                            else{
+                            } else {
                                 $studentModel->InsertStudentGrade($student_num, $crse_code, $grade, $equivalencia, $convalidacion, $credits, $term, $category, $status, $conn);
                             }
-                        }
-                        else{
+                        } else {
                             $credits = $course_info['credits'];
                             $studentModel->InsertStudentGrade($student_num, $crse_code, $grade, $equivalencia, $convalidacion, $credits, $term, $category, $status, $conn);
                         }
@@ -328,9 +274,7 @@ class ExpedientesController {
 
                 require_once(__DIR__ . '/../views/counselingView.php');
                 return;
-            }
-            elseif ($action === 'openCounseling')
-            {
+            } elseif ($action === 'openCounseling') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();
                 require_once(__DIR__ . '/../models/ClassModel.php');
@@ -343,11 +287,10 @@ class ExpedientesController {
                 $studentCohort = $studentData['cohort_year'];
                 $studentRecommendedTerms = $studentModel->studentRecommendedTerms($student_num, $conn);
 
-                if(isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
+                if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
-                }
-                else{
+                } else {
                     $studentRecommendedClasses = NULL;
                 }
                 $_SESSION['consejeria_msg'] = 'Consejería re-abierta para el estudiante!';
@@ -369,9 +312,7 @@ class ExpedientesController {
 
                 require_once(__DIR__ . '/../views/counselingView.php');
                 return;
-            }
-            elseif ($action === 'uploadCSV')
-            {
+            } elseif ($action === 'uploadCSV') {
                 $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
 
                 $currentDateTime = date("Y-m-d H:i:s");
@@ -383,20 +324,20 @@ class ExpedientesController {
                 if (!empty($_FILES['files']['name']) && !empty($_FILES['files2']['name'])) {
                     $file_tmp = $_FILES['files']['tmp_name'];
                     $file_tmp2 = $_FILES['files2']['tmp_name'];
-                
+
                     // Validamos que el primer archivo sea de tipo texto
                     if ($_FILES['files']['type'] == "text/plain") {
                         // Leemos el contenido del primer archivo CSV
                         $file_content = file_get_contents($file_tmp);
-                
+
                         // Dividimos el contenido por líneas
                         $lines = explode("\n", $file_content);
-                
+
                         // Leemos el contenido del segundo archivo CSV
                         $file_content2 = file_get_contents($file_tmp2);
                         $lines2 = preg_split('/\r\n|\r|\n/', $file_content2);
                         $birthdays = [];
-                
+
                         foreach ($lines2 as $line2) {
 
                             if (trim($line2) == '') {
@@ -405,7 +346,7 @@ class ExpedientesController {
 
                             $data2 = explode(",", $line2);
 
-                            if ($data2 == 'ID'){
+                            if ($data2 == 'ID') {
                                 continue;
                             }
 
@@ -414,12 +355,12 @@ class ExpedientesController {
 
                             $student_num2 = trim($data2[0]);
                             $birthday = trim($data2[count($data2) - 2]); // Asumiendo que la fecha de nacimiento está en el penúltimo índice
-                
+
                             // Almacenar la fecha de nacimiento asociada al número de estudiante
                             $birthdays[$student_num2] = $birthday;
                             //echo "{{Birthday for $student_num2: $birthdays[$student_num2]}}\n";
                         }
-                        
+
                         foreach ($lines as $line) {
 
                             if (trim($line) == '') {
@@ -428,28 +369,28 @@ class ExpedientesController {
 
                             // Dividimos cada línea por el delimitador ";"
                             $data = explode(";", $line);
-                        
+
                             // Aplicamos trim a cada parte para eliminar espacios en blanco
                             $student_num = trim($data[0]);
-                            
+
                             // Obtenemos el apellido paterno y materno
                             $apellidos_nombres = explode(",", trim($data[1]));
                             $apellidos = $apellidos_nombres[0];
-                        
+
                             // Verificamos si hay un segundo apellido (materno)
                             $apellido_paterno = $apellido_materno = "";
-                        
+
                             if (strpos($apellidos, ' ') !== false) {
                                 list($apellido_paterno, $apellido_materno) = explode(' ', $apellidos, 2);
                             } else {
                                 $apellido_paterno = $apellidos;
                             }
-                        
+
                             // Obtenemos el nombre y segundo nombre
                             $nombres = explode(" ", trim($apellidos_nombres[1]));
                             $nombre = isset($nombres[0]) ? trim($nombres[0]) : "";
                             $segundo_nombre = isset($nombres[1]) ? trim($nombres[1]) : "";
-                        
+
                             $email = trim($data[12]);
 
                             // Obtener la fecha de nacimiento del array $birthdays si está disponible
@@ -463,30 +404,24 @@ class ExpedientesController {
                             $apellido_paterno = ucwords(strtolower($apellido_paterno));
                             $apellido_materno = ucwords(strtolower($apellido_materno));
                             $email = strtolower($email) . "@upr.edu";
-                            
-                            if($birthdate != '')
-                            {
+
+                            if ($birthdate != '') {
                                 $student = $studentModel->selectStudent($student_num, $conn);
-                                if($student != NULL)
-                                {
+                                if ($student != NULL) {
                                     #error_log("El estudiante: " . $student_num . " ya existia en la base de datos. \n", 3, $archivoRegistro);
                                     $_SESSION['registermodeltxt'] .= "El estudiante: " . $student_num . " ya existia en la base de datos. \n";
-                                }
-                                else
-                                {
+                                } else {
                                     // Llamamos a la función del modelo para insertar el estudiante
                                     $studentModel->insertStudentCSV($conn, $student_num, $nombre, $segundo_nombre, $apellido_materno, $apellido_paterno, $email, $birthdate);
                                     $archivoRegistroModel = __DIR__ . '/../models/archivo_de_registro.txt';
                                     $date = date("Y-m-d");
                                     $studentModel->updateEditDate($conn, $student_num, $date);
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 #error_log("El estudiante: " . $student_num . " no tiene fecha de nacimiento \n", 3, $archivoRegistro);
                                 $_SESSION['registermodeltxt'] .= "El estudiante: " . $student_num . " no tiene fecha de nacimiento \n";
-                            }   
-                        }                                                                                                                      
+                            }
+                        }
                         //exito
                         $result = "Archivos CSV procesados correctamente.";
                         #error_log("Archivos procesados correctamente \n", 3, $archivoRegistro);
@@ -503,9 +438,7 @@ class ExpedientesController {
                     #error_log("No se a seleccionado ningun archivo \n", 3, $archivoRegistro);
                     $_SESSION['registermodeltxt'] .= "No se a seleccionado ningun archivo \n";
                 }
-            }
-            elseif ($action === 'updateGradeCSV')
-            {
+            } elseif ($action === 'updateGradeCSV') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();
                 require_once(__DIR__ . '/../models/ClassModel.php');
@@ -518,8 +451,7 @@ class ExpedientesController {
                 $_SESSION['registermodeltxt'] .= $logMessage;
 
                 // Verificamos si se han subido archivos
-                if (!empty($_FILES['files']['name']))
-                {
+                if (!empty($_FILES['files']['name'])) {
                     // Obtén el archivo temporal subido
                     $tmpName = $_FILES['files']['tmp_name'];
 
@@ -527,11 +459,10 @@ class ExpedientesController {
                     $file = fopen($tmpName, 'r');
 
                     // Itera sobre cada línea del archivo
-                    while (($line = fgetcsv($file)) !== FALSE)
-                    {
+                    while (($line = fgetcsv($file)) !== FALSE) {
                         // Asigna cada dato a una variable
                         $term = $line[0];
-                        if(strlen($term) > 3)
+                        if (strlen($term) > 3)
                             $term = trim($term); # no se por que esta pone un espacio en blanco en el comienzo del archivo. ya con trim lo quitamos
                         $term = trim($term, "\xEF\xBB\xBF");
                         $studentNumber = $line[1];
@@ -547,76 +478,57 @@ class ExpedientesController {
 
                         $studentData = $studentModel->selectStudent($studentNumber, $conn);
                         // El estudiante no existe en la base de datos.
-                        if ($studentData == NULL)
-                        {
+                        if ($studentData == NULL) {
                             #error_log("El estudiante: " . $studentNumber . " no existe en la base de datos.\n", 3, $archivoRegistro);
                             $_SESSION['registermodeltxt'] .= "El estudiante: " . $studentNumber . " no existe en la base de datos.\n";
-                        }
-                        else
-                        {
-                            if($creditAmount != 0) # clases de 0 creditos no se ponen en las notas
+                        } else {
+                            if ($creditAmount != 0) # clases de 0 creditos no se ponen en las notas
                             {
                                 $equi = "";
                                 $conva = "";
                                 $course_info = $classModel->selectCourseWNull($conn, $class);
-                                if ($course_info == NULL)
-                                {
+                                if ($course_info == NULL) {
                                     $type = "free";
-                                }
-                                else #AQUI
+                                } else #AQUI
                                 {
-                                    
+
                                     if ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
-                                        if($course_info['type'] == 'FREE')
+                                        if ($course_info['type'] == 'FREE')
                                             $type = 'free';
                                         else
                                             $type = 'general';
                                     } else {
                                         $type = $course_info['type'];
                                     }
-                                    
                                 }
 
                                 #echo "{$course_info['crse_code']} has type: {$type}\n";
 
-                                if($grade == "")
-                                {
+                                if ($grade == "") {
                                     $status = "M";
-                                }
-                                elseif($department == "CCOM")
-                                {
-                                    if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
-                                    {
+                                } elseif ($department == "CCOM") {
+                                    if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                         $status = "NP";
+                                    } else {
+                                        $status = "P";
                                     }
-                                    else
-                                    {
+                                } else {
+                                    if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
+                                        $status = "NP";
+                                    } else {
                                         $status = "P";
                                     }
                                 }
-                                else
-                                {
-                                    if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR']))
-                                    {
-                                        $status = "NP";
-                                    }
-                                    else
-                                    {
-                                        $status = "P";
-                                    }
-                                }
-                                if(!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995']))
+                                if (!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995']))
                                     $result = $studentModel->studentAlreadyHasGrade($studentNumber, $class, $conn);
                                 else
-                                    $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn);//el estudiante ya tiene una nota en esa clase y en ese semestre
+                                    $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn); //el estudiante ya tiene una nota en esa clase y en ese semestre
 
-                                if ($result == TRUE)
-                                {
+                                if ($result == TRUE) {
                                     $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
                                     $date = date("Y-m-d");
                                     $studentModel->updateEditDate($conn, $studentNumber, $date);
-                                }
-                                else // el estudiante no tiene una nota en esa clase.
+                                } else // el estudiante no tiene una nota en esa clase.
                                 {
                                     $result = $studentModel->InsertStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $status, $conn);
                                     $date = date("Y-m-d");
@@ -634,31 +546,29 @@ class ExpedientesController {
 
         // Parámetros de paginación
         $studentsPerPage = 9; // Cambia esto al número deseado
-        if(!isset($_SESSION['page']))
+        if (!isset($_SESSION['page']))
             $_SESSION['page'] = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        if(isset($_GET['page']))
+        if (isset($_GET['page']))
             $_SESSION['page'] = $_GET['page'];
         $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : (int)$_SESSION['page'];
- 
+
 
         // Obtener los parámetros del filtro de estado y búsqueda
-        if(!isset($_SESSION['status']))
+        if (!isset($_SESSION['status']))
             $_SESSION['status'] = isset($_GET['status']) ? $_GET['status'] : 'Todos';
-        if(isset($_GET['status']) && $_GET['status'] !== $_SESSION['status'])
-        {
+        if (isset($_GET['status']) && $_GET['status'] !== $_SESSION['status']) {
             $_SESSION['status'] = $_GET['status'];
             $_SESSION['page'] = 1;
         }
         $statusFilter = isset($_GET['status']) ? $_GET['status'] : $_SESSION['status'];
 
-        if(!isset($_SESSION['search']))
+        if (!isset($_SESSION['search']))
             $_SESSION['search'] = isset($_GET['search']) ? $_GET['search'] : '';
-        if(isset($_SESSION['search']) && $_SESSION['search'] != '' && !isset($_GET['page']))
-            $currentPage = 1;
-        if(isset($_GET['search']))
-        {
+        //if(isset($_SESSION['search']) && $_SESSION['search'] != '' && !isset($_GET['page']))
+        //  $currentPage = 1;
+        if (isset($_GET['search'])) {
             $_SESSION['search'] = $_GET['search'];
-            if($_GET['search'] != '')
+            if ($_GET['search'] == 'null')
                 $currentPage = 1;
         }
         $searchKeyword = isset($_GET['search']) ? $_GET['search'] : $_SESSION['search'];
@@ -697,7 +607,7 @@ class ExpedientesController {
         //     if($fileContentModel != "")
         //         $_SESSION['registermodeltxt'] = $fileContentModel;
         // }
-        
+
         $cohorteModel = new CohorteModel();
         $cohortes = $cohorteModel->getCohorteYears($conn);
         require_once(__DIR__ . '/../views/expedientesView.php');
@@ -706,4 +616,3 @@ class ExpedientesController {
 
 $expedientesController = new ExpedientesController();
 $expedientesController->index();
-?>
