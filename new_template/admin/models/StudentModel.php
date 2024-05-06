@@ -113,6 +113,17 @@ class StudentModel {
 
     public function insertStudent($conn, $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday) {
         // Preparar la consulta SQL
+
+        $sql0 = "SELECT * FROM student WHERE email = ? or student_num = ?";
+        $stmt =  $conn->prepare($sql0);
+        $stmt->bind_param("si", $email, $numero);
+        $result = $stmt->execute();
+        if ($result->num_rows > 0) {
+            $stmt->close();
+            $_SESSION['students_list_msg'] = "No se pudo insertar el estudiante ".$numero." por número de estudiante o email repetido";
+            return FALSE;
+        }
+        
         $sql = "INSERT INTO student (name1, name2, last_name1, last_name2, email, minor, student_num, cohort_year, status, dob, edited_date, conducted_counseling) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Preparar la sentencia

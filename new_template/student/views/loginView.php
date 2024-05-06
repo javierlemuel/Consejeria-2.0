@@ -54,12 +54,12 @@
                                         <br>
                                     </div>
                                 <?php } ?>
-                                <h1 class="text-3xl font-extrabold uppercase !leading-snug md:text-4xl" style="color: #2b2b2b;">Iniciar Sesion</h1>
-                                <p class="text-base font-bold leading-normal text-white-dark">Entra tu correo electronico, numero de estudiante y fecha de nacimiento</p>
+                                <h1 class="text-3xl font-extrabold uppercase !leading-snug md:text-4xl" style="color: #2b2b2b;">Iniciar Sesión</h1>
+                                <p class="text-base font-bold leading-normal text-white-dark">Entra tu correo electrónico, número de estudiante y fecha de nacimiento</p>
                             </div>
                             <form class="space-y-5 dark:text-white" method="post" action="controllers/loginController.php">
                                 <div>
-                                    <label for="email">Correo electronico</label>
+                                    <label for="email">Correo electrónico</label>
                                     <div class="relative text-white-dark">
                                         <input id="email" type="email" name="email" placeholder="ejemplo@upr.edu" required class="form-input ps-10 placeholder:text-white-dark" />
                                         <span class="absolute start-4 top-1/2 -translate-y-1/2">
@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="student_num">Numero de Estudiante</label>
+                                    <label for="student_num">Número de Estudiante</label>
                                     <div class="relative text-white-dark">
                                         <!-- <input id="student_num" type="password" name="student_num" required placeholder="840######" class="form-input ps-10 placeholder:text-white-dark" /> -->
                                         <input id="student_num" name="student_num" type="password" placeholder="840######" class="form-input ps-10 placeholder:text-white-dark" x-model="params.numero" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 9);" maxlength="9" required />

@@ -53,8 +53,8 @@
                                         <br>
                                     </div>
                                 <?php } ?>
-                                <h1 class="text-3xl font-extrabold uppercase !leading-snug md:text-4xl" style="color: #2b2b2b;">Iniciar Sesion</h1>
-                                <p class="text-base font-bold leading-normal text-white-dark">Entra tu correo electronico y contraseña.</p>
+                                <h1 class="text-3xl font-extrabold uppercase !leading-snug md:text-4xl" style="color: #2b2b2b;">Iniciar Sesión</h1>
+                                <p class="text-base font-bold leading-normal text-white-dark">Entra tu correo electrónico y contraseña.</p>
                             </div>
                             <form class="space-y-5 dark:text-white" method="post" action="controllers/loginController.php">
                                 <div>
