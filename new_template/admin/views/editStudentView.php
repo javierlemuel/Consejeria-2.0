@@ -155,6 +155,7 @@
                         <div>
                             <label for="email">Email</label>
                             <input name="email" type="email" class="form-input" maxlength="40" value="<?php echo $studentData['email']; ?>" required />
+                            <input type='hidden' name='old_email' value="<?php echo $studentData['email']; ?>">
                         </div>
                         <div>
                             <label for="fechaNac">Fecha de nacimiento</label>

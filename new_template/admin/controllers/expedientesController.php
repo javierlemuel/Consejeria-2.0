@@ -71,6 +71,7 @@ class ExpedientesController
                 $apellidoP = $_POST['apellidoP'];
                 $apellidoM = $_POST['apellidoM'];
                 $email = $_POST['email'];
+                $old_email = $_POST['old_email'];
                 $numeroEst = $_POST['numeroEstu'];
                 $fechaNac = $_POST['fechaNac'];
                 $cohorte = $_POST['cohorte'];
@@ -82,7 +83,7 @@ class ExpedientesController
                 $tipo = $_POST['tipo'];
                 //JAVIER
                 $date = date("Y-m-d");
-                $result = $studentModel->editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn);
+                $result = $studentModel->editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $old_email, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn);
                 $minors = $minorModel->getMinors($conn);
                 //
                 $studentData = $studentModel->selectStudent($numeroEst, $conn);

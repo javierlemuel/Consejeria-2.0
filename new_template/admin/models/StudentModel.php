@@ -246,19 +246,23 @@ class StudentModel {
         }
     }
 
-    public function editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn) {
+    public function editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $old_email, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn) {
         // Preparar la consulta SQL
 
-        $sql0 = "SELECT * FROM student WHERE email = ?";
-        $stmt =  $conn->prepare($sql0);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $stmt->close();
-            $_SESSION['students_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst." por email repetido";
-            return;
+        if($email != $old_email)
+        {
+            $sql0 = "SELECT * FROM student WHERE email = ?";
+            $stmt =  $conn->prepare($sql0);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $stmt->close();
+                $_SESSION['students_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst." por email repetido";
+                return;
+            }
         }
+        
 
         $sql = "UPDATE student 
                 SET name1 = ?, 
