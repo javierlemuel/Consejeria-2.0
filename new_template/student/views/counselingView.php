@@ -289,6 +289,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
             });
 
             $(document).ready(() => {
+                const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
 
                 $('input[type="checkbox"]').change(function() {
 

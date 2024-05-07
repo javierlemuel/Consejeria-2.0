@@ -97,6 +97,12 @@
     </div>
 </div>
 <!-- end sidebar section -->
+<script src="assets/js/alpine-collaspe.min.js"></script>
+<script src="assets/js/alpine-persist.min.js"></script>
+<script defer src="assets/js/alpine-ui.min.js"></script>
+<script defer src="assets/js/alpine-focus.min.js"></script>
+<script defer src="assets/js/alpine.min.js"></script>
+<script src="assets/js/custom.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
 <script>
@@ -181,6 +187,7 @@
 
     $(document).ready(() => {
         const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
+        console.log("generales: ", generales);
 
         if (<?php echo $_SESSION['conducted_counseling'] ?> == 1) {
             var courseList = <?php echo $_SESSION['selectedCourses'] ?>;
@@ -198,6 +205,9 @@
 
                 console.log("each selected course: ", selectedCourse);
                 const courseCode = selectedCourse;
+                console.log('general: ', courseCode);
+
+
 
                 let category = '';
                 if (courseCode.startsWith("CCOM")) {
