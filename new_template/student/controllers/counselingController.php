@@ -71,7 +71,7 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
             $counseling_lock = $counselingModel->getCounselingLock($conn, $student_num);
             // FIX HERE
 
-            if ($conducted_counseling === 1 || $counseling_lock === 1) {
+            if ($conducted_counseling == 1 || $counseling_lock == 1) {
                 $_SESSION['conducted_counseling'] = 1;
                 $_SESSION['counseling_button'] = '<button type="submit" value="Submit" id="counseling_button" class="btn btn-warning self-end" disabled>Confirmar Consejeria</button>';
             } else {

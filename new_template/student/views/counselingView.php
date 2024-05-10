@@ -89,6 +89,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                                     <?php
                                                     //var_dump($selected_courses);
                                                     //echo $_SESSION['conducted_counseling']
+                                                    echo $counseling_lock;
                                                     ?>
                                                 </div>
                                             </div>
