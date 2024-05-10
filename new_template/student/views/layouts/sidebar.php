@@ -55,6 +55,13 @@
                         <span>Ciencias Sociales</span>
                     </h2>
                     <ul id="cienciasSociales"></ul>
+                    <h2 class="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold  dark:bg-dark dark:bg-opacity-[0.08]">
+                        <svg class="hidden h-5 w-4 flex-none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- <line x1="5" y1="12" x2="19" y2="12"></line> -->
+                        </svg>
+                        <span>Otras</span>
+                    </h2>
+                    <ul id="otras"></ul>
 
                     <?php
                     //if the student conducted the counseling the button will be disable
@@ -198,7 +205,7 @@
         }
 
         // unset($_SESSION['conducted_counseling']);
-    
+
         // unset($_SESSION['counseling_button']);
 
         //retrieve the list of courses in session storage 
@@ -222,6 +229,8 @@
                     category = $('#humanidades');
                 } else if (courseCode.startsWith("CISO")) {
                     category = $('#cienciasSociales');
+                } else {
+                    category = $('#otras');
                 }
                 let html = `<li id="${courseCode}">
                             <h3 style="font-size: 12px;" class="justify-between -mx-4 mb-2 flex items-center  py-3 px-7 font uppercase dark:bg-dark dark:bg-opacity-[0.08]" style="text-size: 14px;">
