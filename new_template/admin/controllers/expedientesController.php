@@ -313,7 +313,61 @@ class ExpedientesController
 
                 require_once(__DIR__ . '/../views/counselingView.php');
                 return;
-            } elseif ($action === 'uploadCSV') {
+            }
+            elseif ($action === 'blockCounseling') {
+            require_once(__DIR__ . '/../models/ClassesModel.php');
+            $classesModel = new ClassesModel();
+            require_once(__DIR__ . '/../models/ClassModel.php');
+            $classModel = new ClassModel();
+            $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
+
+            // info del estudiatne
+            $student_num = $_POST['student_num'];
+            $studentData = $studentModel->selectStudent($student_num, $conn);
+            $studentCohort = $studentData['cohort_year'];
+            $studentRecommendedTerms = $studentModel->studentRecommendedTerms($student_num, $conn);
+
+            if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
+                $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
+                $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
+            } else {
+                $studentRecommendedClasses = NULL;
+            }
+            $lockStatus = '';
+
+            if(isset($_POST['block']))
+            {
+                $_SESSION['consejeria_msg'] = 'Consejería fue bloqueada para el estudiante!';
+                $lockStatus = 1;
+            }
+
+            if(isset($_POST['unblock']))
+            {
+                $_SESSION['consejeria_msg'] = 'Consejería fue desbloqueada para el estudiante!';
+                $lockStatus = 0;
+            }
+            
+            $studentModel->changeCounselingLock($student_num, $conn, $lockStatus);
+            $studentHaveMinor = $studentModel->studentHaveMinor($student_num, $conn);
+
+            $studentData = $studentModel->selectStudent($student_num, $conn);
+
+            // variables para las notas
+            $currentlyTaking = $classesModel->getCurrentlyTakingClasses($conn, $student_num);
+            $ccomByCohort = $classesModel->getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num);
+            $ccomFreeByNotCohort = $classesModel->getCohortCoursesWgradesCCOMfree($conn, $studentCohort, $student_num);
+            $notccomByCohort = $classesModel->getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num);
+            $notccomByNotCohort = $classesModel->getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num);
+            $otherClasses = $classesModel->getAllOtherCoursesWgrades($conn, $student_num);
+
+            // variables para las recomendaciones
+            $mandatoryClasses = $classesModel->getCcomCourses($conn);
+            $dummyClasses = $classesModel->getDummyCourses($conn);
+            $generalClasses = $classesModel->getGeneralCourses($conn);
+
+            require_once(__DIR__ . '/../views/counselingView.php');
+            return;
+        } elseif ($action === 'uploadCSV') {
                 $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
 
                 $currentDateTime = date("Y-m-d H:i:s");

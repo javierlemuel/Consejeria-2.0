@@ -197,6 +197,10 @@
             console.log("courses session storage: ", courseList);
         }
 
+        // unset($_SESSION['conducted_counseling']);
+    
+        // unset($_SESSION['counseling_button']);
+
         //retrieve the list of courses in session storage 
         if (courseList.length > 0) {
             //por cada checkbox seleccionado

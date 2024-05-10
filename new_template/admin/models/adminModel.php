@@ -62,6 +62,18 @@ class AdminModel {
 
     public function changeAdminInfoModel($conn, $old_email, $email, $fname, $lname, $priv, $pass)
     {
+
+        $sql = "SELECT *
+                FROM advisor
+                WHERE email = '$email'";
+
+        $result = $conn->query($sql);
+
+        
+        if ($result->num_rows > 0) 
+            // Rows exist with the provided email
+            return "failure";
+
         $sql = "UPDATE advisor
                 SET email = '$email',
                 pass = '$pass',

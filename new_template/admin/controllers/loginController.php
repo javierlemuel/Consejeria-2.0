@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // La autenticación fue exitosa, establece la variable de sesión "authenticated" en true
         session_start();
         $_SESSION['authenticated'] = true;
+        $_SESSION['email'] = $email;
 
         // Redirige al usuario a la página de expedientes
         header("Location: ../index.php");

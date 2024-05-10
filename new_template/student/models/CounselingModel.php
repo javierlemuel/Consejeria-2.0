@@ -255,11 +255,11 @@ class CounselingModel
     public function getCounselingStatus($conn, $student_num)
     {
         //get the student counseling status 0 == not conducted, 1 == conducted
-        $sql = "SELECT DISTINCT  conducted_counseling
+        $sql = "SELECT DISTINCT conducted_counseling
                 FROM student
                 WHERE student_num = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $student_num);
+        $stmt->bind_param("i", $student_num);
         if (!$stmt->execute()) {
             throw new Exception("Error: " . $stmt->error);
         } else {
@@ -267,6 +267,26 @@ class CounselingModel
             $status = $result->fetch_assoc();
             return $status['conducted_counseling'];
         }
+    }
+
+    public function getCounselingLock($conn, $student_num)
+    {
+        //get the student counseling lock, 0 == unblocked, 1 == blocked
+        $sql1 = "SELECT DISTINCT counseling_lock
+                FROM student
+                WHERE student_num = $student_num";
+        $lock = 0;        
+        
+        $result = $conn->query($sql1);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        foreach ($result as $res)
+            $lock = $res['counseling_lock'];
+
+        return $lock;
     }
 
     public function getCohortes($conn)

@@ -125,7 +125,7 @@ class StudentModel {
             return FALSE;
         }
 
-        $sql = "INSERT INTO student (name1, name2, last_name1, last_name2, email, minor, student_num, cohort_year, status, dob, edited_date, conducted_counseling) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO student (name1, name2, last_name1, last_name2, email, minor, student_num, cohort_year, status, dob, edited_date, conducted_counseling, counseling_lock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
@@ -134,7 +134,7 @@ class StudentModel {
 
         $cc = 0;
         // Vincular los parámetros con los valores
-        $stmt->bind_param("ssssssssssss", $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday, $edited, $cc);
+        $stmt->bind_param("sssssssssssss", $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday, $edited, $cc, $cc);
 
         // Ejecutar la sentencia
         $result = $stmt->execute();
@@ -383,8 +383,9 @@ class StudentModel {
     
         // Ejecuta el query de inserción
         $date = date("Y-m-d");
-        $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, minor, cohort_year, status, edited_date)
-                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', 0, 0, $cohort_year, 'Activo', '$date')";
+        $cc = 0;
+        $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, counseling_lock, minor, cohort_year, status, edited_date)
+                  VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', $cc, $cc, $cc, $cohort_year, 'Activo', '$date')";
     
         // Ejecuta el query
         if ($conn->query($query) === TRUE) {
@@ -556,6 +557,19 @@ class StudentModel {
         $result = $stmt->execute();
 
         // Cerrar la declaración
+        $stmt->close();
+
+        return;
+    }
+
+    public function changeCounselingLock($student_num, $conn, $lockStatus)
+    {
+        $sql = "UPDATE student SET counseling_lock = ? WHERE student_num = ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $lockStatus, $student_num);
+        $result = $stmt->execute();
+
         $stmt->close();
 
         return;
@@ -1066,7 +1080,7 @@ class StudentModel {
                     {
                         foreach($res4 as $res4)
                         {
-                            if($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm)
+                            if($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm && $res4['crse_grade'] != 'W')
                             {
                                 $checker1 = true; # Dismiss a class if student has passed it or is currently seeing it
                             }
@@ -1103,10 +1117,11 @@ class StudentModel {
                                     {
                                         $req_status =  $res6['crse_status'];
                                         $req_term = $res6['term'];
+                                        $req_grade = $res6['crse_grade'];
                                     }
                                 }
 
-                                if($req_status == 'P' || $req_term == $prevTerm) # If req has been passed, then continue to next req
+                                if($req_status == 'P' || $req_term == $prevTerm && $req_grade != 'W') # If req has been passed, then continue to next req
                                     continue;
                                 else
                                     $checker2 = false;

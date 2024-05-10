@@ -829,8 +829,23 @@
                         <form method="POST" action="index.php">
                             <input type='hidden' name='openCounseling' value='openCounseling'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                            <button type="submit" name="action" value="openCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Re-abrir Consejería en Frontend</button>
+                            <button type="submit" name="action" value="openCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Reiniciar Consejería en Frontend</button>
                         </form>
+                        <?php } ?>
+                        <br> 
+                        <?php if($studentData['counseling_lock'] == 0) { ?>
+                            <form method="POST" action="index.php">
+                            <input type='hidden' name='block' value='block'>
+                            <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
+                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Bloquear Consejería en Frontend</button>
+                            </form>
+                        <?php } 
+                            else if($studentData['counseling_lock'] == 1) { ?>
+                            <form method="POST" action="index.php">
+                            <input type='hidden' name='unblock' value='unblock'>
+                            <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
+                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Desbloquear Consejería en Frontend</button>
+                            </form>
                         <?php } ?>
                         <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Volver a Estudiantes</button>
                     </div>
