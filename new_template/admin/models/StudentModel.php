@@ -88,6 +88,8 @@ class StudentModel {
             $statusCondition = "status = 'Inactivo'";
         } elseif ($status === 'Graduados') {
             $statusCondition = "status = 'Graduado'";
+        } elseif ($status === 'Graduandos') {
+            $statusCondition = "status = 'Graduando'";    
         } else {
             $statusCondition = "1"; // Sin filtro, contar todos
         }
