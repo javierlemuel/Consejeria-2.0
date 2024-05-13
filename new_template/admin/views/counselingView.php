@@ -246,7 +246,7 @@
                                                         <option value='mandatory'>Concentración CCOM</option>
                                                         <option value='elective'>Electiva CCOM</option>
                                                         <option value='general'>General</option>
-                                                        <option value='elective'>Electiva Libre</option>
+                                                        <option value='free'>Electiva Libre</option>
                                                         <option value='other'>Otras Clases</option>
                                                     </select>
                                                 </td>
