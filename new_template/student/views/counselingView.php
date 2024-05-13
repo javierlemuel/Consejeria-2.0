@@ -89,6 +89,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                                     <?php
                                                     //var_dump($selected_courses);
                                                     //echo $_SESSION['conducted_counseling']
+                                                    //echo $counseling_lock;
                                                     ?>
                                                 </div>
                                             </div>
@@ -314,6 +315,8 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                             category = $('#humanidades');
                         } else if (courseCode.startsWith("CISO")) {
                             category = $('#cienciasSociales');
+                        } else {
+                            category = $('#otras');
                         }
                         let html = `<li id="${courseCode}">
                                 <h3 style="font-size: 12px;" class="justify-between -mx-4 mb-2 flex items-center  py-3 px-7 uppercase dark:bg-dark dark:bg-opacity-[0.08]" style="text-size: 14px;">
