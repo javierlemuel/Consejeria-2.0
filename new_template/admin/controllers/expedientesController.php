@@ -543,13 +543,21 @@ class ExpedientesController
                                 $conva = "";
                                 $course_info = $classModel->selectCourseWNull($conn, $class);
                                 if ($course_info == NULL) {
-                                    $type = "free";
+                                    $type = 'free';
                                 } else #AQUI
                                 {
-
-                                    if ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
-                                        if ($course_info['type'] == 'FREE')
+                                    if (isset($course_info['required']))
+                                    {
+                                        if($course_info['required'] == 1)
+                                            $type = 'general';
+                                        else
                                             $type = 'free';
+                                    }
+                                    elseif ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
+                                        if ($course_info['type'] == 'FREE'){
+                                            $type = 'free';
+                                        }
+                                            
                                         else
                                             $type = 'general';
                                     } else {
