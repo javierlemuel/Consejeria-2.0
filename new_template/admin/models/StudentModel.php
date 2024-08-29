@@ -586,7 +586,7 @@ class StudentModel {
             if($lg == $code)
                 $code = $this->validateLanguageGenerals($conn, $code);
 
-        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ?";
+        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND crse_grade != ''";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
@@ -611,7 +611,7 @@ class StudentModel {
             if($lg == $code)
                 $code = $this->validateLanguageGenerals($conn, $code);
 
-        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
+        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ? AND crse_grade != ''";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
@@ -678,7 +678,7 @@ class StudentModel {
 
         # $crse_grade is the grade they currently have
         # $grade is the grade being inserted
-        if(($crse_grade > $grade) && $checker == false)
+        if(($crse_grade > $grade || $crse_grade == '') && $checker == false)
         {
             $sql1 = "UPDATE student_courses 
                     SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
@@ -958,7 +958,7 @@ class StudentModel {
             if($lg == $class)
                 $class = $this->validateLanguageGenerals($conn, $class);
 
-        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
+        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ? AND crse_grade != ''";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor

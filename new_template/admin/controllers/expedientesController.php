@@ -191,12 +191,15 @@ class ExpedientesController
                             $status = "P";
                         }
                     }
+                    
 
                     $result = $studentModel->studentAlreadyHasGrade($student_num, $course_code, $conn);
 
                     if ($grade == "") {
                         $studentModel->deleteStudentGrade($student_num, $course_code, $term, $conn);
-                    } elseif ($result == TRUE) {
+                    } 
+                    
+                    if ($result == TRUE) {
                         $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn);
                     } else {
                         $studentModel->InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn);
@@ -582,6 +585,7 @@ class ExpedientesController
                                         $status = "P";
                                     }
                                 }
+
                                 if (!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995']))
                                     $result = $studentModel->studentAlreadyHasGrade($studentNumber, $class, $conn);
                                 else
