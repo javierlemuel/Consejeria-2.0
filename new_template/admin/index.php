@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
     if (
         isset($_GET['lista']) || isset($_GET['classes']) || isset($_GET['ccomelectives']) ||
-        isset($_GET['generalclasses']) || isset($_GET['addOffer']) || isset($_GET['removeOffer'])
-        || isset($_GET['offer']) || isset($_GET['newterm'])
+        isset($_GET['generalclasses']) || isset($_GET['dummyclasses']) || isset($_GET['addOffer']) 
+        || isset($_GET['removeOffer']) || isset($_GET['offer']) || isset($_GET['newterm'])
     ) {
         require_once 'controllers/classesController.php';
     } elseif (isset($_GET['createclass'])) {

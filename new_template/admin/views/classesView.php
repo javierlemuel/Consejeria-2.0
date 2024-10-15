@@ -283,6 +283,9 @@
                             <a href="?generalclasses" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'generales'}">Cursos generales</a>
                         </li>
                         <li>
+                            <a href="?dummyclasses" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'dummy'}">Cursos dummy</a>
+                        </li>
+                        <li>
                             <a href="?offer" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'oferta'}">Cursos en oferta</a>
                         </li>
                     </ul>
@@ -328,9 +331,12 @@
                 <td style='text-align:center'>$courseName</td>
                 <td style='text-align:center'>$credits</td> ";
                 
-                if($category !== 'oferta' && $privileges == 1)
+                if($category !== 'oferta' && $privileges == 1) {
                     echo "<td style='text-align:center; vertical-align:middle'><a href='?addOffer&code=$courseCode'>
                     <span class='badge whitespace-nowrap badge-outline-primary'>Añade a oferta</span>";
+                    echo "<td style='text-align:center; vertical-align:middle'><a href='?class=$courseCode'>
+                    <span class='badge whitespace-nowrap badge-outline-primary'>Editar curso</span>";
+                }
                 
                 elseif ($category == 'oferta') {
                     echo "<td style='text-align:center; vertical-align:middle'>

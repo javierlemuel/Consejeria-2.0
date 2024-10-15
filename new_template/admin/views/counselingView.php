@@ -467,8 +467,8 @@
                                             echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
                                             echo "<td style='padding: 5px;'> ". $general_credits."</td>";
                                             echo "<td>HUMA: ".$_SESSION['HUMA_credits']."</td>
-                                            <td>CISO: ".$_SESSION['CISO_credits']."</td>
-                                            <td></td><td></td><td></td><td></td><td></td><td></td>";
+                                            <td colspan=2>CISO: ".$_SESSION['CISO_credits']."</td>
+                                            <td></td><td></td><td></td><td></td><td></td>";
                                         echo "</tr>";
                                         ?>
                                     </tbody>
@@ -650,7 +650,7 @@
                                     echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">No hay otras clases que el estudiante haya tomado</h2>';
                                 } else {
                                 ?>
-                                <form method="post" action="index.php">
+
                                 <!-- basic table -->
                                 <div class="table-responsive">
                                     <table style="font-size: 12px; border-collapse: collapse;">
@@ -701,7 +701,7 @@
                                                 echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
-                                                if($curso['db'] == 'yes' && $privileges == 1)
+                                                if(/*$curso['db'] == 'yes' && */$privileges == 1)
                                                     echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
                                                 echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";

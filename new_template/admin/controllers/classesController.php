@@ -36,6 +36,12 @@ class ClassesController{
             $category = 'generales';
         }
 
+        elseif(isset($_GET['dummyclasses'])){
+            $term = $classesModel->getTerm($conn);
+            $courses = $classesModel->getDummyCourses($conn);
+            $category = 'dummy';
+        }
+
         elseif(isset($_GET['offer'])){
             if(isset($_GET['otherterm']))
             {

@@ -29,6 +29,11 @@ class ExpedientesController
             $studentModel->generateAutoReports($conn, $date);
         }
 
+        if (isset($_GET['deleteAllRecommend'])) {
+            // Entrar función de borrar todas las recomendaciones
+            $studentModel->deleteAllRecommendations($conn);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $date = date("Y-m-d");
             $action = isset($_POST['action']) ? $_POST['action'] : '';

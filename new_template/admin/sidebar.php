@@ -116,6 +116,9 @@ session_start()
                         <li>
                             <a href="?autorecommend">Auto-recomendación</a>
                         </li>
+                        <li>
+                            <a href="?deleteAllRecommend">Borrar todas las recomendaciones</a>
+                        </li>
                         <?php } ?>
                     </ul>
                 </li>
