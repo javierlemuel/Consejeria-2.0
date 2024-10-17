@@ -11,7 +11,7 @@ class ClassesModel {
         $sql = "SELECT crse_code, name, credits
                 FROM ccom_courses 
                 WHERE type = 'mandatory'
-                AND crse_code LIKE '%$search%' 
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%') 
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
@@ -53,7 +53,7 @@ class ClassesModel {
         $sql = "SELECT *
                 FROM ccom_courses
                 WHERE type != 'mandatory'
-                AND crse_code LIKE '%$search%'
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
@@ -74,7 +74,7 @@ class ClassesModel {
 
         $sql = "SELECT *
                 FROM general_courses
-                WHERE crse_code LIKE '%$search%'
+                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
@@ -94,7 +94,7 @@ class ClassesModel {
         }
         $sql = "SELECT *
                 FROM dummy_courses
-                WHERE crse_code LIKE '%$search%'
+                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
