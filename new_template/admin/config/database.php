@@ -6,9 +6,9 @@
 // $password = 'Prog@840ccom';
 // $database = 'ConsejeriaCCOM';
 
-$host = "ubuntuserver.local"; // XAMPP crea el localhost
+$host = "localhost"; // XAMPP crea el localhost
 $username = "counseling_db"; // Usuario de phpMyAdmin
-$password = "achomano123"; //contrasena de phpMyAdmin
+$password = ""; //contrasena de phpMyAdmin
 $database = "counseling_db"; 
 
 
