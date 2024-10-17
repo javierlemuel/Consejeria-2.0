@@ -2,11 +2,16 @@
 // models/StudentModel.php
 class ClassesModel {
 
-    public function getCcomCourses($conn)
+    public function getCcomCourses($conn, $q = null)
     {
+        $search = "";
+        if (isset($q)) {
+            $search = $q;
+        }
         $sql = "SELECT crse_code, name, credits
                 FROM ccom_courses 
-                WHERE type = 'mandatory' 
+                WHERE type = 'mandatory'
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%') 
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
@@ -39,11 +44,16 @@ class ClassesModel {
         return $result;
     }
 
-    public function getCcomElectives($conn)
+    public function getCcomElectives($conn, $q = null)
     {
+        $search = "";
+        if (isset($q)) {
+            $search = $q;
+        }
         $sql = "SELECT *
                 FROM ccom_courses
                 WHERE type != 'mandatory'
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
@@ -55,10 +65,16 @@ class ClassesModel {
         return $result;
     }
 
-    public function getGeneralCourses($conn)
+    public function getGeneralCourses($conn, $q = null)
     {
+        $search = "";
+        if (isset($q)) {
+            $search = $q;
+        }
+
         $sql = "SELECT *
                 FROM general_courses
+                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
@@ -70,10 +86,15 @@ class ClassesModel {
         return $result;
     }
 
-    public function getDummyCourses($conn)
+    public function getDummyCourses($conn, $q = null)
     {
+        $search = "";
+        if (isset($q)) {
+            $search = $q;
+        }
         $sql = "SELECT *
                 FROM dummy_courses
+                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
                 ORDER BY crse_code ASC";
 
         $result = $conn->query($sql);
