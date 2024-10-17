@@ -192,25 +192,32 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                        foreach ($studentRecommendedClasses as $recomendedCourse) {
-                                            echo "<tr>";
-                                            echo"<form method='POST' action='index.php'>";
-                                            echo"<input type='hidden' name='deleteRecomendation' value='deleteRecomendation'>";
-                                            echo "<td style='padding: 5px;'>" . $recomendedCourse['crse_code'] . "</td>";
-                                            echo "<input type='hidden' name='crse_code' value='" . $recomendedCourse['crse_code'] . "'/>";
-                                            echo "<td style='padding: 5px;'>" . $recomendedCourse['name'] . "</td>";
-                                            echo "<td style='padding: 5px;'>" . $recomendedCourse['credits'] . "</td>";
-                                            echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
-                                            echo "<input type='hidden' name='selectedTerm' value=" . $selectedTerm . ">";
-                                            if($privileges == 1) {
-                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</button></td>";
-                                            }echo "</form>";
-                                            echo "</tr>";
-                                        }
+                                            // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                            foreach ($studentRecommendedClasses as $recomendedCourse) {
+                                                echo "<tr>";
+                                                echo "<form method='POST' action='index.php'>";
+                                                echo "<input type='hidden' name='deleteRecomendation' value='deleteRecomendation'>";
+                                                echo "<td style='padding: 5px;'>" . $recomendedCourse['crse_code'] . "</td>";
+                                                echo "<input type='hidden' name='crse_code' value='" . $recomendedCourse['crse_code'] . "'/>";
+                                                echo "<td style='padding: 5px;'>" . $recomendedCourse['name'] . "</td>";
+                                                echo "<td style='padding: 5px;'>" . $recomendedCourse['credits'] . "</td>";
+                                                echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
+                                                echo "<input type='hidden' name='selectedTerm' value=" . $selectedTerm . ">";
+                                                if($privileges == 1) {
+                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</button></td>";
+                                                }
+                                                echo "</form>";
+                                                echo "</tr>";
+                                            }
+                                            
                                         ?>
+                                        
                                     </tbody>
                                 </table>
+                                <form method='POST' action='index.php'>
+                                    <input type='hidden' name='confirmRecomendation' value='confirmRecomendation'>
+                                    <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar</button>
+                                </form>
                             </div>
                         <?php
                         }
@@ -720,7 +727,10 @@
                                 <div class="mx-10 mb-5 sm:mb-0">
                                     <ul class="w-24 m-auto text-center font-semibold">
                                         <li>
-                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'mandatory'}" @click="tab='mandatory'">CCOM Mandatorias</a>
+                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'mandatory'}" @click="tab='mandatory'">CCOM Requeridas</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'ccomElective'}" @click="tab='ccomElective'">CCOM Electivas</a>
                                         </li>
                                         <li>
                                             <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'elective'}" @click="tab='elective'">Cursos Dummy</a>
@@ -777,6 +787,34 @@
                                                     <?php
                                                     // Itera sobre los datos de los cursos y llena las celdas de la tabla
                                                     foreach ($dummyClasses as $curso) {
+                                                        echo "<tr>";
+                                                        echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
+                                                        echo "<td>" . $curso['crse_code'] . "</td>";
+                                                        echo "<td>" . $curso['name'] . "</td>";
+                                                        echo "<td>" . $curso['credits'] . "</td>";
+                                                        echo "</tr>";
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div x-show="tab === 'ccomElective'">
+                                        <!-- basic table -->
+                                        <div class="table-responsive">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Código Del Curso</th>
+                                                        <th>Nombre</th>
+                                                        <th>Créditos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                                    foreach ($electiveClasses as $curso) {
                                                         echo "<tr>";
                                                         echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                                         echo "<td>" . $curso['crse_code'] . "</td>";
