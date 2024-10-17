@@ -7,7 +7,7 @@
 // $database = 'ConsejeriaCCOM';
 
 $host = "localhost"; // XAMPP crea el localhost
-$username = "counseling_db"; // Usuario de phpMyAdmin
+$username = "root"; // Usuario de phpMyAdmin
 $password = ""; //contrasena de phpMyAdmin
 $database = "counseling_db"; 
 
