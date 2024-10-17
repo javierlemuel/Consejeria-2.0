@@ -237,11 +237,23 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                     <!-- Create class buttons -->
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <h2 class="text-xl">Cursos Por Categoría (Próximo Semestre: <?php echo $term ?>)</h2>
+                        <form action="" method="GET">
+                            <?php
+                            // Preserve existing GET parameters except 'q'
+                            foreach ($_GET as $key => $value) {
+                                if ($key != 'q') {
+                                    echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
+                                }
+                            }
+                            ?>
+                            <input type="text" name="q" placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
+                            <button type="submit">Buscar</button>
+                        </form>
 
                         <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                             <div class="flex gap-3">
                                 <div>
-                                    <form action="?createclass=CCOM" method="POST">
+                                    <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
                                         <?php if ($privileges == 1) { ?>
                                             <button type="submit" class="btn btn-primary">
                                                 <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"

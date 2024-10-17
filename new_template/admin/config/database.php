@@ -8,7 +8,7 @@
 
 $host = "ubuntuserver.local"; // XAMPP crea el localhost
 $username = "counseling_db"; // Usuario de phpMyAdmin
-$password = "achomano"; //contrasena de phpMyAdmin
+$password = "achomano123"; //contrasena de phpMyAdmin
 $database = "counseling_db"; 
 
 
