@@ -24,21 +24,35 @@ class ClassesController{
             $course = $_GET['class'];
             require_once(__DIR__ . '/../views/listaView.php');
         }
-        elseif(isset($_GET['ccomelectives'])){
+        elseif(isset($_GET['ccomelectives']))
+        {
+            $q = null;
+            if (isset($_GET['q'])) {
+                $q = $_GET['q'];
+            }
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getCcomElectives($conn);
+            $courses = $classesModel->getCcomElectives($conn, $q);
             $category = 'electivas';
         }
 
         elseif(isset($_GET['generalclasses'])){
+            $q = null;
+            if (isset($_GET['q'])) {
+                $q = $_GET['q'];
+            }
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getGeneralCourses($conn);
+            $courses = $classesModel->getGeneralCourses($conn, $q);
             $category = 'generales';
+            $current_class = 'generalclasses';
         }
 
         elseif(isset($_GET['dummyclasses'])){
+            $q = null;
+            if (isset($_GET['q'])) {
+                $q = $_GET['q'];
+            }
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getDummyCourses($conn);
+            $courses = $classesModel->getDummyCourses($conn, $q);
             $category = 'dummy';
         }
 
@@ -155,7 +169,11 @@ class ClassesController{
 
         else //isset 'classes'
         {
-            $courses = $classesModel->getCcomCourses($conn);
+            $q = null;
+            if (isset($_GET['q'])) {
+                $q = $_GET['q'];
+            }
+            $courses = $classesModel->getCcomCourses($conn, $q);
             $category = 'concentracion';
             $term = $classesModel->getTerm($conn);
         }
