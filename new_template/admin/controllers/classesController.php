@@ -18,6 +18,10 @@ class ClassesController{
 
         $terms = $classesModel->getTerms($conn);
 
+        // Search query (q) and pagination (p)
+        $q = $_GET["q"] ?? "";
+        $p = $_GET["p"] ?? 1;
+        
         if(isset($_GET['lista']))
         {
             $matriculados = $classesModel->getStudentsMatriculadosModel($conn, $_GET['class']);
@@ -26,33 +30,23 @@ class ClassesController{
         }
         elseif(isset($_GET['ccomelectives']))
         {
-            $q = null;
-            if (isset($_GET['q'])) {
-                $q = $_GET['q'];
-            }
+            
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getCcomElectives($conn, $q);
+
+            $courses = $classesModel->getCcomElectives($conn, $q, $p);
             $category = 'electivas';
         }
 
         elseif(isset($_GET['generalclasses'])){
-            $q = null;
-            if (isset($_GET['q'])) {
-                $q = $_GET['q'];
-            }
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getGeneralCourses($conn, $q);
+            $courses = $classesModel->getGeneralCourses($conn, $q, $p);
             $category = 'generales';
             $current_class = 'generalclasses';
         }
 
         elseif(isset($_GET['dummyclasses'])){
-            $q = null;
-            if (isset($_GET['q'])) {
-                $q = $_GET['q'];
-            }
             $term = $classesModel->getTerm($conn);
-            $courses = $classesModel->getDummyCourses($conn, $q);
+            $courses = $classesModel->getDummyCourses($conn, $q, $p);
             $category = 'dummy';
         }
 
@@ -169,11 +163,7 @@ class ClassesController{
 
         else //isset 'classes'
         {
-            $q = null;
-            if (isset($_GET['q'])) {
-                $q = $_GET['q'];
-            }
-            $courses = $classesModel->getCcomCourses($conn, $q);
+            $courses = $classesModel->getCcomCourses($conn, $q, $p);
             $category = 'concentracion';
             $term = $classesModel->getTerm($conn);
         }
