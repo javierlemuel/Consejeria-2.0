@@ -249,18 +249,12 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                             <input type="text" name="q" placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
                             <button type="submit">Buscar</button>
                         </form>
-                        <nav class="flex items-center gap-x-4 min-w-max">
-      <a class="text-gray-500 hover:text-gray-900 p-4 inline-flex items-center md:mr-8 mr-1" href="javascript:;">
-         <span>Back</span>
-      </a>
-      <a class="w-10 h-10  bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;" aria-current="page">1</a>
-      <a class="w-10 h-10 bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;">2</a>
-      <a class="w-10 h-10 bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;">3</a>
-      <a class="w-10 h-10 bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;">4</a>
-      <a class="text-gray-500 hover:text-gray-900 p-4 inline-flex items-center md:ml-8 ml-1" href="javascript:;">
-         <span>Next</span>
-      </a>
-      </nav>
+                        <?php 
+
+                        
+                        require(__ROOT__.'/admin/global_classes/utils.php');
+                        generate_pagination($p, $maxPages ?? 1);
+                        ?>
 
                         <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                             <div class="flex gap-3">
