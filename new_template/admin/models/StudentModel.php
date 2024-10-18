@@ -1186,5 +1186,15 @@ class StudentModel {
         }
     }
 
+    public function deleteAllRecommendationsOnOneStudent($conn, $student_num)
+    {
+        $sql = "DELETE FROM recommended_courses
+                WHERE student_num=$student_num";
+        $res = $conn->query($sql);
+        if ($res === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+    }
+
 }
 ?>
