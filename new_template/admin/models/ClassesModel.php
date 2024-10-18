@@ -88,7 +88,7 @@ class ClassesModel {
         return $result;
     }
 
-    public function getDummyCourses($conn, $q = null, $p)
+    public function getDummyCourses($conn, $q = null, $p = 1)
     {
         $offset = $this->calculateOffset($p);
         $search = $q ?? "";
