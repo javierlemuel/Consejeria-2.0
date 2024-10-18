@@ -196,27 +196,39 @@
 
                         
 
-            <?php } else { ?>
-                <!-- Create class buttons -->
-                <div class="flex flex-wrap items-center justify-between gap-4">
-                            <h2 class="text-xl">Cursos Por Categoría (Próximo Semestre: <?php echo $term ?>)</h2>
-                            
-                            <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-                                <div class="flex gap-3">
-                                    <div>
-                                        <form action="?createclass=CCOM" method="POST">
-                                        <?php if ($privileges == 1) {?>
-                                        <button type="submit" class="btn btn-primary">
-                                        <svg
-                                                    class="shrink-0 group-hover:!text-primary"
-                                                    width="20"
-                                                    height="20"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        opacity="0.5"
+
+                <?php } else { ?>
+                    <!-- Create class buttons -->
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <h2 class="text-xl">Cursos Por Categoría (Próximo Semestre: <?php echo $term ?>)</h2>
+                        <form action="" method="GET">
+                            <?php
+                            // Preserve existing GET parameters except 'q'
+                            foreach ($_GET as $key => $value) {
+                                if ($key != 'q') {
+                                    echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
+                                }
+                            }
+                            ?>
+                            <input type="text" name="q" placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
+                            <button type="submit">Buscar</button>
+                        </form>
+                        <?php 
+
+                        
+                        require(__ROOT__.'/admin/global_classes/utils.php');
+                        generate_pagination($p, $maxPages ?? 1);
+                        ?>
+
+                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                            <div class="flex gap-3">
+                                <div>
+                                    <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+                                        <?php if ($privileges == 1) { ?>
+                                            <button type="submit" class="btn btn-primary">
+                                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5"
                                                         d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z"
                                                         fill="currentColor"
                                                     />

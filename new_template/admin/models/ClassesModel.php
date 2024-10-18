@@ -1,6 +1,11 @@
 <?php
 // models/StudentModel.php
 class ClassesModel {
+    public $pagination_limit = 20;
+    public function calculateOffset($p_num) {
+        $page = max(1, (int)($p_num ?? 1));  // Ensure the page number is at least 1
+        return $this->pagination_limit * ($page - 1);
+    }
 
     public function getCcomCourses($conn)
     {
