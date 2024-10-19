@@ -1,18 +1,22 @@
 <?php
 // models/StudentModel.php
 class ClassesModel {
+    public $pagination_limit = 20;
+    public function calculateOffset($p_num) {
+        $page = max(1, (int)($p_num ?? 1));  // Ensure the page number is at least 1
+        return $this->pagination_limit * ($page - 1);
+    }
 
-    public function getCcomCourses($conn, $q = null)
+    public function getCcomCourses($conn, $q = null, $p = 1)
     {
-        $search = "";
-        if (isset($q)) {
-            $search = $q;
-        }
+        $offset = $this->calculateOffset($p);
+        $search = $q ?? "";
         $sql = "SELECT crse_code, name, credits
                 FROM ccom_courses 
                 WHERE type = 'mandatory'
                 AND (crse_code LIKE '%$search%' OR name LIKE '%$search%') 
-                ORDER BY crse_code ASC";
+                ORDER BY crse_code ASC
+                LIMIT $this->pagination_limit OFFSET $offset";
 
         $result = $conn->query($sql);
 
@@ -44,17 +48,16 @@ class ClassesModel {
         return $result;
     }
 
-    public function getCcomElectives($conn, $q = null)
+    public function getCcomElectives($conn, $q = null, $p)
     {
-        $search = "";
-        if (isset($q)) {
-            $search = $q;
-        }
+        $offset = $this->calculateOffset($p);
+        $search = $q ?? "";
         $sql = "SELECT *
                 FROM ccom_courses
                 WHERE type != 'mandatory'
                 AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')
-                ORDER BY crse_code ASC";
+                ORDER BY crse_code ASC
+                LIMIT $this->pagination_limit OFFSET $offset";
 
         $result = $conn->query($sql);
 
@@ -65,17 +68,16 @@ class ClassesModel {
         return $result;
     }
 
-    public function getGeneralCourses($conn, $q = null)
+    public function getGeneralCourses($conn, $q = null, $p = 1)
     {
-        $search = "";
-        if (isset($q)) {
-            $search = $q;
-        }
+        $offset = $this->calculateOffset($p);
+        $search = $q ?? "";
 
         $sql = "SELECT *
                 FROM general_courses
                 WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
-                ORDER BY crse_code ASC";
+                ORDER BY crse_code ASC
+                LIMIT $this->pagination_limit OFFSET $offset";
 
         $result = $conn->query($sql);
 
@@ -86,16 +88,15 @@ class ClassesModel {
         return $result;
     }
 
-    public function getDummyCourses($conn, $q = null)
+    public function getDummyCourses($conn, $q = null, $p = 1)
     {
-        $search = "";
-        if (isset($q)) {
-            $search = $q;
-        }
+        $offset = $this->calculateOffset($p);
+        $search = $q ?? "";
         $sql = "SELECT *
                 FROM dummy_courses
                 WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
-                ORDER BY crse_code ASC";
+                ORDER BY crse_code ASC
+                LIMIT $this->pagination_limit OFFSET $offset";
 
         $result = $conn->query($sql);
 

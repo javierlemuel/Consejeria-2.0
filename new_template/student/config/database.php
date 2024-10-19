@@ -2,16 +2,16 @@
 
 //config/database.php
 // // config/database.php
-$host = '136.145.24.81';
-$username = 'estccom';
-$password = 'Prog@840ccom';
-$database = 'ConsejeriaCCOM';
+// $host = '136.145.24.81';
+// $username = 'estccom';
+// $password = 'Prog@840ccom';
+// $database = 'ConsejeriaCCOM';
 
 
-// $host = "localhost"; // XAMPP crea el localhost
-// $username = "root"; // Usuario de phpMyAdmin
-// $password = ""; //contrasena de phpMyAdmin
-// $database = "counseling_db";
+$host = "localhost"; // XAMPP crea el localhost
+$username = "root"; // Usuario de phpMyAdmin
+$password = ""; //contrasena de phpMyAdmin
+$database = "counseling_db";
 
 
 // $host = "136.145.29.193"; // XAMPP crea el localhost

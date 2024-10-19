@@ -249,6 +249,12 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                             <input type="text" name="q" placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
                             <button type="submit">Buscar</button>
                         </form>
+                        <?php 
+
+                        
+                        require(__ROOT__.'/admin/global_classes/utils.php');
+                        generate_pagination($p, $maxPages ?? 1);
+                        ?>
 
                         <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                             <div class="flex gap-3">
