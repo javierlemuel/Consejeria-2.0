@@ -253,7 +253,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
                         
                         require(__ROOT__.'/admin/global_classes/utils.php');
-                        generate_pagination($p, $maxPages ?? 1);
+                        generate_pagination($p, $amountOfPages ?? 1);
                         ?>
 
                         <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">

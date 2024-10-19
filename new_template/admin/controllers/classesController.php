@@ -22,6 +22,7 @@ class ClassesController{
         $q = $_GET["q"] ?? "";
         $p = $_GET["p"] ?? 1;
         
+        
         if(isset($_GET['lista']))
         {
             $matriculados = $classesModel->getStudentsMatriculadosModel($conn, $_GET['class']);
@@ -34,27 +35,23 @@ class ClassesController{
             $term = $classesModel->getTerm($conn);
 
             $courses = $classesModel->getCcomElectives($conn, $q, $p);
+            $amountOfPages = $classesModel->getPageAmount();
             $category = 'electivas';
+            
         }
 
         elseif(isset($_GET['generalclasses'])){
-            $q = null;
-            if (isset($_GET['q'])) {
-                $q = $_GET['q'];
-            }
             $term = $classesModel->getTerm($conn);
             $courses = $classesModel->getGeneralCourses($conn, $q, $p);
+            $amountOfPages = $classesModel->getPageAmount();
             $category = 'generales';
             $current_class = 'generalclasses';
         }
 
         elseif(isset($_GET['dummyclasses'])){
-            $q = null;
-            if (isset($_GET['q'])) {
-                $q = $_GET['q'];
-            }
             $term = $classesModel->getTerm($conn);
             $courses = $classesModel->getDummyCourses($conn, $q, $p);
+            $amountOfPages = $classesModel->getPageAmount();
             $category = 'dummy';
         }
 
@@ -172,6 +169,7 @@ class ClassesController{
         else //isset 'classes'
         {
             $courses = $classesModel->getCcomCourses($conn, $q, $p);
+            $amountOfPages = $classesModel->getPageAmount();
             $category = 'concentracion';
             $term = $classesModel->getTerm($conn);
         }

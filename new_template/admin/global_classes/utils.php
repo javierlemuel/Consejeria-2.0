@@ -16,7 +16,8 @@ function generate_pagination($currPg = 1, $maxPg = 3){
         }
         echo 'p=' . $i . '">';
 
-        echo '<button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition' . $btnColor . '">';
+        echo '<button class="flex justify-center font-semibold px-3.5 py-2 rounded
+         transition ' . $btnColor . '">';
         echo $i;
         echo '</button></a></li>';
 
