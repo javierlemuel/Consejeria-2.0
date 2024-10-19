@@ -6,10 +6,6 @@ require_once "config.php";
 // $password = 'Prog@840ccom';
 // $database = 'ConsejeriaCCOM';
 
-
-
-
-
 /*
 $host = "136.145.29.193"; // XAMPP crea el localhost
 $username = "emamarsa"; // Usuario de phpMyAdmin

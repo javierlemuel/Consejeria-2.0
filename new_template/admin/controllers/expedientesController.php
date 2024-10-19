@@ -278,6 +278,7 @@ class ExpedientesController
 
                 // variables para las recomendaciones
                 $mandatoryClasses = $classesModel->getCcomCourses($conn);
+                $electiveClasses = $classesModel->getCcomElectives($conn);
                 $dummyClasses = $classesModel->getDummyCourses($conn);
                 $generalClasses = $classesModel->getGeneralCourses($conn);
 
@@ -316,6 +317,7 @@ class ExpedientesController
 
                 // variables para las recomendaciones
                 $mandatoryClasses = $classesModel->getCcomCourses($conn);
+                $electiveClasses = $classesModel->getCcomElectives($conn);
                 $dummyClasses = $classesModel->getDummyCourses($conn);
                 $generalClasses = $classesModel->getGeneralCourses($conn);
 
@@ -370,6 +372,7 @@ class ExpedientesController
 
             // variables para las recomendaciones
             $mandatoryClasses = $classesModel->getCcomCourses($conn);
+            $electiveClasses = $classesModel->getCcomElectives($conn);
             $dummyClasses = $classesModel->getDummyCourses($conn);
             $generalClasses = $classesModel->getGeneralCourses($conn);
 

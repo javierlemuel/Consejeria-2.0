@@ -217,7 +217,9 @@ class StudentModel {
         LEFT JOIN
             (SELECT crse_code, name, credits FROM ccom_courses
              UNION
-             SELECT crse_code, name, credits FROM general_courses) AS courses
+             SELECT crse_code, name, credits FROM general_courses
+             UNION
+             SELECT crse_code, name, credits FROM dummy_courses) AS courses
         ON
             recommended_courses.crse_code = courses.crse_code
         WHERE
@@ -1179,7 +1181,19 @@ class StudentModel {
     /* New functions */
     public function deleteAllRecommendations($conn)
     {
-        $sql = "DELETE FROM recommended_courses";
+        $sql = "DELETE FROM recommended_courses NATURAL JOIN student
+                WHERE confirmed = 0";
+        $res = $conn->query($sql);
+        if ($res === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+    }
+
+    public function confirmCounseling($conn, $id)
+    {
+        $sql = "UPDATE student
+                SET confirmed = 1
+                WHERE student_num = $id";
         $res = $conn->query($sql);
         if ($res === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
