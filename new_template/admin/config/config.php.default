@@ -1,4 +1,3 @@
-
 <?php
 // Copy this and make it into config.php, then enter credentials
 $host = "localhost"; // XAMPP crea el localhost
