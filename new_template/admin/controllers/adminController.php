@@ -4,7 +4,7 @@ if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
     header("Location: ../index.php");
     exit;
 }
-require_once(__DIR__ . '/../models/AdminModel.php');
+require_once(__DIR__ . '/../models/adminModel.php');
 require_once(__DIR__ . '/../config/database.php');
 
 class AdminController{
