@@ -246,16 +246,19 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                 }
                             }
                             ?>
-                            <input type="text" name="q" placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
-                            <button type="submit">Buscar</button>
+                            <div class="relative">
+                            <input class="peer form-input py-2 ltr:pr-11 rtl:pl-11" type="text" name="q"
+                                placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
+                            <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                                            <button type="submit">
+                                                <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
+                                                    <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                            </div>
                         </form>
-                        <?php 
-
-                        
-                        require(__ROOT__.'/admin/global_classes/utils.php');
-                        generate_pagination($p, $amountOfPages ?? 1);
-                        ?>
-
                         <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                             <div class="flex gap-3">
                                 <div>
@@ -444,6 +447,11 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
 
                         <!-- end main content section -->
+
+                        <?php
+                        require(__ROOT__ . '/admin/global_classes/utils.php');
+                        generate_pagination($p, $amountOfPages ?? 1);
+                        ?>
 
                     </div>
 
