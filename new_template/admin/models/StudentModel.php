@@ -33,7 +33,7 @@ class StudentModel {
         $sql = "SELECT student_num, name1, name2, last_name1, last_name2, conducted_counseling, status, edited_date
                 FROM student 
                 WHERE $statusCondition
-                AND (name1 LIKE ? OR student_num LIKE ?)
+                AND (name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ? OR student_num LIKE ?)
                 ORDER BY name1 ASC 
                 LIMIT ? 
                 OFFSET ?
@@ -44,7 +44,7 @@ class StudentModel {
     
         // Modificar el filtro de búsqueda para buscar en cualquier parte del nombre
         $searchKeyword = "%$search%";
-        $stmt->bind_param("ssii", $searchKeyword, $searchKeyword, $perPage, $offset);
+        $stmt->bind_param("sssssii", $searchKeyword,$searchKeyword, $searchKeyword,$searchKeyword,$searchKeyword, $perPage, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
     

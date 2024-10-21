@@ -308,6 +308,7 @@
                                             type="text"
                                             name="search"
                                             placeholder="Buscar por nombre o #"
+                                            value="<?php echo $_GET['search'] ?? "" ?>"
                                             class="peer form-input py-2 ltr:pr-11 rtl:pl-11"
                                         />
                                         <!-- Agrega campos ocultos para los parámetros de filtro de estado -->
