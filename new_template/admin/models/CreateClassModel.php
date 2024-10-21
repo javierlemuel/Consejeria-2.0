@@ -26,10 +26,10 @@ class CreateClassModel {
             }
             else //return false if course exists
             {
-                return false;
+                return "Ese código de curso ya existe!!";
             }
         }
-        return $result;
+        return;
     }
 
     public function createGeneralCourse($conn, $crse_code, $crse_name, $cred,
@@ -70,7 +70,7 @@ class CreateClassModel {
                 return "Ese código de curso ya existe!!";
             }
         }
-        return $result;
+        return;
     }
 
     public function getMinors($conn){
