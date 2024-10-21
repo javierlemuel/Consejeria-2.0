@@ -25,3 +25,16 @@ function generate_pagination($currPg = 1, $maxPg = 3){
     }   
     echo '</ul></div>'; 
 }
+
+function isValidCode($cd) {
+    return preg_match("/^[A-Z]{4}[0-9]{4}$/", $cd);
+}
+
+function isValidGrade($grd) {
+    return preg_match("/^(A|B|C|D|F|IC|W|W\*|P|NP)$/", $grd);
+}
+
+function sanitizeSearch($srch) {
+    return preg_replace("/[^a-z0-9 ]/i", "",$srch);
+}
+

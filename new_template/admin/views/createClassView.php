@@ -158,7 +158,7 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
 
                 <?php if (isset($_GET['error'])) { ?>
 
-                    <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+                    <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" style="border: 1px solid orange; color:darkred" role="alert">
                         <p class="font-bold">ERROR: </p>
                         <p><?php echo $_GET['error'] ?></p>
                     </div>

@@ -1,5 +1,5 @@
 <?php
-
+require_once("../global_classes/utils.php");
 class CreateClassModel {
     public function createCcomCourse($conn, $crse_code, $crse_name, $cred,
     $type, $level, $minor)
@@ -12,7 +12,7 @@ class CreateClassModel {
         // Remove anything that is not number or letter
         $sanitized_code = preg_replace( '/[^a-z0-9 ]/i', '', $crse_code);
         // Check if course is of pattern LLLLNNNN
-        $crse_code_is_matched = preg_match("/^[A-Z]{4}[0-9]{4}$/", $sanitized_code); 
+        $crse_code_is_matched = isValidCode($crse_code);
         if (!$crse_code_is_matched) {
             // course code is wrong, stop
             return "El código no es formato valido.";
@@ -50,7 +50,8 @@ class CreateClassModel {
         // Remove anything that is not number or letter
         $sanitized_code = preg_replace( '/[^a-z0-9 ]/i', '', $crse_code);
         // Check if course is of pattern LLLLNNNN
-        $crse_code_is_matched = preg_match("/^[A-Z]{4}[0-9]{4}$/", $sanitized_code); 
+        $crse_code_is_matched = isValidCode($crse_code);  
+        
         if (!$crse_code_is_matched) {
             // course code is wrong, stop
             return "El código no es formato valido.";
