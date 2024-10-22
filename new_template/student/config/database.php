@@ -1,5 +1,7 @@
 <?php
+
 require_once "config.php";
+
 //config/database.php
 // // config/database.php
 // $host = '136.145.24.81';

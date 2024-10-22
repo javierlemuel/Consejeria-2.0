@@ -1,5 +1,5 @@
 <?php
-
+require_once("../global_classes/utils.php");
 class CreateClassModel {
     public function createCcomCourse($conn, $crse_code, $crse_name, $cred,
     $type, $level, $minor)
@@ -7,7 +7,18 @@ class CreateClassModel {
         $sql = "SELECT *
                 FROM ccom_courses
                 WHERE crse_code = '$crse_code'";
-            
+        
+        // Sanitize the input and check if it is correct
+        // Remove anything that is not number or letter
+        $sanitized_code = preg_replace( '/[^a-z0-9 ]/i', '', $crse_code);
+        // Check if course is of pattern LLLLNNNN
+        $crse_code_is_matched = isValidCode($crse_code);
+        if (!$crse_code_is_matched) {
+            // course code is wrong, stop
+            return "El código no es formato valido.";
+        }
+
+     
         $result = $conn->query($sql);
 
         //Find if the course already exits
@@ -24,18 +35,29 @@ class CreateClassModel {
                     throw new Exception("Error en la consulta SQL: " . $conn->error);
                 }
             }
-            else //return false if course exists
+            else //return if course exists
             {
-                return false;
+                return "Ese código de curso ya existe!!";
             }
         }
-        return $result;
+        return;
     }
 
     public function createGeneralCourse($conn, $crse_code, $crse_name, $cred,
     $type, $required)
     {
-        $sql = "SELECT *
+        // Sanitize the input and check if it is correct
+        // Remove anything that is not number or letter
+        $sanitized_code = preg_replace( '/[^a-z0-9 ]/i', '', $crse_code);
+        // Check if course is of pattern LLLLNNNN
+        $crse_code_is_matched = isValidCode($crse_code);  
+        
+        if (!$crse_code_is_matched) {
+            // course code is wrong, stop
+            return "El código no es formato valido.";
+        }
+
+        $sql = "SELECT crse_code
                 FROM general_courses
                 WHERE crse_code = '$crse_code'";
             
@@ -55,12 +77,12 @@ class CreateClassModel {
                     throw new Exception("Error en la consulta SQL: " . $conn->error);
                 }
             }
-            else //return false if course exists
+            else //return if course exists
             {
-                return false;
+                return "Ese código de curso ya existe!!";
             }
         }
-        return $result;
+        return;
     }
 
     public function getMinors($conn){

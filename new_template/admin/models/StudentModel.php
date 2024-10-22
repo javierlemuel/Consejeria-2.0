@@ -33,7 +33,7 @@ class StudentModel {
         $sql = "SELECT student_num, name1, name2, last_name1, last_name2, conducted_counseling, status, edited_date
                 FROM student 
                 WHERE $statusCondition
-                AND (name1 LIKE ? OR student_num LIKE ?)
+                AND (name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ? OR student_num LIKE ?)
                 ORDER BY name1 ASC 
                 LIMIT ? 
                 OFFSET ?
@@ -44,7 +44,7 @@ class StudentModel {
     
         // Modificar el filtro de búsqueda para buscar en cualquier parte del nombre
         $searchKeyword = "%$search%";
-        $stmt->bind_param("ssii", $searchKeyword, $searchKeyword, $perPage, $offset);
+        $stmt->bind_param("sssssii", $searchKeyword,$searchKeyword, $searchKeyword,$searchKeyword,$searchKeyword, $perPage, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
     
@@ -217,7 +217,9 @@ class StudentModel {
         LEFT JOIN
             (SELECT crse_code, name, credits FROM ccom_courses
              UNION
-             SELECT crse_code, name, credits FROM general_courses) AS courses
+             SELECT crse_code, name, credits FROM general_courses
+             UNION
+             SELECT crse_code, name, credits FROM dummy_courses) AS courses
         ON
             recommended_courses.crse_code = courses.crse_code
         WHERE
@@ -1179,7 +1181,19 @@ class StudentModel {
     /* New functions */
     public function deleteAllRecommendations($conn)
     {
-        $sql = "DELETE FROM recommended_courses";
+        $sql = "DELETE FROM recommended_courses NATURAL JOIN student
+                WHERE confirmed = 0";
+        $res = $conn->query($sql);
+        if ($res === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+    }
+
+    public function confirmCounseling($conn, $id)
+    {
+        $sql = "UPDATE student
+                SET confirmed = 1
+                WHERE student_num = $id";
         $res = $conn->query($sql);
         if ($res === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
