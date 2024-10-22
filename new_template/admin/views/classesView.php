@@ -239,29 +239,26 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         <h2 class="text-xl">Cursos Por Categoría (Próximo Semestre: <?php echo $term ?>)</h2>
                         <form action="" method="GET">
                             <?php
-                            // Preserve existing GET parameters except 'q'
+                            // Preserve existing GET parameters except 'q' or 'p'
                             foreach ($_GET as $key => $value) {
-                                if ($key != 'q') {
+                                if ($key != 'q' & $key != 'p') {
                                     echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
                                 }
                             }
                             ?>
-                            <input type="text" name="q" placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
-                            <button type="submit">Buscar</button>
+                            <div class="relative">
+                            <input class="peer form-input py-2 ltr:pr-11 rtl:pl-11" type="text" name="q"
+                                placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
+                            <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                                            <button type="submit">
+                                                <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
+                                                    <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                            </div>
                         </form>
-                        <nav class="flex items-center gap-x-4 min-w-max">
-      <a class="text-gray-500 hover:text-gray-900 p-4 inline-flex items-center md:mr-8 mr-1" href="javascript:;">
-         <span>Back</span>
-      </a>
-      <a class="w-10 h-10  bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;" aria-current="page">1</a>
-      <a class="w-10 h-10 bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;">2</a>
-      <a class="w-10 h-10 bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;">3</a>
-      <a class="w-10 h-10 bg-transparent text-gray-500 p-2 inline-flex items-center justify-center rounded-full transition-all duration-150 hover:text-indigo-600" href="javascript:;">4</a>
-      <a class="text-gray-500 hover:text-gray-900 p-4 inline-flex items-center md:ml-8 ml-1" href="javascript:;">
-         <span>Next</span>
-      </a>
-      </nav>
-
                         <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                             <div class="flex gap-3">
                                 <div>
@@ -450,6 +447,11 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
 
                         <!-- end main content section -->
+
+                        <?php
+                        require_once(__ROOT__ . '/admin/global_classes/utils.php');
+                        generate_pagination($p, $amountOfPages ?? 1);
+                        ?>
 
                     </div>
 
