@@ -15,7 +15,6 @@ require_once "config.php";
 // $password = ""; //contrasena de phpMyAdmin
 // $database = "counseling_db";
 
-
 // $host = "136.145.29.193"; // XAMPP crea el localhost
 // $username = "emamarsa"; // Usuario de phpMyAdmin
 // $password = "ema84023"; //contrasena de phpMyAdmin
