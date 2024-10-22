@@ -38,6 +38,6 @@ function isValidGrade($grd) {
 
 // Removes anything that isn't a letter or number
 function sanitizeSearch($srch) {
-    return preg_replace("/[^a-z0-9 ]/i", "",$srch);
+    return preg_replace("/[^A-Za-z0–9]/i", "",$srch);
 }
 

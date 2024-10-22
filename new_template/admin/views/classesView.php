@@ -239,9 +239,9 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         <h2 class="text-xl">Cursos Por Categoría (Próximo Semestre: <?php echo $term ?>)</h2>
                         <form action="" method="GET">
                             <?php
-                            // Preserve existing GET parameters except 'q'
+                            // Preserve existing GET parameters except 'q' or 'p'
                             foreach ($_GET as $key => $value) {
-                                if ($key != 'q') {
+                                if ($key != 'q' & $key != 'p') {
                                     echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
                                 }
                             }
@@ -451,7 +451,6 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         <?php
                         require_once(__ROOT__ . '/admin/global_classes/utils.php');
                         generate_pagination($p, $amountOfPages ?? 1);
-                        echo("PAGE NUM: ".$p);
                         ?>
 
                     </div>
