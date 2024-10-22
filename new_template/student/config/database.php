@@ -1,11 +1,11 @@
 <?php
-
+require_once "config.php";
 //config/database.php
 // // config/database.php
-$host = '136.145.24.81';
-$username = 'estccom';
-$password = 'Prog@840ccom';
-$database = 'ConsejeriaCCOM';
+// $host = '136.145.24.81';
+// $username = 'estccom';
+// $password = 'Prog@840ccom';
+// $database = 'ConsejeriaCCOM';
 
 
 // $host = "localhost"; // XAMPP crea el localhost
