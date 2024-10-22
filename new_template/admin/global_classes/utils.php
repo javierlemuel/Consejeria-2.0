@@ -1,7 +1,7 @@
 <?php
 
 function generate_pagination($currPg = 1, $maxPg = 3){
-    echo '<div class="pagination">
+    echo '<div class="pagination my-5">
     <ul class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto">';
     
     for ($i = 1; $i <= $maxPg; $i++) {
