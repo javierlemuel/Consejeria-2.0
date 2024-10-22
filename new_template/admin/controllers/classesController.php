@@ -7,6 +7,7 @@ if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
 require_once(__DIR__ . '/../models/ClassesModel.php');
 require_once(__DIR__ . '/../models/ReporteModel.php');
 require_once(__DIR__ . '/../config/database.php');
+require_once(__DIR__ . "/../global_classes/utils.php");
 //session_start();
 
 class ClassesController{
@@ -20,8 +21,13 @@ class ClassesController{
 
         // Search query (q) and pagination (p)
         $q = $_GET["q"] ?? "";
+        $q = sanitizeSearch($q);
         $p = $_GET["p"] ?? 1;
-        
+        try {
+            $p = (int)$p;
+        } catch (Exception $e) {
+            $p = 1;
+        } 
         
         if(isset($_GET['lista']))
         {

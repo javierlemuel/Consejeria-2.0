@@ -449,8 +449,9 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         <!-- end main content section -->
 
                         <?php
-                        require(__ROOT__ . '/admin/global_classes/utils.php');
+                        require_once(__ROOT__ . '/admin/global_classes/utils.php');
                         generate_pagination($p, $amountOfPages ?? 1);
+                        echo("PAGE NUM: ".$p);
                         ?>
 
                     </div>
