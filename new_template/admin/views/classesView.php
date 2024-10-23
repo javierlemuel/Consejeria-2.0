@@ -259,7 +259,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                         </div>
                             </div>
                         </form>
-                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3"> 
                             <div class="flex gap-3">
                                 <div>
                                     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">

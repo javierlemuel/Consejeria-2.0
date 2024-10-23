@@ -60,7 +60,7 @@ class ClassesModel
         return $result;
     }
 
-    public function getCcomElectives($conn, $q = null, $p)
+    public function getCcomElectives($conn, $q = null, $p = null)
     {
         $offset = $this->calculateOffset($p);
         $search = $q ?? "";

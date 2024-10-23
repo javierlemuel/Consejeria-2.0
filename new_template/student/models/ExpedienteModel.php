@@ -174,8 +174,8 @@ class StudentModel
 
         $sql = "SELECT DISTINCT  sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, cc.name AS name, cc.credits AS credits
         FROM student_courses AS sc
-        LEFT JOIN ccom_courses AS cc ON sc.crse_code = cc.crse_code
-        WHERE sc.student_num = ? AND sc.category = 'elective' " . $minor_id . " UNION
+        RIGHT JOIN ccom_courses AS cc ON sc.crse_code = cc.crse_code
+        WHERE sc.student_num = ? AND sc.category = 'free'  $minor_id  UNION
 		SELECT DISTINCT  sc.crse_code, sc.crse_grade, sc.term, sc.equivalencia, sc.convalidacion, gc.name AS name, gc.credits AS credits
         FROM student_courses AS sc
         JOIN general_courses AS gc ON sc.crse_code = gc.crse_code
