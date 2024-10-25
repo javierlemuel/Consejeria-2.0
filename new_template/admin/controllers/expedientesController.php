@@ -34,6 +34,11 @@ class ExpedientesController
             $studentModel->deleteAllRecommendations($conn);
         }
 
+        if (isset($_POST['deleteAllRecommendationsforOneStudent']) && $_POST['student_num']) {
+            // Entrar función de borrar todas las recomendaciones
+            $studentModel->deleteAllRecommendationsOnOneStudent($conn, $_POST['student_num']);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $date = date("Y-m-d");
             $action = isset($_POST['action']) ? $_POST['action'] : '';

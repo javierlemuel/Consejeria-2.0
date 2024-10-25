@@ -215,11 +215,13 @@
                                     </tbody>
                                 </table>
                                 <form method='POST' action='index.php'>
+                                    <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
                                     <input type='hidden' name='deleteAllRecommendationsforOneStudent' value='deleteAllRecommendationsforOneStudent'>
                                     <button type='submit' name='action' value='deleteAllRecommendationsforOneStudent' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345; margin-top: 5vh; float: right;'>Eliminar todas</button>
                                 </form>
                                 <form method='POST' action='index.php'>
                                     <input type='hidden' name='confirmRecomendation' value='confirmRecomendation'>
+                                    <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
                                     <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar</button>
                                 </form>
                             </div>
