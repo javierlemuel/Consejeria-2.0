@@ -247,22 +247,22 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                             }
                             ?>
                             <div class="relative">
-                            <input class="peer form-input py-2 ltr:pr-11 rtl:pl-11" type="text" name="q"
-                                placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
-                            <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
-                                            <button type="submit">
-                                                <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
-                                                    <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
+                                <input class="peer form-input py-2 ltr:pr-11 rtl:pl-11" type="text" name="q"
+                                    placeholder="Buscar..." value="<?php echo $_GET['q'] ?? ''; ?>">
+                                <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                                    <button type="submit">
+                                        <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
+                                            <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </form>
-                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3"> 
+                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                             <div class="flex gap-3">
                                 <div>
-                                    <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+                                    <form action="?createclass=CCOM" method="POST">
                                         <?php if ($privileges == 1) { ?>
                                             <button type="submit" class="btn btn-primary">
                                                 <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
@@ -405,7 +405,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                                         <a href='?removeOffer&code=<?php echo $courseCode ?>'>
                                                             <span class='badge whitespace-nowrap badge-outline-danger'>Remueve
                                                                 de oferta</span>
-                                                        <?php }
+                                                    <?php }
 
                                                 echo "</a>
                 </td>                                                    
@@ -475,10 +475,11 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
 
             <script>
-
                 if (sessionStorage.getItem('csv_content')) {
                     // Create a Blob from the CSV content
-                    var blob = new Blob([sessionStorage.getItem('csv_content')], { type: 'application/csv' });
+                    var blob = new Blob([sessionStorage.getItem('csv_content')], {
+                        type: 'application/csv'
+                    });
 
                     // Create a link element to trigger the download
                     var a = document.createElement('a');
@@ -496,7 +497,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                     sessionStorage.removeItem('csv_content');
                 }
 
-                $(document).ready(function () {
+                $(document).ready(function() {
                     $("#sidebar").load("sidebar.php");
                 });
 
