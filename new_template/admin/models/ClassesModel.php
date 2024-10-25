@@ -60,7 +60,7 @@ class ClassesModel
         return $result;
     }
 
-    public function getCcomElectives($conn, $q = null, $p)
+    public function getCcomElectives($conn, $q = null, $p = 1)
     {
         $offset = $this->calculateOffset($p);
         $search = $q ?? "";
@@ -692,7 +692,6 @@ class ClassesModel
         // echo "hey";
 
         return $courses;
-
     }
 
     public function addToOffer($conn, $courseID)
@@ -813,7 +812,6 @@ class ClassesModel
         }
 
         return $term;
-
     }
 
     public function getTerms($conn)
@@ -851,7 +849,6 @@ class ClassesModel
         }
 
         return $count;
-
     }
 
 
@@ -870,6 +867,5 @@ class ClassesModel
 
 
         return $result;
-
     }
 }
