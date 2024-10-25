@@ -2,26 +2,49 @@
 // Generate pagination by using the same link but with added p value
 function generate_pagination($currPg = 1, $maxPg = 3)
 {
+    $linkValues = '';
+
+
+    foreach ($_GET as $key => $value) {
+        if ($key != 'p') {
+            $linkValues = $linkValues . htmlspecialchars($key) . '=' . htmlspecialchars($value) . '&';
+        }
+    }
+
     echo '<div class="pagination my-5">
     <ul class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto">';
 
+    echo '<li><a href="?' . $linkValues;
+
+    echo 'p=' . ($currPg > 1 ? $currPg - 1 : 1) . '">
+        <button class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover:text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
+            <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                </path>
+            </svg>
+        </button>
+        </a>
+        </li>';
+
     for ($i = 1; $i <= $maxPg; $i++) {
         $btnColor = ($i == $currPg) ? 'bg-primary text-white' : 'bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary';
-        echo "<li>";
-        echo '<a href="?';
+        echo '<li><a href="?' . $linkValues;
         // Preserve existing GET parameters except 'p'
-        foreach ($_GET as $key => $value) {
-            if ($key != 'p') {
-                echo htmlspecialchars($key) . '=' . htmlspecialchars($value) . '&';
-            }
-        }
-        echo 'p=' . $i . '">';
-
-        echo '<button class="flex justify-center font-semibold px-3.5 py-2 rounded
-         transition ' . $btnColor . '">';
-        echo $i;
-        echo '</button></a></li>';
+        echo 'p=' . $i . '"><button class="flex justify-center font-semibold px-3.5 py-2 rounded
+         transition ' . $btnColor . '">' . $i . '</button></a></li>';
     }
+
+    echo '<li><a href="?' . $linkValues;
+
+    echo 'p=' . ($currPg < $maxPg ? $currPg + 1 : $maxPg) . '">
+        <button class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover:text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
+            <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+        </button>
+        </a>
+        </li>';
+
     echo '</ul></div>';
 }
 
