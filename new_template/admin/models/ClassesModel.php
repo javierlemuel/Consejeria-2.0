@@ -1,16 +1,42 @@
 <?php
 // models/StudentModel.php
-class ClassesModel {
-
-    public function getCcomCourses($conn)
+class ClassesModel
+{
+    public $pagination_limit = 20;
+    public $amountOfRows = 1; // Functions will change this to then send to 
+    public function calculateOffset($p_num)
     {
+        $page = max(1, (int) ($p_num ?? 1));  // Ensure the page number is at least 1
+        return $this->pagination_limit * ($page - 1);
+    }
+
+    public function getPageAmount()
+    {
+        return ceil($this->amountOfRows / $this->pagination_limit);
+    }
+
+
+    public function getCcomCourses($conn, $q = null, $p = null)
+    {
+        if (!isset($p)) {
+            $p_limit = PHP_INT_MAX;
+            $offset = 0;
+        } else {
+            $offset = $this->calculateOffset($p);
+        }
+        $search = $q ?? "";
         $sql = "SELECT crse_code, name, credits
                 FROM ccom_courses 
-                WHERE type = 'mandatory' 
-                ORDER BY crse_code ASC";
+                WHERE type = 'mandatory'
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%') 
+                ORDER BY crse_code ASC
+                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
 
         $result = $conn->query($sql);
-
+        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM ccom_courses WHERE type = 'mandatory'
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
+        $row = $rowCount->fetch_assoc();
+        $this->amountOfRows = $row['total'];
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
@@ -39,15 +65,27 @@ class ClassesModel {
         return $result;
     }
 
-    public function getCcomElectives($conn)
+    public function getCcomElectives($conn, $q = null, $p = null)
     {
+        if (!isset($p)) {
+            $p_limit = PHP_INT_MAX;
+            $offset = 0;
+        } else {
+            $offset = $this->calculateOffset($p);
+        }
+        $search = $q ?? "";
         $sql = "SELECT *
                 FROM ccom_courses
                 WHERE type != 'mandatory'
-                ORDER BY crse_code ASC";
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')
+                ORDER BY crse_code ASC
+                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
 
         $result = $conn->query($sql);
-
+        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM ccom_courses WHERE type != 'mandatory'
+                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
+        $row = $rowCount->fetch_assoc();
+        $this->amountOfRows = $row['total'];
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
@@ -55,14 +93,26 @@ class ClassesModel {
         return $result;
     }
 
-    public function getGeneralCourses($conn)
+    public function getGeneralCourses($conn, $q = null, $p = null)
     {
+        if (!isset($p)) {
+            $p_limit = PHP_INT_MAX;
+            $offset = 0;
+        } else {
+            $offset = $this->calculateOffset($p);
+        }
+        $search = $q ?? "";
+
         $sql = "SELECT *
                 FROM general_courses
-                ORDER BY crse_code ASC";
+                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
+                ORDER BY crse_code ASC
+                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
 
         $result = $conn->query($sql);
-
+        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM general_courses WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
+        $row = $rowCount->fetch_assoc();
+        $this->amountOfRows = $row['total'];
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
@@ -70,14 +120,27 @@ class ClassesModel {
         return $result;
     }
 
-    public function getDummyCourses($conn)
+    public function getDummyCourses($conn, $q = null, $p = null)
     {
+        if (!isset($p)) {
+            $p_limit = PHP_INT_MAX;
+            $offset = 0;
+        } else {
+            $offset = $this->calculateOffset($p);
+        }
+
+        $search = $q ?? "";
         $sql = "SELECT *
                 FROM dummy_courses
-                ORDER BY crse_code ASC";
+                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
+                ORDER BY crse_code ASC
+                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
 
         $result = $conn->query($sql);
 
+        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM dummy_courses WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
+        $row = $rowCount->fetch_assoc();
+        $this->amountOfRows = $row['total'];
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
@@ -247,7 +310,7 @@ class ClassesModel {
         $stmt0->bind_param("s", $student_num);
 
         $student_minor_id = 0;
-  
+
         // Ejecutar
         if ($stmt0->execute()) {
             // Sacar la nota
@@ -338,21 +401,21 @@ class ClassesModel {
 
         $student_minor_id = -1;
         $fetched_student_minor_id = '';
-  
+
         // Ejecutar
         if ($stmt0->execute()) {
             // Sacar la nota
             $stmt0->bind_result($fetched_student_minor_id);
             $stmt0->fetch();
-        
+
             // Cerrar
             $stmt0->close();
-        
+
             // Actualizar $student_minor_id solo si el valor es diferente de -1
             if ($fetched_student_minor_id !== 0 && $fetched_student_minor_id != NULL) {
                 $student_minor_id = $fetched_student_minor_id;
             }
-        }else {
+        } else {
             // Error
             echo "Error executing query.";
         }
@@ -471,8 +534,7 @@ class ClassesModel {
 
                 if ($result2 === false) {
                     throw new Exception("Error en la consulta SQL: " . $conn->error);
-                }
-                else if ($result2->num_rows > 0) {
+                } else if ($result2->num_rows > 0) {
                     while ($row = $result2->fetch_assoc()) {
                         // Add CISO credit count to session
                         $_SESSION['CISO_credits'] += $row['sum'];
@@ -487,8 +549,7 @@ class ClassesModel {
 
                 if ($result3 === false) {
                     throw new Exception("Error en la consulta SQL: " . $conn->error);
-                }
-                else if ($result3->num_rows > 0) {
+                } else if ($result3->num_rows > 0) {
                     while ($row = $result3->fetch_assoc()) {
                         // Add HUMA credit count to session
                         $_SESSION['HUMA_credits'] += $row['sum'];
@@ -496,7 +557,7 @@ class ClassesModel {
                 }
             }
         }
-        
+
         return $result;
 
         // $sql = "SELECT cohort.crse_code as crse_code, general_courses.name as name, student_courses.credits as credits, student_courses.crse_grade as crse_grade,
@@ -633,11 +694,11 @@ class ClassesModel {
             if ($result2 === false) {
                 throw new Exception("Error2 en la consulta SQL: " . $conn->error);
             }
-            
+
             $combinedData = [];
 
-            while($row2 = $result2->fetch_assoc()) {
-               $combinedData[] = $row2;
+            while ($row2 = $result2->fetch_assoc()) {
+                $combinedData[] = $row2;
             }
             foreach ($combinedData as &$data) {
                 $data['term'] = $term;
@@ -652,10 +713,9 @@ class ClassesModel {
         // echo "hey";
 
         return $courses;
-
     }
 
-    public function addToOffer($conn,$courseID)
+    public function addToOffer($conn, $courseID)
     {
         //Verifica que el curso no exista ya en la oferta
         $term = $this->getTerm($conn);
@@ -663,10 +723,9 @@ class ClassesModel {
                 FROM offer
                 WHERE crse_code = '$courseID'
                 AND term = '$term'";
-        $result = $conn->query($sql);   
+        $result = $conn->query($sql);
 
-        if ($result->num_rows == 0)
-        {
+        if ($result->num_rows == 0) {
             $sql = "SELECT term
                     FROM offer
                     WHERE crse_code = 'XXXX'";
@@ -674,14 +733,13 @@ class ClassesModel {
             $res = $conn->query($sql);
             if ($res === false) {
                 throw new Exception("Error en la consulta SQL: " . $conn->error);
-            }
-            else{
-                foreach($res as $r)
+            } else {
+                foreach ($res as $r)
                     $term = $r['term'];
-            
+
                 $sql2 = "INSERT INTO offer
                         VALUES('$courseID', '$term')";
-                
+
                 $result = $conn->query($sql2);
                 if ($result === false) {
                     throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -694,7 +752,8 @@ class ClassesModel {
         return 'failure';
     }
 
-    public function removeFromOffer($conn,$courseID){
+    public function removeFromOffer($conn, $courseID)
+    {
         $term = $this->getTerm($conn);
         $sql = "DELETE FROM offer
                 WHERE crse_code = '$courseID'
@@ -742,15 +801,15 @@ class ClassesModel {
                 SET term = '$term'
                 WHERE crse_code = 'XXXX'";
         $result5 = $conn->query($sql5);
-        if ($result5 === false) {   
-            throw new Exception("Error2 en la consulta SQL:". $conn->error);
+        if ($result5 === false) {
+            throw new Exception("Error2 en la consulta SQL:" . $conn->error);
         }
 
         $sqli = "INSERT INTO OFFER
                 VALUES('CCOM3001', '$term'), ('CCOM3002', '$term')";
 
         $resulti = $conn->query($sqli);
-        if($resulti === false)
+        if ($resulti === false)
             throw new Exception("Error Insert Term en la consulta SQL: " . $conn->error);
 
         return $resulti;
@@ -767,28 +826,27 @@ class ClassesModel {
         }
 
         $term = '';
-        
+
         while ($row = $result->fetch_assoc()) {
             $term = $row['term'];
             break;
         }
 
         return $term;
-
     }
 
     public function getTerms($conn)
-   {
+    {
         $sql = "SELECT DISTINCT term
                 FROM offer";
 
         $result = $conn->query($sql);
 
-        if($result === false)
-            throw new Exception("Error en la consulta SQL: ". $conn->error);
+        if ($result === false)
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
 
         return $result;
-   }
+    }
 
     public function getMatriculadosModel($conn, $course)
     {
@@ -812,7 +870,6 @@ class ClassesModel {
         }
 
         return $count;
-
     }
 
 
@@ -831,6 +888,5 @@ class ClassesModel {
 
 
         return $result;
-
     }
 }

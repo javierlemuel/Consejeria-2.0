@@ -78,7 +78,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
-                                        <span class="list-text"><a href="https://upra.edu/computadoras/cohorte-2015/#1582136406836-9121ada3-25a9" target="_blank" class="hover:underline">Electivas Departamentales</a></span>
+                                        <span class="list-text"><a href="https://upra.edu/computadoras/descripciones-de-cursos/" target="_blank" class="hover:underline">Electivas Departamentales</a></span>
                                     </li>
                                     <li>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
@@ -102,24 +102,24 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
-                                        <span class="list-text"><a href="http://cartero.upra.edu/images/pdf/0409_solicitud_de_graduacion.pdf" target="_blank" class="hover:underline">Intrucciones Solicitud de Graduacion</a></span>
+                                        <span class="list-text"><a href="http://cartero.upra.edu/images/pdf/0409_solicitud_de_graduacion.pdf" target="_blank" class="hover:underline">Instrucciones Solicitud de Graduación</a></span>
                                     </li>
                                     <li>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
-                                        <span class="list-text"><a href="http://cartero.upra.edu/images/pdf/0409instrucciones_estatus_evaluacin_graduacin_portal_upr.pdf" target="_blank" class="hover:underline">Instrucciones Acceso a Estatus de Solicitud de Graduacion</a></span>
+                                        <span class="list-text"><a href="http://cartero.upra.edu/images/pdf/0409instrucciones_estatus_evaluacin_graduacin_portal_upr.pdf" target="_blank" class="hover:underline">Instrucciones Acceso a Estatus de Solicitud de Graduación</a></span>
                                     </li>
                                 </ul>
                             </div>
                             <div class="my-5">
-                                <h5 class="text-lg font-bold dark:text-white-light">Información Prematricula online:</h5>
+                                <h5 class="text-lg font-bold dark:text-white-light">Información Prematrícula online:</h5>
                                 <ul class="mb-3 mx-4">
                                     <li>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
-                                        <span class="list-text"><a href="https://upra.edu/registraduria/proceso-matricula/#1478031446050-eba96eac-c203" target="_blank" class="hover:underline">Intrucciones para Realizar Prematricula</a></span>
+                                        <span class="list-text"><a href="https://upra.edu/registraduria/proceso-matricula/#1478031446050-eba96eac-c203" target="_blank" class="hover:underline">Intrucciones para Realizar Prematrícula</a></span>
                                     </li>
                                 </ul>
                             </div>
@@ -130,13 +130,13 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
-                                        <span class="list-text"><a href="assets/docs/CompuREU Internships and Co-op.pdf" target="_blank" class="hover:underline">Presentacion Como aplicar a REU, Internado y CO-OP</a></span>
+                                        <span class="list-text"><a href="assets/docs/CompuREU Internships and Co-op.pdf" target="_blank" class="hover:underline">Presentación Cómo aplicar a REU, Internado y CO-OP</a></span>
                                     </li>
                                     <li>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-primary ltr:mr-2 rtl:ml-2 rtl:rotate-180">
                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
-                                        <span class="list-text"><a href="assets/docs/Taller Resume Valenzuela (UPDATE 2022).pdf" target="_blank" class="hover:underline">Como Preparar Resume</a></span>
+                                        <span class="list-text"><a href="assets/docs/Taller Resume Valenzuela (UPDATE 2022).pdf" target="_blank" class="hover:underline">Cómo Preparar Resumé</a></span>
                                     </li>
                                 </ul>
                             </div>

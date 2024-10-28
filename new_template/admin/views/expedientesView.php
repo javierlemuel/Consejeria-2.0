@@ -1,15 +1,14 @@
 <?php
-    if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
-    {
-        header("Location: ../index.php");
-        exit;
-    }
-    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
+if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
+    header("Location: ../index.php");
+    exit;
+}
+$privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-    
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -94,16 +93,16 @@
                                 <!-- user-profile -->
                                 <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="top-11 w-[230px] !py-0 font-semibold text-dark ltr:right-0 rtl:left-0 dark:text-white-dark dark:text-white-light/90">
                                     <li class="border-t border-white-light dark:border-white-light/10">
-                                    <form method="post" action="index.php">
-                                        <input type="hidden" name="signout" value="1">
-                                        <button type="submit" class="!py-3 text-danger">
-                                            <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                                <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            Sign Out
-                                        </button>
-                                    </form>
+                                        <form method="post" action="index.php">
+                                            <input type="hidden" name="signout" value="1">
+                                            <button type="submit" class="!py-3 text-danger">
+                                                <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                Sign Out
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -115,42 +114,45 @@
             <!-- end header section -->
 
             <div class="animate__animated p-6" :class="[$store.app.animation]">
-            <div style='text-align: center'>
-                        <?php 
-                            if(isset($_SESSION['students_list_msg'])) 
-                            {
-                                if(strpos($_SESSION['students_list_msg'], 'No') !== false || strpos($_SESSION['students_list_msg'], 'Error') !== false)
-                                    echo "<h2 style='color:red; bold' class='text-xl'>".$_SESSION['students_list_msg']."</h2>";
-                                else
-                                    echo "<h2 style='color:limegreen; bold' class='text-xl'>".$_SESSION['students_list_msg']."</h2>";
-                                unset($_SESSION['students_list_msg']);
-                            }
-                        ?>
-                    </div>
+                <div style='text-align: center'>
+                    <?php
+                    if (isset($_SESSION['students_list_msg'])) {
+                        if (strpos($_SESSION['students_list_msg'], 'No') !== false || strpos($_SESSION['students_list_msg'], 'Error') !== false)
+                            echo "<h2 style='color:red; bold' class='text-xl'>" . $_SESSION['students_list_msg'] . "</h2>";
+                        else
+                            echo "<h2 style='color:limegreen; bold' class='text-xl'>" . $_SESSION['students_list_msg'] . "</h2>";
+                        unset($_SESSION['students_list_msg']);
+                    }
+                    ?>
+                </div>
                 <!-- start main content section -->
                 <div x-data="contacts">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <h2 class="text-xl">Expedientes de Estudiantes (<?php if(isset($_SESSION['status'])){echo $_SESSION['status'];}else {echo 'Todos';}?>)</h2>
-                            <!-- Comienzo Boton drop down -->
-                            <div x-data="dropdown" @click.outside="open = false" class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle" @click="toggle">Filtrar por Estatus
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
-                                        <text x="50" y="65" font-size="48" fill="White">▼</text>
-                                    </svg>
-                                </button>
-                                <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                    <li><a href="?status=Todos&search=<?php echo $searchKeyword?>" @click="toggle">Todos</a></li>
-                                    <li><a href="?status=Activos&search=<?php echo $searchKeyword?>" @click="toggle">Activos</a></li>
-                                    <li><a href="?status=Inactivos&search=<?php echo $searchKeyword?>" @click="toggle">Inactivos</a></li>
-                                    <li><a href="?status=Graduados&search=<?php echo $searchKeyword?>" @click="toggle">Graduados</a></li>
-                                    <li><a href="?status=Graduandos&search=<?php echo $searchKeyword?>" @click="toggle">Graduandos</a></li>
-                                </ul>
-                            </div>
-                            <!-- Final del boton de dropdown-->
-                            <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-                                <div class="flex gap-3">
-                                    <div>
-                                    <?php if ($privileges == 1) {?>
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <h2 class="text-xl">Expedientes de Estudiantes (<?php if (isset($_SESSION['status'])) {
+                                                                            echo $_SESSION['status'];
+                                                                        } else {
+                                                                            echo 'Todos';
+                                                                        } ?>)</h2>
+                        <!-- Comienzo Boton drop down -->
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" @click="toggle">Filtrar por Estatus
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
+                                    <text x="50" y="65" font-size="48" fill="White">▼</text>
+                                </svg>
+                            </button>
+                            <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                <li><a href="?status=Todos&search=<?php echo $searchKeyword ?>" @click="toggle">Todos</a></li>
+                                <li><a href="?status=Activos&search=<?php echo $searchKeyword ?>" @click="toggle">Activos</a></li>
+                                <li><a href="?status=Inactivos&search=<?php echo $searchKeyword ?>" @click="toggle">Inactivos</a></li>
+                                <li><a href="?status=Graduados&search=<?php echo $searchKeyword ?>" @click="toggle">Graduados</a></li>
+                                <li><a href="?status=Graduandos&search=<?php echo $searchKeyword ?>" @click="toggle">Graduandos</a></li>
+                            </ul>
+                        </div>
+                        <!-- Final del boton de dropdown-->
+                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                            <div class="flex gap-3">
+                                <div>
+                                    <?php if ($privileges == 1) { ?>
                                         <button type="button" class="btn btn-primary" @click="editUser">
                                             <svg
                                                 width="24"
@@ -158,465 +160,454 @@
                                                 viewBox="0 0 24 24"
                                                 fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                class="h-5 w-5 ltr:mr-2 rtl:ml-2"
-                                            >
+                                                class="h-5 w-5 ltr:mr-2 rtl:ml-2">
                                                 <circle cx="10" cy="6" r="4" stroke="currentColor" stroke-width="1.5" />
                                                 <path
                                                     opacity="0.5"
                                                     d="M18 17.5C18 19.9853 18 22 10 22C2 22 2 19.9853 2 17.5C2 15.0147 5.58172 13 10 13C14.4183 13 18 15.0147 18 17.5Z"
                                                     stroke="currentColor"
-                                                    stroke-width="1.5"
-                                                />
+                                                    stroke-width="1.5" />
                                                 <path
                                                     d="M21 10H19M19 10H17M19 10L19 8M19 10L19 12"
                                                     stroke="currentColor"
                                                     stroke-width="1.5"
-                                                    stroke-linecap="round"
-                                                />
+                                                    stroke-linecap="round" />
                                             </svg>
                                             Crear estudiante
                                         </button>
                                     <?php } ?>
-                                        <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="addContactModal && '!block'">
-                                            <div class="flex min-h-screen items-center justify-center px-4" @click.self="addContactModal = false">
-                                                <div
-                                                    x-show="addContactModal"
-                                                    x-transition
-                                                    x-transition.duration.300
-                                                    class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full"
-                                                >
-                                                    <button
-                                                        type="button"
-                                                        class="absolute top-4 text-white-dark hover:text-dark ltr:right-4 rtl:left-4"
-                                                        @click="addContactModal = false"
-                                                    >
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            width="24px"
-                                                            height="24px"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            stroke-width="1.5"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            class="h-6 w-6"
-                                                        >
-                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                        </svg>
-                                                    </button>
-                                                    <h3
-                                                        class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]"
-                                                        x-text="params.id ? 'Editar estudiante' : 'Crear estudiante'"
-                                                    ></h3>
-                                                    <div class="p-5">
-                                                        <form id="studentForm" action="#" method="POST">
-                                                            <div class="mb-5 grid grid-cols-1 md:grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                                <input type="hidden" name="action" value="addStudent">
-                                                                <div>
-                                                                    <label for="nombre">Primer <br> Nombre</label>
-                                                                    <input x-model="params.nombre" id="nombre" name="nombre" type="text" class="form-input" maxlength="15" required/>
-                                                                </div>
-                                                                <div>
-                                                                    <label for="nombre2">Segundo Nombre</label>
-                                                                    <input id="nombre2" name="nombre2" type="text" class="form-input" maxlength="15"/>
-                                                                </div>
-                                                                <div>
-                                                                    <label for="apellidoP">Apellido Paterno</label>
-                                                                    <input x-model="params.apellidoP" id="apellidoP" name="apellidoP" type="text"class="form-input" maxlength="20" required/>
-                                                                </div>
-                                                                <div>
-                                                                    <label for="apellidoM">Apellido Materno</label>
-                                                                    <input id="apellidoM" name="apellidoM" type="text" class="form-input" maxlength="20"/>
-                                                                </div>
+                                    <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="addContactModal && '!block'">
+                                        <div class="flex min-h-screen items-center justify-center px-4" @click.self="addContactModal = false">
+                                            <div
+                                                x-show="addContactModal"
+                                                x-transition
+                                                x-transition.duration.300
+                                                class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
+                                                <button
+                                                    type="button"
+                                                    class="absolute top-4 text-white-dark hover:text-dark ltr:right-4 rtl:left-4"
+                                                    @click="addContactModal = false">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24px"
+                                                        height="24px"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        class="h-6 w-6">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </button>
+                                                <h3
+                                                    class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]"
+                                                    x-text="params.id ? 'Editar estudiante' : 'Crear estudiante'"></h3>
+                                                <div class="p-5">
+                                                    <form id="studentForm" action="#" method="POST">
+                                                        <div class="mb-5 grid grid-cols-1 md:grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                            <input type="hidden" name="action" value="addStudent">
+                                                            <div>
+                                                                <label for="nombre">Primer <br> Nombre</label>
+                                                                <input x-model="params.nombre" id="nombre" name="nombre" type="text" class="form-input" maxlength="15" required />
                                                             </div>
-                                                            <div class="mb-5">
-                                                                <label for="email">Email</label>
-                                                                <input
-                                                                    id="email"
-                                                                    name="email"
-                                                                    type="email"
-                                                                    placeholder="yeyo.soto2@upr.edu"
-                                                                    class="form-input"
-                                                                    x-model="params.email"
-                                                                    required
-                                                                />
+                                                            <div>
+                                                                <label for="nombre2">Segundo Nombre</label>
+                                                                <input id="nombre2" name="nombre2" type="text" class="form-input" maxlength="15" />
                                                             </div>
-                                                            <div class="mb-5">
-                                                                <label for="minor">Minor</label>
-                                                                <select id="gridYear" class="form-select text-white-dark" name="minor">
-                                                                    <option value="0">N/A</option>
-                                                                    <!-- JAVIER -->
-                                                                    <?php foreach($minors as $minor) { ?>
-                                                                        <option value="<?php echo $minor['ID']; ?>"><?php echo $minor['name']; ?></option>
-                                                                    <?php } ?>
-                                                                </select>
+                                                            <div>
+                                                                <label for="apellidoP">Apellido Paterno</label>
+                                                                <input x-model="params.apellidoP" id="apellidoP" name="apellidoP" type="text" class="form-input" maxlength="20" required />
                                                             </div>
-                                                            <div class="mb-5">
-                                                                <label for="numero">Número de estudiante</label>
-                                                                <input
-                                                                    id="numero"
-                                                                    name="numero_estu"
-                                                                    type="text"
-                                                                    placeholder="840-xx-xxxx"
-                                                                    class="form-input"
-                                                                    x-model="params.numero"
-                                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 9);"
-                                                                    maxlength="9"
-                                                                    required
-                                                                />
+                                                            <div>
+                                                                <label for="apellidoM">Apellido Materno</label>
+                                                                <input id="apellidoM" name="apellidoM" type="text" class="form-input" maxlength="20" />
                                                             </div>
-                                                            <div class="mb-5">
-                                                                <label for="cohorte">Cohorte</label>
-                                                                <select id="gridYear" class="form-select text-white-dark" name="cohorte" x-model="params.cohorte" required>
-                                                                    <?php foreach($cohortes as $c) { ?>
-                                                                    <option value="<?php echo $c['cohort_year']?>"><?php echo $c['cohort_year']?></option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-5">
-                                                                <label for="estatus">Estatus</label>
-                                                                <select id="status" x-model="params.estatus" class="form-select text-white-dark" name="estatus" required>
-                                                                    <option>Activo</option>    
-                                                                    <option>Inactivo</option>
-                                                                    <option>Graduado</option>
-                                                                    <option>Graduando</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-5">
-                                                                <label for="birthday">Cumpleaños</label>
-                                                                <input type="date" x-model="params.birthday" id="birthday" name="birthday" required>               
-                                                            </div>
-                                                            
-                                                            <div class="mt-8 flex items-center justify-end">
-                                                                <button type="button" class="btn btn-outline-danger" @click="addContactModal = false">
-                                                                    Cancelar
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" x-text="params.id ? 'Update' : 'Añadir'"></button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <label for="email">Email</label>
+                                                            <input
+                                                                id="email"
+                                                                name="email"
+                                                                type="email"
+                                                                placeholder="yeyo.soto2@upr.edu"
+                                                                class="form-input"
+                                                                x-model="params.email"
+                                                                required />
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <label for="minor">Minor</label>
+                                                            <select id="gridYear" class="form-select text-white-dark" name="minor">
+                                                                <option value="0">N/A</option>
+                                                                <!-- JAVIER -->
+                                                                <?php foreach ($minors as $minor) { ?>
+                                                                    <option value="<?php echo $minor['ID']; ?>"><?php echo $minor['name']; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <label for="numero">Número de estudiante</label>
+                                                            <input
+                                                                id="numero"
+                                                                name="numero_estu"
+                                                                type="text"
+                                                                placeholder="840-xx-xxxx"
+                                                                class="form-input"
+                                                                x-model="params.numero"
+                                                                oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 9);"
+                                                                maxlength="9"
+                                                                required />
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <label for="cohorte">Cohorte</label>
+                                                            <select id="gridYear" class="form-select text-white-dark" name="cohorte" x-model="params.cohorte" required>
+                                                                <?php foreach ($cohortes as $c) { ?>
+                                                                    <option value="<?php echo $c['cohort_year'] ?>"><?php echo $c['cohort_year'] ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <label for="estatus">Estatus</label>
+                                                            <select id="status" x-model="params.estatus" class="form-select text-white-dark" name="estatus" required>
+                                                                <option>Activo</option>
+                                                                <option>Inactivo</option>
+                                                                <option>Graduado</option>
+                                                                <option>Graduando</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <label for="birthday">Cumpleaños</label>
+                                                            <input type="date" x-model="params.birthday" id="birthday" name="birthday" required>
+                                                        </div>
+
+                                                        <div class="mt-8 flex items-center justify-end">
+                                                            <button type="button" class="btn btn-outline-danger" @click="addContactModal = false">
+                                                                Cancelar
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" x-text="params.id ? 'Update' : 'Añadir'"></button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="relative">
-                                    <form action="index.php" method="GET">
-                                        <input
-                                            type="text"
-                                            name="search"
-                                            placeholder="Buscar por nombre o #"
-                                            class="peer form-input py-2 ltr:pr-11 rtl:pl-11"
-                                        />
-                                        <!-- Agrega campos ocultos para los parámetros de filtro de estado -->
-                                        <input type="hidden" name="status" value="<?php echo $statusFilter; ?>">
-                                        <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
-                                            <button type="submit">
-                                                <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
-                                                    <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
                             </div>
-                        </div> <br>
-                        <!-- inicio de tabla para presentar los estudiantes-->
-                        <div class="table-responsive">
-                            <table class="table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Estudiante</th>
-                                        <th>Número de estudiante</th>
-                                        <th>Recomendación</th>
-                                        <th>Consejería</th>
-                                        <th>Estatus</th>
-                                        <th>Ultima Actualización</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($students as $student): ?>
-                                        <tr>
-                                            <td><?= $student['name1'] ?> <?= $student['name2'] ?> <?= $student['last_name1'] ?> <?= $student['last_name2'] ?></td>
-                                            <td><?= $student['formatted_student_num'] ?></td>
-                                            <td>
-                                                <?php if ($student['status'] == 'Graduando' || $student['status'] == 'Graduado'): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
-                                                <?php elseif ($student['given_counseling'] == "0"): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
-                                                <?php else: ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($student['status'] == 'Graduando' || $student['status'] == 'Graduado'): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
-                                                <?php elseif ($student['conducted_counseling'] == 0): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
-                                                <?php else: ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($student['status'] == 'Inactivo'): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-danger">Inactivo</span>
-                                                <?php elseif ($student['status'] == 'Graduado'): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-primary">Graduado</span>
-                                                <?php elseif ($student['status'] == 'Graduando'): ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-primary">Graduando</span>    
-                                                <?php else: ?>
-                                                    <span class="badge whitespace-nowrap badge-outline-success">Activo</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?= $student['edited_date'] ?></td>
-                                            <td>
-                                                <form method="POST" action="index.php">
-                                                    <input type="hidden" name="action" value="selecteStudent">
-                                                    <input type="hidden" name="student_num" value="<?= $student['student_num'] ?>">
-                                                    <button type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2" x-text="params.id ? 'Update' : 'Editar'"></button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="POST" action="index.php">
-                                                    <input type="hidden" name="action" value="studentCounseling">
-                                                    <input type="hidden" name="student_num" value="<?= $student['student_num'] ?>">
-                                                    <button type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2" x-text="params.id ? 'Update' : 'Consejería'"></button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div> <br>
-                        <!-- final de tabla para presentar los estudiantes-->
-                        <!--inicio de paginacion -->
-                        <div class="pagination">
-                            <ul class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto">
-                                <li>
-                                    <a href="?page=<?php echo $currentPage > 1 ? $currentPage - 1 : 1; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                        <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover:text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
-                                            <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            <div class="relative">
+                                <form action="index.php" method="GET">
+                                    <input
+                                        type="text"
+                                        name="search"
+                                        placeholder="Buscar por nombre o #"
+                                        value="<?php echo $_GET['search'] ?? "" ?>"
+                                        class="peer form-input py-2 ltr:pr-11 rtl:pl-11" />
+                                    <!-- Agrega campos ocultos para los parámetros de filtro de estado -->
+                                    <input type="hidden" name="status" value="<?php echo $statusFilter; ?>">
+                                    <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                                        <button type="submit">
+                                            <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
+                                                <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
                                             </svg>
                                         </button>
-                                    </a>
-                                </li>
-                                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                    <li>
-                                        <a href="?page=<?php echo $i; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                            <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition <?php echo ($i == $currentPage) ? 'bg-primary text-white' : 'bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary'; ?>">
-                                                <?php echo $i; ?>
-                                            </button>
-                                        </a>
-                                    </li>
-                                <?php endfor; ?>
-                                <li>
-                                    <a href="?page=<?php echo $currentPage < $totalPages ? $currentPage + 1 : $totalPages; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                        <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
-                                            <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                            </svg>
-                                        </button>
-                                    </a>
-                                </li>
-                            </ul>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <!-- termina la paginacion UTILIZA SCRIPTS-->
-        </div> <br>
-            <!-- end main content section -->
+                    </div> <br>
+                    <!-- inicio de tabla para presentar los estudiantes-->
+                    <div class="table-responsive">
+                        <table class="table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Número de estudiante</th>
+                                    <th>Recomendación</th>
+                                    <th>Consejería</th>
+                                    <th>Estatus</th>
+                                    <th>Ultima Actualización</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($students as $student): ?>
+                                    <tr>
+                                        <td><?= $student['name1'] ?> <?= $student['name2'] ?> <?= $student['last_name1'] ?> <?= $student['last_name2'] ?></td>
+                                        <td><?= $student['formatted_student_num'] ?></td>
+                                        <td>
+                                            <?php if ($student['status'] == 'Graduando' || $student['status'] == 'Graduado'): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
+                                            <?php elseif ($student['given_counseling'] == "0"): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
+                                            <?php else: ?>
+                                                <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($student['status'] == 'Graduando' || $student['status'] == 'Graduado'): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
+                                            <?php elseif ($student['conducted_counseling'] == 0): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
+                                            <?php else: ?>
+                                                <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($student['status'] == 'Inactivo'): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-danger">Inactivo</span>
+                                            <?php elseif ($student['status'] == 'Graduado'): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-primary">Graduado</span>
+                                            <?php elseif ($student['status'] == 'Graduando'): ?>
+                                                <span class="badge whitespace-nowrap badge-outline-primary">Graduando</span>
+                                            <?php else: ?>
+                                                <span class="badge whitespace-nowrap badge-outline-success">Activo</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?= $student['edited_date'] ?></td>
+                                        <td>
+                                            <form method="POST" action="index.php">
+                                                <input type="hidden" name="action" value="selecteStudent">
+                                                <input type="hidden" name="student_num" value="<?= $student['student_num'] ?>">
+                                                <button type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2" x-text="params.id ? 'Update' : 'Editar'"></button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form method="POST" action="index.php">
+                                                <input type="hidden" name="action" value="studentCounseling">
+                                                <input type="hidden" name="student_num" value="<?= $student['student_num'] ?>">
+                                                <button type="submit" class="btn btn-primary ltr:ml-2 rtl:mr-2" x-text="params.id ? 'Update' : 'Consejería'"></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div> <br>
+                    <!-- final de tabla para presentar los estudiantes-->
+                    <!--inicio de paginacion -->
+                    <div class="pagination">
+                        <ul class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto">
+                            <li>
+                                <a href="?page=<?php echo $currentPage > 1 ? $currentPage - 1 : 1; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
+                                    <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover:text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
+                                        <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                        </svg>
+                                    </button>
+                                </a>
+                            </li>
+                            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                <li>
+                                    <a href="?page=<?php echo $i; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
+                                        <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition <?php echo ($i == $currentPage) ? 'bg-primary text-white' : 'bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary'; ?>">
+                                            <?php echo $i; ?>
+                                        </button>
+                                    </a>
+                                </li>
+                            <?php endfor; ?>
+                            <li>
+                                <a href="?page=<?php echo $currentPage < $totalPages ? $currentPage + 1 : $totalPages; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
+                                    <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
+                                        <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                        </svg>
+                                    </button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- termina la paginacion UTILIZA SCRIPTS-->
+                </div> <br>
+                <!-- end main content section -->
 
-            <!-- start footer section -->
-            <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
-                © <span id="footer-year">2022</span>. UPRA All rights reserved.
+                <!-- start footer section -->
+                <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
+                    © <span id="footer-year">2022</span>. UPRA All rights reserved.
+                </div>
+                <!-- end footer section -->
             </div>
-            <!-- end footer section -->
         </div>
-    </div>
 
-    <?php
-    // Check if the session variables are set
-    if (isset($_SESSION['registertxt'])) {
-        // Output the text content in a JavaScript block
-        echo '<script>';
-        echo 'var txtContent = ' . json_encode($_SESSION['registertxt']) . ';';
-        echo 'var txtFileName = "archivo_de_registro.txt";'; // Set your desired filename here
-        echo 'var blob = new Blob([txtContent], { type: "text/plain" });'; // Use "text/plain" for plain text
-        echo 'var a = document.createElement("a");';
-        echo 'a.href = URL.createObjectURL(blob);';
-        echo 'a.target = "_blank";'; // Open in a new window
-        echo 'document.body.appendChild(a);';
-        echo 'a.click();';
-        echo 'document.body.removeChild(a);';
-        echo '</script>';
-    
-        // Clear the session variable
-        unset($_SESSION['registertxt']);
-    }
+        <?php
+        // Check if the session variables are set
+        if (isset($_SESSION['registertxt'])) {
+            // Output the text content in a JavaScript block
+            echo '<script>';
+            echo 'var txtContent = ' . json_encode($_SESSION['registertxt']) . ';';
+            echo 'var txtFileName = "archivo_de_registro.txt";'; // Set your desired filename here
+            echo 'var blob = new Blob([txtContent], { type: "text/plain" });'; // Use "text/plain" for plain text
+            echo 'var a = document.createElement("a");';
+            echo 'a.href = URL.createObjectURL(blob);';
+            echo 'a.target = "_blank";'; // Open in a new window
+            echo 'document.body.appendChild(a);';
+            echo 'a.click();';
+            echo 'document.body.removeChild(a);';
+            echo '</script>';
 
-    if (isset($_SESSION['registermodeltxt']) && $_SESSION['registermodeltxt'] != '') {
-        // Set the desired filename
-        $date = date("Y-m-d");
-        $fileName = "error_log_".$date;
-    
-        echo '<script>';
-        echo 'var txtContent = ' . json_encode($_SESSION['registermodeltxt']) . ';';
-        echo 'var blob = new Blob([txtContent], { type: "text/plain" });';
-        echo 'var a = document.createElement("a");';
-        echo 'a.href = URL.createObjectURL(blob);';
-        echo 'a.download = ' . json_encode($fileName) . ';';
-        echo 'document.body.appendChild(a);';
-        echo 'a.click();';
-        echo 'document.body.removeChild(a);';
-        echo 'URL.revokeObjectURL(a.href);';
-        echo '</script>';
-        
-        // Clear the session variable
-        unset($_SESSION['registermodeltxt']);
-    }
+            // Clear the session variable
+            unset($_SESSION['registertxt']);
+        }
 
-    ?>
+        if (isset($_SESSION['registermodeltxt']) && $_SESSION['registermodeltxt'] != '') {
+            // Set the desired filename
+            $date = date("Y-m-d");
+            $fileName = "error_log_" . $date;
 
-    <script src="assets/js/alpine-collaspe.min.js"></script>
-    <script src="assets/js/alpine-persist.min.js"></script>
-    <script defer src="assets/js/alpine-ui.min.js"></script>
-    <script defer src="assets/js/alpine-focus.min.js"></script>
-    <script defer src="assets/js/alpine.min.js"></script>
-    <script src="assets/js/custom.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+            echo '<script>';
+            echo 'var txtContent = ' . json_encode($_SESSION['registermodeltxt']) . ';';
+            echo 'var blob = new Blob([txtContent], { type: "text/plain" });';
+            echo 'var a = document.createElement("a");';
+            echo 'a.href = URL.createObjectURL(blob);';
+            echo 'a.download = ' . json_encode($fileName) . ';';
+            echo 'document.body.appendChild(a);';
+            echo 'a.click();';
+            echo 'document.body.removeChild(a);';
+            echo 'URL.revokeObjectURL(a.href);';
+            echo '</script>';
+
+            // Clear the session variable
+            unset($_SESSION['registermodeltxt']);
+        }
+
+        ?>
+
+        <script src="assets/js/alpine-collaspe.min.js"></script>
+        <script src="assets/js/alpine-persist.min.js"></script>
+        <script defer src="assets/js/alpine-ui.min.js"></script>
+        <script defer src="assets/js/alpine-focus.min.js"></script>
+        <script defer src="assets/js/alpine.min.js"></script>
+        <script src="assets/js/custom.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
 
-    <script>
-    $(document).ready(function(){
+        <script>
+            $(document).ready(function() {
                 $("#sidebar").load("sidebar.php");
             });
-        
-
-        document.addEventListener('alpine:init', () => {
-            // main section
-            Alpine.data('scrollToTop', () => ({
-                showTopButton: false,
-                init() {
-                    window.onscroll = () => {
-                        this.scrollFunction();
-                    };
-                },
-
-                scrollFunction() {
-                    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-                        this.showTopButton = true;
-                    } else {
-                        this.showTopButton = false;
-                    }
-                },
-
-                goToTop() {
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                },
-            }));
 
 
-            // sidebar section
-            Alpine.data('sidebar', () => ({
-                init() {
-                    const selector = document.querySelector('.sidebar ul a[href="' + window.location.pathname + '"]');
-                    if (selector) {
-                        selector.classList.add('active');
-                        const ul = selector.closest('ul.sub-menu');
-                        if (ul) {
-                            let ele = ul.closest('li.menu').querySelectorAll('.nav-link');
-                            if (ele) {
-                                ele = ele[0];
-                                setTimeout(() => {
-                                    ele.click();
-                                });
+            document.addEventListener('alpine:init', () => {
+                // main section
+                Alpine.data('scrollToTop', () => ({
+                    showTopButton: false,
+                    init() {
+                        window.onscroll = () => {
+                            this.scrollFunction();
+                        };
+                    },
+
+                    scrollFunction() {
+                        if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                            this.showTopButton = true;
+                        } else {
+                            this.showTopButton = false;
+                        }
+                    },
+
+                    goToTop() {
+                        document.body.scrollTop = 0;
+                        document.documentElement.scrollTop = 0;
+                    },
+                }));
+
+
+                // sidebar section
+                Alpine.data('sidebar', () => ({
+                    init() {
+                        const selector = document.querySelector('.sidebar ul a[href="' + window.location.pathname + '"]');
+                        if (selector) {
+                            selector.classList.add('active');
+                            const ul = selector.closest('ul.sub-menu');
+                            if (ul) {
+                                let ele = ul.closest('li.menu').querySelectorAll('.nav-link');
+                                if (ele) {
+                                    ele = ele[0];
+                                    setTimeout(() => {
+                                        ele.click();
+                                    });
+                                }
                             }
                         }
-                    }
-                },
-            }));
+                    },
+                }));
 
-            // header section
-            Alpine.data('header', () => ({
-                init() {
-                    const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
-                    if (selector) {
-                        selector.classList.add('active');
-                        const ul = selector.closest('ul.sub-menu');
-                        if (ul) {
-                            let ele = ul.closest('li.menu').querySelectorAll('.nav-link');
-                            if (ele) {
-                                ele = ele[0];
-                                setTimeout(() => {
-                                    ele.classList.add('active');
-                                });
+                // header section
+                Alpine.data('header', () => ({
+                    init() {
+                        const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
+                        if (selector) {
+                            selector.classList.add('active');
+                            const ul = selector.closest('ul.sub-menu');
+                            if (ul) {
+                                let ele = ul.closest('li.menu').querySelectorAll('.nav-link');
+                                if (ele) {
+                                    ele = ele[0];
+                                    setTimeout(() => {
+                                        ele.classList.add('active');
+                                    });
+                                }
                             }
                         }
-                    }
-                },
-            }));
-        });
-        // elec script
-
-        const clearCourse = (course, elements, category) => {
-            var query = document.getElementById(course).value; /* Value inputted by user */
-            var elements = document.getElementsByClassName(elements); /* Get the li elements in the list */
-            var myList = document.getElementById(category); /* Var to reference the list */
-            var length = (document.getElementsByClassName(element).length); /* # of li elements */
-            var checker = 'false'; /* boolean-ish value to determine if value was found */
-
-            myList.querySelectorAll('li').forEach(function(item) {
-                if (item.innerHTML.indexOf(query) !== -1)
-                    item.remove();
+                    },
+                }));
             });
-        }
+            // elec script
 
-        const clearCourses = (courses) => {
-            document.getElementById(courses).innerHTML = "";
-        }
+            const clearCourse = (course, elements, category) => {
+                var query = document.getElementById(course).value; /* Value inputted by user */
+                var elements = document.getElementsByClassName(elements); /* Get the li elements in the list */
+                var myList = document.getElementById(category); /* Var to reference the list */
+                var length = (document.getElementsByClassName(element).length); /* # of li elements */
+                var checker = 'false'; /* boolean-ish value to determine if value was found */
 
-        document.addEventListener("alpine:init", () => {
-            Alpine.data("collapse", () => ({
-                collapse: false,
+                myList.querySelectorAll('li').forEach(function(item) {
+                    if (item.innerHTML.indexOf(query) !== -1)
+                        item.remove();
+                });
+            }
 
-                collapseSidebar() {
-                    this.collapse = !this.collapse;
-                },
-            }));
+            const clearCourses = (courses) => {
+                document.getElementById(courses).innerHTML = "";
+            }
 
-            Alpine.data("dropdown", (initialOpenState = false) => ({
-                open: initialOpenState,
+            document.addEventListener("alpine:init", () => {
+                Alpine.data("collapse", () => ({
+                    collapse: false,
 
-                toggle() {
-                    this.open = !this.open;
-                },
-            }));
-        });
+                    collapseSidebar() {
+                        this.collapse = !this.collapse;
+                    },
+                }));
 
-    </script>
-    <!-- dropdown script -->
-    <script>
+                Alpine.data("dropdown", (initialOpenState = false) => ({
+                    open: initialOpenState,
 
-        function changePage(page) {
-            // Redirige a la página correspondiente
-            window.location.href = "?page=" + page;
-        }    
+                    toggle() {
+                        this.open = !this.open;
+                    },
+                }));
+            });
+        </script>
+        <!-- dropdown script -->
+        <script>
+            function changePage(page) {
+                // Redirige a la página correspondiente
+                window.location.href = "?page=" + page;
+            }
 
-        document.addEventListener("alpine:init", () => {
-            Alpine.data("dropdown", (initialOpenState = false) => ({
-                open: initialOpenState,
+            document.addEventListener("alpine:init", () => {
+                Alpine.data("dropdown", (initialOpenState = false) => ({
+                    open: initialOpenState,
 
-                toggle() {
-                    this.open = !this.open;
-                },
-            }));
+                    toggle() {
+                        this.open = !this.open;
+                    },
+                }));
 
-            Alpine.data('app', () => ({
+                Alpine.data('app', () => ({
                     showUploadModal: false,
                     formData: {
                         file: null,
@@ -640,8 +631,8 @@
                     },
                 }));
 
-            //contacts
-            Alpine.data('contacts', () => ({
+                //contacts
+                Alpine.data('contacts', () => ({
                     defaultParams: {
                         id: null,
                         nombre: '',
@@ -664,8 +655,7 @@
                     },
                     filterdContactsList: [],
                     searchUser: '',
-                    contactList: [
-                        {
+                    contactList: [{
                             id: 1,
                             path: 'profile-35.png',
                             nombre: 'Joel Melvin Ramos Soto',
@@ -762,21 +752,21 @@
                             //update user
                             let user = this.contactList.find((d) => d.id === this.params.id);
                             user.nombre = this.params.nombre,
-                            user.nombre2 = this.params.nombre2,
-                            user.apellidoP = this.params.apellidoP,
-                            user.apellidoM = this.params.apellidoM,
-                            user.email = this.params.email;
+                                user.nombre2 = this.params.nombre2,
+                                user.apellidoP = this.params.apellidoP,
+                                user.apellidoM = this.params.apellidoM,
+                                user.email = this.params.email;
                             user.minor = this.params.minor;
                             user.numero = this.params.numero;
                             user.cohorte = this.params.cohorte;
                             user.consejeria = 'No realizada';
                             user.priority = 'activo';
-                            user.birthday =  this.params.birthday;
+                            user.birthday = this.params.birthday;
                         } else {
                             //add user
-                            let maxUserId = this.contactList.length
-                                ? this.contactList.reduce((max, character) => (character.id > max ? character.id : max), this.contactList[0].id)
-                                : 0;
+                            let maxUserId = this.contactList.length ?
+                                this.contactList.reduce((max, character) => (character.id > max ? character.id : max), this.contactList[0].id) :
+                                0;
 
                             let user = {
                                 id: maxUserId + 1,
@@ -839,9 +829,7 @@
                     },
                 }));
             });
-            
- 
-    </script>
+        </script>
 </body>
 
 </html>

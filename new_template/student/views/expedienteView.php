@@ -284,7 +284,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 </div>
                                 <!-- electivas libres -->
                                 <div class="table-responsive mt-5">
-                                    <h4 class="font-semibold text-2xl my-4">Electivas Libres</h4>
+                                    <h4 class="font-semibold text-xl my-4">Electivas Libres</h4>
                                     <table class="table-striped">
                                         <thead>
                                             <tr>

@@ -1,5 +1,7 @@
 <?php
 
+require_once "config.php";
+
 //config/database.php
 // // config/database.php
 // $host = '136.145.24.81';
@@ -8,11 +10,10 @@
 // $database = 'ConsejeriaCCOM';
 
 
-$host = "localhost"; // XAMPP crea el localhost
-$username = "root"; // Usuario de phpMyAdmin
-$password = ""; //contrasena de phpMyAdmin
-$database = "counseling_db";
-
+// $host = "localhost"; // XAMPP crea el localhost
+// $username = "root"; // Usuario de phpMyAdmin
+// $password = ""; //contrasena de phpMyAdmin
+// $database = "counseling_db";
 
 // $host = "136.145.29.193"; // XAMPP crea el localhost
 // $username = "emamarsa"; // Usuario de phpMyAdmin

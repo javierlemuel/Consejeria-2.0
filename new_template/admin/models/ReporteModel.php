@@ -120,6 +120,11 @@ class ReporteModel {
             FROM student
             WHERE status = 'Activo'";
         }
+        else {
+            $sql = "SELECT student_num, name1, name2, last_name1, last_name2
+            FROM will_take NATURAL JOIN student
+            WHERE crse_code = '$type' AND term = '$term'";
+        }
 
         $students = [];
         $result2 = $conn->query($sql);

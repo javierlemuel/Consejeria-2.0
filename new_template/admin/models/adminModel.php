@@ -69,10 +69,6 @@ class AdminModel {
 
         $result = $conn->query($sql);
 
-        
-        if ($result->num_rows > 0) 
-            // Rows exist with the provided email
-            return "failure";
 
         $sql = "UPDATE advisor
                 SET email = '$email',
