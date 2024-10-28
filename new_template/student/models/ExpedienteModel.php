@@ -108,7 +108,7 @@ class StudentModel
             END AS recommended
             FROM student_courses
             JOIN general_courses on general_courses.crse_code = student_courses.crse_code
-            WHERE student_courses.student_num = ? AND (student_courses.crse_code LIKE 'CISO%' OR student_courses.crse_code LIKE 'HUMA%') ;";
+            WHERE student_courses.student_num = ? AND (type = 'CISO' OR type = 'HUMA') ;";
 
         $stmt = $conn->prepare($sql);
 

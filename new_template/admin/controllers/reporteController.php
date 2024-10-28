@@ -49,6 +49,8 @@ class ReporteController{
                 $combinedCsvFileName = "Report_No_Han_Realizado_Consejeria_".$term.".csv";
             else if($type == 'active')
                 $combinedCsvFileName = "Report_Estudiantes_Activos_".$term.".csv";
+            else
+                $combinedCsvFileName = "Report_Estudiantes_Apuntados_".$type."-".$term.".csv";
             $_SESSION['filename'] = $combinedCsvFileName;
 
         }
