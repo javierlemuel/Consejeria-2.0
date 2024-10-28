@@ -80,15 +80,23 @@ class StudentModel
         //         JOIN cohort on cohort.crse_code = general_courses.crse_code
         //         WHERE cohort.cohort_year = ? AND general_courses.crse_code NOT IN ('INGL3113', 'INGL3114');";
 
-        $sql = "SELECT DISTINCT  general_courses.crse_code, general_courses.name, general_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
-            student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, general_courses.type,
-            CASE WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num =  ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
-
-            FROM general_courses
-            LEFT JOIN student_courses ON general_courses.crse_code = student_courses.crse_code
-            AND student_courses.student_num = ?
-            JOIN cohort on cohort.crse_code = general_courses.crse_code
-            WHERE cohort.cohort_year =  ? AND general_courses.required = 1
+        $sql = "SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND type = 'INGL'
 
             UNION
 
@@ -108,12 +116,113 @@ class StudentModel
             END AS recommended
             FROM student_courses
             JOIN general_courses on general_courses.crse_code = student_courses.crse_code
-            WHERE student_courses.student_num = ? AND (student_courses.crse_code LIKE 'CISO%' OR student_courses.crse_code LIKE 'HUMA%') ;";
+            WHERE student_courses.student_num = ? AND type = 'ESPA'
+
+            UNION
+
+            SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND type = 'MATE'
+
+            UNION
+
+            SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND type = 'HUMA'
+
+            UNION
+
+            SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND type = 'CISO'
+
+            UNION
+
+            SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND type = 'CIBI'
+
+            UNION
+
+            SELECT DISTINCT 
+            student_courses.crse_code, 
+            general_courses.name, 
+            student_courses.credits, 
+            student_courses.crse_grade, 
+            student_courses.crse_status, 
+            student_courses.convalidacion, 
+            student_courses.equivalencia, 
+            student_courses.term, 
+            general_courses.type,
+            CASE 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            ELSE NULL 
+            END AS recommended
+            FROM student_courses
+            JOIN general_courses on general_courses.crse_code = student_courses.crse_code
+            WHERE student_courses.student_num = ? AND type = 'FISI';";
 
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param("sssss", $student_num, $student_num, $cohort_year, $student_num, $student_num);
+        $stmt->bind_param('ssssssssssssss', $student_num, $student_num, $student_num, $student_num, $student_num, $student_num, $student_num,
+        $student_num, $student_num, $student_num, $student_num, $student_num, $student_num, $student_num);
 
         // ejecuta el statement
         $stmt->execute();

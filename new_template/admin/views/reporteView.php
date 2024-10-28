@@ -186,6 +186,8 @@
                                 <tr <?php if($count % 2 == 0) echo "style='background-color: lightgray'"; ?>>
                                     <td style='text-align:center'><?php echo $s['crse_code']?></td>
                                     <td style='text-align:center'><?php echo $s['count'] ?></td>
+                                    <td style='text-align:center; vertical-align:middle'><a href='?reports&code=<?php echo $s['crse_code']?>'>
+                                    <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                                 </tr>
                             <?php $count++;
                             } 
