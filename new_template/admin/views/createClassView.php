@@ -181,7 +181,7 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
                         </div>
                         <div>
                             <label for="cred">Créditos</label>
-                            <input name="cred" type="text" class="form-input" required />
+                            <input id="cred" oninput="filterNumberOnly()" name="cred" type="text" class="form-input" required />
                         </div>
                     </div>
 
@@ -264,6 +264,7 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
     </div>
     </div>
 
+    <script src="assets/js/utils.js"></script>
     <script src="assets/js/alpine-collaspe.min.js"></script>
     <script src="assets/js/alpine-persist.min.js"></script>
     <script defer src="assets/js/alpine-ui.min.js"></script>
@@ -275,7 +276,7 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
     <!-- <script src="assets/js/courses.js"></script> -->
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#sidebar").load("sidebar.php");
             $("#createclass").load("crear_clase.php");
         });
@@ -437,7 +438,6 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
 
             }));
         });
-
     </script>
 </body>
 
