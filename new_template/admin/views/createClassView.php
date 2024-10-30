@@ -264,7 +264,6 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
     </div>
     </div>
 
-    <script src="assets/js/utils.js"></script>
     <script src="assets/js/alpine-collaspe.min.js"></script>
     <script src="assets/js/alpine-persist.min.js"></script>
     <script defer src="assets/js/alpine-ui.min.js"></script>
@@ -275,6 +274,15 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <!-- <script src="assets/js/courses.js"></script> -->
 
+    <script>
+        let theInput = document.getElementById("cred");
+        theInput.onkeydown = function(event) {
+            // Only allow if the e.key value is a number or if it's 'Backspace'
+            if (isNaN(event.key) && event.key !== 'Backspace') {
+                event.preventDefault();
+            }
+        };
+    </script>
     <script>
         $(document).ready(function() {
             $("#sidebar").load("sidebar.php");
