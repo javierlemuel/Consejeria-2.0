@@ -19,12 +19,16 @@ class CreateClassModel
         // Remove anything that is not number or letter
         $sanitized_code = preg_replace('/[^a-z0-9 ]/i', '', $crse_code);
         // Check if course is of pattern LLLLNNNN
-        $crse_code_is_matched = isValidCode($crse_code);
+        $crse_code_is_matched = isValidCode($sanitized_code);
         if (!$crse_code_is_matched) {
             // course code is wrong, stop
             return "El código no es formato valido.";
         }
 
+        // Check if credit is integer
+        if (!ctype_digit($cred)) {
+            return "El credito no puede tener letras.";
+        }
 
         $result = $conn->query($sql);
 
@@ -33,7 +37,7 @@ class CreateClassModel
             //If it doesn't exist, create new course
             if ($result->num_rows == 0) {
                 $sql = "INSERT INTO ccom_courses
-                        VALUES('$crse_code', '$crse_name', $cred, '$type', '$level', $minor)";
+                        VALUES('$sanitized_code', '$crse_name', $cred, '$type', '$level', $minor)";
 
                 $result = $conn->query($sql);
                 if ($result === false) {
