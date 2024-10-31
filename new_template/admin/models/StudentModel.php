@@ -1,6 +1,20 @@
 <?php
 // models/StudentModel.php
-class StudentModel {
+class StudentModel
+{
+    public $pagination_limit = 20;
+    public $amountOfRows = 1;
+
+    public function calculateOffset($p_num)
+    {
+        $page = max(1, (int) ($p_num ?? 1));  // Ensure the page number is at least 1
+        return $this->pagination_limit * ($page - 1);
+    }
+
+    public function getPageAmount()
+    {
+        return ceil($this->amountOfRows / $this->pagination_limit);
+    }
 
     public function getCohorts($conn)
     {
@@ -15,9 +29,16 @@ class StudentModel {
         return $result;
     }
 
-    public function getStudentsByPageAndStatusAndSearch($conn, $perPage, $currentPage, $status, $search) {
-        $offset = ($currentPage - 1) * $perPage;
-    
+    public function getStudentsByPageAndStatusAndSearch($conn, $q = null, $currentPage = null, $status)
+    {
+
+        if (!isset($currentPage)) {
+            $p_limit = PHP_INT_MAX;
+            $offset = 0;
+        } else {
+            $offset = $this->calculateOffset($currentPage);
+        }
+        $search = $q ?? "";
         if ($status === 'Activos') {
             $statusCondition = "status = 'Activo'";
         } elseif ($status === 'Inactivos') {
@@ -27,7 +48,7 @@ class StudentModel {
         } else {
             $statusCondition = "1"; // Sin filtro, mostrar todos
         }
-    
+
         // Modificar la consulta SQL para incluir el filtro de estado y búsqueda
         //JAVIER//
         $sql = "SELECT student_num, name1, name2, last_name1, last_name2, conducted_counseling, status, edited_date
@@ -39,15 +60,16 @@ class StudentModel {
                 OFFSET ?
                 ";
         //
-    
+
         $stmt = $conn->prepare($sql);
-    
+
         // Modificar el filtro de búsqueda para buscar en cualquier parte del nombre
         $searchKeyword = "%$search%";
-        $stmt->bind_param("sssssii", $searchKeyword,$searchKeyword, $searchKeyword,$searchKeyword,$searchKeyword, $perPage, $offset);
+        $finalLimit = $p_limit ?? $this->pagination_limit;
+        $stmt->bind_param("sssssii", $searchKeyword, $searchKeyword, $searchKeyword, $searchKeyword, $searchKeyword, $finalLimit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         $students = [];
         while ($row = $result->fetch_assoc()) {
             $student_num = $row['student_num'];
@@ -60,7 +82,7 @@ class StudentModel {
                 FROM recommended_courses 
                 WHERE student_num = $student_num
                 AND term = '$term'";
-             $result2 = $conn->query($sql2);
+            $result2 = $conn->query($sql2);
 
             if ($result2 === false) {
                 throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -68,7 +90,7 @@ class StudentModel {
 
             $counseling = 0;
 
-            foreach($result2 as $res)
+            foreach ($result2 as $res)
                 $counseling = 1;
 
             $row['given_counseling'] = $counseling;
@@ -77,11 +99,12 @@ class StudentModel {
             $students[] = $row;
         }
         $stmt->close();
-    
-        return $students;
-    }    
 
-    public function getTotalStudentsByStatusAndSearch($conn, $status, $search) {
+        return $students;
+    }
+
+    public function getTotalStudentsByStatusAndSearch($conn, $status, $search)
+    {
         if ($status === 'Activos') {
             $statusCondition = "status = 'Activo'";
         } elseif ($status === 'Inactivos') {
@@ -89,31 +112,32 @@ class StudentModel {
         } elseif ($status === 'Graduados') {
             $statusCondition = "status = 'Graduado'";
         } elseif ($status === 'Graduandos') {
-            $statusCondition = "status = 'Graduando'";    
+            $statusCondition = "status = 'Graduando'";
         } else {
             $statusCondition = "1"; // Sin filtro, contar todos
         }
-    
+
         // Modificar la consulta SQL para incluir el filtro de estado y búsqueda
         $sql = "SELECT COUNT(*) as total 
                 FROM student 
                 WHERE $statusCondition 
                 AND (name1 LIKE ? OR student_num LIKE ?)";
-    
+
         $stmt = $conn->prepare($sql);
-    
+
         // Modificar el filtro de búsqueda para buscar en cualquier parte del nombre
         $searchKeyword = "%$search%";
         $stmt->bind_param("ss", $searchKeyword, $searchKeyword);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         $row = $result->fetch_assoc();
         $stmt->close();
         return $row['total'];
-    }    
+    }
 
-    public function insertStudent($conn, $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday) {
+    public function insertStudent($conn, $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday)
+    {
         // Preparar la consulta SQL
 
         $sql0 = "SELECT * FROM student WHERE email = ? or student_num = ?";
@@ -123,7 +147,7 @@ class StudentModel {
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
             $stmt->close();
-            $_SESSION['students_list_msg'] = "No se pudo insertar el estudiante ".$numero." por número de estudiante o email repetido";
+            $_SESSION['students_list_msg'] = "No se pudo insertar el estudiante " . $numero . " por número de estudiante o email repetido";
             return FALSE;
         }
 
@@ -144,16 +168,17 @@ class StudentModel {
         // Verificar si la inserción se realizó con éxito
         if ($result === true) {
             // Inserción exitosa
-            $_SESSION['students_list_msg'] = "El estudiante ".$numero." fue insertado!!";
+            $_SESSION['students_list_msg'] = "El estudiante " . $numero . " fue insertado!!";
             return TRUE;
         } else {
             // Error en la inserción
-            $_SESSION['students_list_msg'] = "No se pudo insertar el estudiante ".$numero;
+            $_SESSION['students_list_msg'] = "No se pudo insertar el estudiante " . $numero;
             return FALSE;
         }
     }
 
-    public function selectStudent($student_num, $conn) {
+    public function selectStudent($student_num, $conn)
+    {
         // Preparar la consulta SQL
         $sql = "SELECT * FROM student WHERE student_num = ?";
         // Preparar la sentencia
@@ -180,7 +205,8 @@ class StudentModel {
         return $studentData;
     }
 
-    public function studentRecommendedTerms($student_num, $conn) {
+    public function studentRecommendedTerms($student_num, $conn)
+    {
         // Preparar la consulta SQL
         $sql = "SELECT DISTINCT term FROM recommended_courses WHERE student_num = ?;";
         // Preparar la sentencia
@@ -201,11 +227,12 @@ class StudentModel {
         } else {
             return NULL;
         }
-    
+
         return $terms;
     }
 
-    public function studentRecommendedClasses($student_num, $selectedTerm, $conn) {
+    public function studentRecommendedClasses($student_num, $selectedTerm, $conn)
+    {
         // Preparar la consulta SQL para obtener los cursos recomendados
         $sql = "
         SELECT
@@ -225,7 +252,7 @@ class StudentModel {
         WHERE
             recommended_courses.student_num = ?
             AND recommended_courses.term = ?";
-            
+
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular los parámetros con los valores
@@ -236,7 +263,7 @@ class StudentModel {
         $result = $stmt->get_result();
         // Cerrar la sentencia
         $stmt->close();
-        
+
         // Verificar si hay resultados
         if ($result->num_rows === 0) {
             return NULL; // Devolver NULL si no hay filas
@@ -250,11 +277,11 @@ class StudentModel {
         }
     }
 
-    public function editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $old_email, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn) {
+    public function editStudent($nombre, $nombre2, $apellidoP, $apellidoM, $old_email, $email, $numeroEst, $fechaNac, $cohorte, $minor, $graduacion, $notaAdmin, $notaEstudiante, $status, $tipo, $date, $conn)
+    {
         // Preparar la consulta SQL
 
-        if($email != $old_email)
-        {
+        if ($email != $old_email) {
             $sql0 = "SELECT * FROM student WHERE email = ?";
             $stmt =  $conn->prepare($sql0);
             $stmt->bind_param("s", $email);
@@ -262,11 +289,11 @@ class StudentModel {
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 $stmt->close();
-                $_SESSION['student_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst." por email repetido";
+                $_SESSION['student_edit_msg'] = "No se pudo editar el estudiante " . $numeroEst . " por email repetido";
                 return;
             }
         }
-        
+
 
         $sql = "UPDATE student 
                 SET name1 = ?, 
@@ -284,49 +311,50 @@ class StudentModel {
                     type = ?,
                     edited_date = ? 
                 WHERE student_num = ?";
-    
+
         // Preparar los datos para la consulta
         $params = array(
-            $nombre, 
-            $nombre2, 
-            $apellidoP, 
-            $apellidoM, 
-            $email, 
-            $fechaNac, 
-            $cohorte, 
-            $minor, 
-            $graduacion, 
-            $notaAdmin, 
-            $notaEstudiante, 
-            $status, 
+            $nombre,
+            $nombre2,
+            $apellidoP,
+            $apellidoM,
+            $email,
+            $fechaNac,
+            $cohorte,
+            $minor,
+            $graduacion,
+            $notaAdmin,
+            $notaEstudiante,
+            $status,
             $tipo,
-            $date, 
+            $date,
             $numeroEst
         );
-    
+
         // Tipos de datos para los parámetros
         $types = 'sssssssisssssss';
-    
+
         // Ejecutar la consulta
         $stmt = $conn->prepare($sql);
         $stmt->bind_param($types, ...$params);
-    
+
         $result = $stmt->execute();
-    
+
         // Cerrar la conexión
         $stmt->close();
 
-        if($result == true)
-            $_SESSION['student_edit_msg'] = "El estudiante ".$numeroEst." fue editado!!";
+        if ($result == true)
+            $_SESSION['student_edit_msg'] = "El estudiante " . $numeroEst . " fue editado!!";
         else
-            $_SESSION['student_edit_msg'] = "No se pudo editar el estudiante ".$numeroEst;
-    
+            $_SESSION['student_edit_msg'] = "No se pudo editar el estudiante " . $numeroEst;
+
         // Devolver true si la consulta se ejecutó correctamente, o false en caso contrario
         return $result !== false;
     }
-    
-    
-    public function insertStudentCSV($conn, $student_num, $nombre, $segundo_nombre, $apellido_materno, $apellido_paterno, $email, $birthdate) {
+
+
+    public function insertStudentCSV($conn, $student_num, $nombre, $segundo_nombre, $apellido_materno, $apellido_paterno, $email, $birthdate)
+    {
         $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
 
         $currentDateTime = date("Y-m-d H:i:s");
@@ -334,20 +362,17 @@ class StudentModel {
         #error_log($logMessage, 3, $archivoRegistro);
         $_SESSION['registermodeltxt'] .= $logMessage;
 
-        if(strlen($birthdate) == 5)
-            $birthdate = '0'.$birthdate;
-    
+        if (strlen($birthdate) == 5)
+            $birthdate = '0' . $birthdate;
+
         // Extraer el mes, día y año de $birthdate
         $mes = substr($birthdate, 0, 2);
         $dia = substr($birthdate, 2, 2);
         $axo = substr($birthdate, 4, 2);
 
-        if($axo > 50)
-        {
+        if ($axo > 50) {
             $axo = $axo + 1900;
-        }
-        else
-        {
+        } else {
             $axo = $axo + 2000;
         }
         $birthdate_formatted = sprintf("%04d-%02d-%02d", $axo, $mes, $dia);
@@ -370,11 +395,10 @@ class StudentModel {
 
 
         //echo "Combined Digits: ".$combinedDigits."\n";
-        foreach($cohorts as $cohort)
-        {
-            $year = $cohort['cohort_year'][2].$cohort['cohort_year'][3];
+        foreach ($cohorts as $cohort) {
+            $year = $cohort['cohort_year'][2] . $cohort['cohort_year'][3];
             //echo "YEAR END: ".$year."\n";
-            if($combinedDigits >= $year)
+            if ($combinedDigits >= $year)
                 $cohort_year = $cohort['cohort_year'];
         }
 
@@ -384,28 +408,29 @@ class StudentModel {
         //     $cohort_year = '2017';
         // else    
         //     $cohort_year = '2022';
-    
+
         // Ejecuta el query de inserción
         $date = date("Y-m-d");
         $cc = 0;
         $query = "INSERT INTO student (student_num, email, name1, name2, last_name1, last_name2, dob, conducted_counseling, counseling_lock, minor, cohort_year, status, edited_date)
                   VALUES ('$student_num', '$email', '$nombre', '$segundo_nombre', '$apellido_paterno', '$apellido_materno', '$birthdate_formatted', $cc, $cc, $cc, $cohort_year, 'Activo', '$date')";
-    
+
         // Ejecuta el query
         if ($conn->query($query) === TRUE) {
             // Insert exitoso
             #error_log("Estudiante insertado correctamente en la base de datos.\n", 3, $archivoRegistro);
-            $_SESSION['registermodeltxt'] .= "Estudiante ".$student_num." insertado correctamente en la base de datos.\n";
+            $_SESSION['registermodeltxt'] .= "Estudiante " . $student_num . " insertado correctamente en la base de datos.\n";
             $_SESSION['students_list_msg'] = "Estudiante(s) fue(ron) insertado(s)!!";
         } else {
             // querie fallo
             #error_log("Error al insertar estudiante en la base de datos: " . $conn->error . "\n", 3, $archivoRegistro);
-            $_SESSION['registermodeltxt'] .= "Error al insertar estudiante ".$student_num." en la base de datos: " . $conn->error . "\n";
-            $_SESSION['students_list_msg'] = "Error al insertar estudiante(s) ".$student_num." en la base de datos: " . $conn->error;
+            $_SESSION['registermodeltxt'] .= "Error al insertar estudiante " . $student_num . " en la base de datos: " . $conn->error . "\n";
+            $_SESSION['students_list_msg'] = "Error al insertar estudiante(s) " . $student_num . " en la base de datos: " . $conn->error;
         }
     }
-    
-    public function alreadyRecomended($student_num, $class, $term, $conn) {
+
+    public function alreadyRecomended($student_num, $class, $term, $conn)
+    {
         // Preparar la consulta SQL
         $sql = "SELECT * FROM recommended_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
         // Preparar la sentencia
@@ -418,33 +443,30 @@ class StudentModel {
         $result = $stmt->get_result();
         // Verificar si se encontraron resultados
         $stmt->close();
-        if ($result->num_rows > 0)
-            {
-                return TRUE;
-            }
-        else 
-        {
+        if ($result->num_rows > 0) {
+            return TRUE;
+        } else {
             return FALSE;
         }
     }
 
-    public function insertRecomendation($student_num, $class, $term, $conn) {
+    public function insertRecomendation($student_num, $class, $term, $conn)
+    {
         #insertRecommendation
         // Preparar la consulta SQL
         $sql = "INSERT INTO recommended_courses (student_num, crse_code, term) VALUES (?, ?, ?)";
-        
+
         // Preparar la declaración
         $stmt = $conn->prepare($sql);
-        
+
         // Vincular los parámetros
         $stmt->bind_param("iss", $student_num, $class, $term);
-        
+
         // Ejecutar la consulta
         $result = $stmt->execute();
-        
+
         // Verificar si la inserción fue exitosa
-        if ($result)
-        {
+        if ($result) {
             // Obtener la fecha actual
             $date = date("Y-m-d");
             $cc = 0;
@@ -471,50 +493,47 @@ class StudentModel {
             // Cerrar la declaración
             $stmt->close();
 
-            $_SESSION['consejeria_msg'] = "Recomendación de ".$class." añadida!!";
+            $_SESSION['consejeria_msg'] = "Recomendación de " . $class . " añadida!!";
 
             return TRUE;
-        } 
-        else
-        {
+        } else {
             // Cerrar la declaración
             $stmt->close();
-            $_SESSION['consejeria_msg'] = "No se pudo añadir recomendación de ".$class.".";
+            $_SESSION['consejeria_msg'] = "No se pudo añadir recomendación de " . $class . ".";
             return FALSE;
         }
-        
     }
 
-    public function deleteRecomendation($student_num, $class, $term, $conn) {
+    public function deleteRecomendation($student_num, $class, $term, $conn)
+    {
         #deleteRecommendation
         // Preparar la consulta SQL
         $sql = "DELETE FROM recommended_courses WHERE student_num = ? AND crse_code = ? AND term = ?";
-        
+
         // Preparar la declaración
         $stmt = $conn->prepare($sql);
-        
+
         // Vincular los parámetros
         $stmt->bind_param("sss", $student_num, $class, $term);
-        
+
         // Ejecutar la consulta
         $result = $stmt->execute();
-        
+
         // Verificar si la eliminación fue exitosa
-        if ($result)
-        {
+        if ($result) {
             // Obtener la fecha actual
             $date = date("Y-m-d");
             $cc = 0;
-    
+
             // Consulta SQL para actualizar la columna conducted_counseling y edited_date del estudiante
             $sql = "UPDATE student SET conducted_counseling = ?, edited_date = ? WHERE student_num = ?";
-    
+
             // Preparar la declaración
             $stmt = $conn->prepare($sql);
-    
+
             // Vincular los parámetros
             $stmt->bind_param("isi", $cc, $date, $student_num);
-    
+
             // Ejecutar la consulta
             $result = $stmt->execute();
 
@@ -524,26 +543,24 @@ class StudentModel {
             $stmt = $conn->prepare($sql2);
             $stmt->bind_param("ss", $student_num, $term);
             $result = $stmt->execute();
-    
+
             // Cerrar la declaración
             $stmt->close();
-    
-            $_SESSION['consejeria_msg'] = "Recomendación  de ".$class." fue borrada!!";
+
+            $_SESSION['consejeria_msg'] = "Recomendación  de " . $class . " fue borrada!!";
             return TRUE;
-        } 
-        else
-        {
+        } else {
             // Cerrar la declaración
             $stmt->close();
-            $_SESSION['consejeria_msg'] = "No se pudo borrar la recomendación de ".$class.".";
+            $_SESSION['consejeria_msg'] = "No se pudo borrar la recomendación de " . $class . ".";
             return FALSE;
         }
-    }  
+    }
 
     public function openCounseling($student_num, $conn)
     {
         $sql = "UPDATE student SET conducted_counseling = ? WHERE student_num = ?";
-    
+
         // Preparar la declaración
         $stmt = $conn->prepare($sql);
         $cc = 0;
@@ -579,13 +596,14 @@ class StudentModel {
         return;
     }
 
-    
-    public function studentAlreadyHasGrade($student_num, $code, $conn) {
+
+    public function studentAlreadyHasGrade($student_num, $code, $conn)
+    {
         // Preparar la consulta SQL
         $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-        foreach($language_generals as $lg)
-            if($lg == $code)
+        foreach ($language_generals as $lg)
+            if ($lg == $code)
                 $code = $this->validateLanguageGenerals($conn, $code);
 
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND crse_grade != ''";
@@ -605,12 +623,13 @@ class StudentModel {
         }
     }
 
-    public function studentAlreadyHasGradeWithSemester($student_num, $code, $term, $conn) {
+    public function studentAlreadyHasGradeWithSemester($student_num, $code, $term, $conn)
+    {
         // Preparar la consulta SQL
         $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-        foreach($language_generals as $lg)
-            if($lg == $code)
+        foreach ($language_generals as $lg)
+            if ($lg == $code)
                 $code = $this->validateLanguageGenerals($conn, $code);
 
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ? AND crse_grade != ''";
@@ -631,13 +650,13 @@ class StudentModel {
         }
     }
 
-    public function UpdateStudentGradeCSV($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn) {
+    public function UpdateStudentGradeCSV($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn)
+    {
         // Preparar la consulta SQL para la actualización
         $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-        foreach($language_generals as $lg)
-            if($lg == $course_code)
-            {
+        foreach ($language_generals as $lg)
+            if ($lg == $course_code) {
                 $old_course_code = $course_code;
                 $course_code = $this->validateLanguageGenerals($conn, $course_code);
                 $equi .= $old_course_code;
@@ -657,7 +676,7 @@ class StudentModel {
 
         $crse_grade = '';
         $old_term = '';
-  
+
         // Ejecutar
         if ($stmt0->execute()) {
             // Sacar la nota
@@ -665,7 +684,7 @@ class StudentModel {
             $stmt0->fetch();
 
             // Cerrar
-           // $stmt0->close();
+            // $stmt0->close();
         } else {
             // Error
             echo "Error executing query.";
@@ -675,17 +694,16 @@ class StudentModel {
 
         $checker = false;
         if (strpos($grade, 'D') == true || strpos($grade, 'F') == true)
-            if(strpos($crse_grade, 'W') == true)
+            if (strpos($crse_grade, 'W') == true)
                 $checker = true;
 
         # $crse_grade is the grade they currently have
         # $grade is the grade being inserted
-        if(($crse_grade > $grade || $crse_grade == '') && $checker == false)
-        {
+        if (($crse_grade > $grade || $crse_grade == '') && $checker == false) {
             $sql1 = "UPDATE student_courses 
                     SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
-            
+
             // Preparar la sentencia
             $stmt1 = $conn->prepare($sql1);
             if (!$stmt1) {
@@ -693,10 +711,10 @@ class StudentModel {
                 echo "Error preparing SQL statement: " . $conn->error . "<br>";
                 return FALSE;
             }
-            
+
             // Vincular los parámetros con los valores
             $stmt1->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
-            
+
             // Ejecutar la sentencia
             if ($stmt1->execute()) {
                 // Verificar si la actualización fue exitosa
@@ -708,11 +726,11 @@ class StudentModel {
                     $result = $conn->query($sql2);
 
                     if ($result === false) {
-                            throw new Exception("Error en la consulta SQL: " . $conn->error);
+                        throw new Exception("Error en la consulta SQL: " . $conn->error);
                     }
                     return TRUE; // La actualización fue exitosa
-                    
-                    
+
+
                 } else {
                     $stmt1->close();
                     $_SESSION['students_list_msg'] = "No hubo cambios en la base de datos";
@@ -726,65 +744,22 @@ class StudentModel {
                 $stmt1->close();
                 return FALSE;
             }
-            
-        }
-        else
+        } else
             return TRUE;
     }
 
-    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn) {
-            $sql1 = "UPDATE student_courses 
+    public function UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn)
+    {
+        $sql1 = "UPDATE student_courses 
                     SET credits = ?, category = ?, level = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
 
-            $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-            foreach($language_generals as $lg)
-                if($lg == $course_code)
-                    $course_code = $this->validateLanguageGenerals($conn, $course_code);   
-            
-            // Preparar la sentencia
-            $stmt1 = $conn->prepare($sql1);
-            if (!$stmt1) {
-                // Manejar el error de preparación de la consulta
-                echo "Error preparing SQL statement: " . $conn->error . "<br>";
-                return FALSE;
-            }
-            
-            // Vincular los parámetros con los valores
-            $stmt1->bind_param("issssssssss", $credits, $category, $level, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
-            
-            // Ejecutar la sentencias
-            if ($stmt1->execute()) {
-                // Verificar si la actualización fue exitosa
-                if ($stmt1->affected_rows > 0) {
-                    $stmt1->close();
-                    $_SESSION['consejeria_msg'] = "Curso $course_code fue actualizado!!";
-                    $date = date("Y-m-d");
-                    $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
-                    $result = $conn->query($sql2);
+        foreach ($language_generals as $lg)
+            if ($lg == $course_code)
+                $course_code = $this->validateLanguageGenerals($conn, $course_code);
 
-                    if ($result === false) {
-                            throw new Exception("Error en la consulta SQL: " . $conn->error);
-                    }
-                    return TRUE; // La actualización fue exitosa
-                } else {
-                    $stmt1->close();
-                    $_SESSION['consejeria_msg'] = "No pudo actualizar el curso $course_code!!";
-                    return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
-                }
-            } else {
-                // Ocurrió un error al ejecutar la consulta
-                // Manejar el error según sea necesario
-                $stmt1->close();
-                return FALSE;
-            }
-    }
-
-    public function deleteStudentGrade($student_num, $course_code, $term, $conn) {
-        $sql1 = "DELETE FROM student_courses 
-                WHERE student_num = ? AND crse_code = ? AND term = ?";
-        
         // Preparar la sentencia
         $stmt1 = $conn->prepare($sql1);
         if (!$stmt1) {
@@ -792,10 +767,53 @@ class StudentModel {
             echo "Error preparing SQL statement: " . $conn->error . "<br>";
             return FALSE;
         }
-        
+
+        // Vincular los parámetros con los valores
+        $stmt1->bind_param("issssssssss", $credits, $category, $level, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
+
+        // Ejecutar la sentencias
+        if ($stmt1->execute()) {
+            // Verificar si la actualización fue exitosa
+            if ($stmt1->affected_rows > 0) {
+                $stmt1->close();
+                $_SESSION['consejeria_msg'] = "Curso $course_code fue actualizado!!";
+                $date = date("Y-m-d");
+                $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                $result = $conn->query($sql2);
+
+                if ($result === false) {
+                    throw new Exception("Error en la consulta SQL: " . $conn->error);
+                }
+                return TRUE; // La actualización fue exitosa
+            } else {
+                $stmt1->close();
+                $_SESSION['consejeria_msg'] = "No pudo actualizar el curso $course_code!!";
+                return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
+            }
+        } else {
+            // Ocurrió un error al ejecutar la consulta
+            // Manejar el error según sea necesario
+            $stmt1->close();
+            return FALSE;
+        }
+    }
+
+    public function deleteStudentGrade($student_num, $course_code, $term, $conn)
+    {
+        $sql1 = "DELETE FROM student_courses 
+                WHERE student_num = ? AND crse_code = ? AND term = ?";
+
+        // Preparar la sentencia
+        $stmt1 = $conn->prepare($sql1);
+        if (!$stmt1) {
+            // Manejar el error de preparación de la consulta
+            echo "Error preparing SQL statement: " . $conn->error . "<br>";
+            return FALSE;
+        }
+
         // Vincular los parámetros con los valores
         $stmt1->bind_param("sss", $student_num, $course_code, $term);
-        
+
         // Ejecutar la sentencia
         if ($stmt1->execute()) {
             // Verificar si la eliminación fue exitosa
@@ -805,9 +823,9 @@ class StudentModel {
                 $date = date("Y-m-d");
                 $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
                 $result = $conn->query($sql2);
-    
+
                 if ($result === false) {
-                        throw new Exception("Error en la consulta SQL: " . $conn->error);
+                    throw new Exception("Error en la consulta SQL: " . $conn->error);
                 }
                 return TRUE; // La eliminación fue exitosa
             } else {
@@ -823,12 +841,12 @@ class StudentModel {
         }
     }
 
-    public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn) {
-        
+    public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn)
+    {
+
         $course_level = '';
 
-        if((strpos($course_code, 'CCOM') !== false))
-        {
+        if ((strpos($course_code, 'CCOM') !== false)) {
             $sql0 = "SELECT `level` FROM ccom_courses WHERE crse_code = ?";
             $stmt = $conn->prepare($sql0);
             if (!$stmt) {
@@ -839,23 +857,20 @@ class StudentModel {
             if ($stmt->execute()) {
                 // Vincular el resultado de la consulta a una variable
                 $stmt->bind_result($course_level);
-            
+
                 // Obtener el resultado de la consulta
                 if ($stmt->fetch())
                     $level = $course_level;
-                
             }
 
             $stmt->close();
-        }
-        else
+        } else
             $level = 'NULL';
 
         $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-        foreach($language_generals as $lg)
-            if($lg == $course_code)
-            {
+        foreach ($language_generals as $lg)
+            if ($lg == $course_code) {
                 $old_course_code = $course_code;
                 $course_code = $this->validateLanguageGenerals($conn, $course_code);
                 $equi .= $old_course_code;
@@ -864,19 +879,19 @@ class StudentModel {
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, category, level, crse_grade, crse_status, term, equivalencia, convalidacion)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             // Manejar el error de preparación de la consulta
             return FALSE;
         }
-        
+
         // Vincular los parámetros con los valores
         $stmt->bind_param("ssssssssss", $student_num, $course_code, $credits, $category, $level, $grade, $status, $term, $equi, $conva);
 
         // echo $stmt;
-        
+
         // Ejecutar la sentencia
         if ($stmt->execute()) {
             // Verificar si la inserción fue exitosa
@@ -888,7 +903,7 @@ class StudentModel {
                 $result = $conn->query($sql2);
 
                 if ($result === false) {
-                        throw new Exception("Error en la consulta SQL: " . $conn->error);
+                    throw new Exception("Error en la consulta SQL: " . $conn->error);
                 }
                 return TRUE; // La inserción fue exitosa
             } else {
@@ -904,7 +919,8 @@ class StudentModel {
         }
     }
 
-    public function studentHaveMinor($student_num, $conn) {
+    public function studentHaveMinor($student_num, $conn)
+    {
         // Preparar la consulta SQL para obtener el nombre de la menor
         $sql = "SELECT 
                     CASE
@@ -914,31 +930,31 @@ class StudentModel {
                 FROM student s
                 LEFT JOIN minor m ON s.minor = m.ID
                 WHERE s.student_num = ?";
-    
+
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             // Manejar el error de preparación de la consulta
             return null;
         }
-        
+
         // Vincular los parámetros con los valores
         $stmt->bind_param("s", $student_num);
-        
+
         // Ejecutar la sentencia
         if ($stmt->execute()) {
             // Obtener el resultado de la consulta
             $result = $stmt->get_result();
-            
+
             // Verificar si se encontró alguna fila
             if ($result->num_rows == 1) {
                 // Obtener el nombre de la menor
                 $row = $result->fetch_assoc();
                 $minor_name = $row['minor_name'];
-                
+
                 // Cerrar la sentencia y liberar recursos
                 $stmt->close();
-                
+
                 // Devolver el nombre de la menor
                 return $minor_name;
             } else {
@@ -952,12 +968,13 @@ class StudentModel {
         }
     }
 
-    public function alreadyHasGradeInTerm($student_num, $class, $term, $conn) {
+    public function alreadyHasGradeInTerm($student_num, $class, $term, $conn)
+    {
         // Preparar la consulta SQL
         $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-        foreach($language_generals as $lg)
-            if($lg == $class)
+        foreach ($language_generals as $lg)
+            if ($lg == $class)
                 $class = $this->validateLanguageGenerals($conn, $class);
 
         $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ? AND crse_grade != ''";
@@ -971,12 +988,9 @@ class StudentModel {
         $result = $stmt->get_result();
         // Verificar si se encontraron resultados
         $stmt->close();
-        if ($result->num_rows > 0)
-            {
-                return TRUE;
-            }
-        else 
-        {
+        if ($result->num_rows > 0) {
+            return TRUE;
+        } else {
             return FALSE;
         }
     }
@@ -992,10 +1006,10 @@ class StudentModel {
         $stmt->execute();
 
         return;
-
     }
 
-    public function getTerm($conn){
+    public function getTerm($conn)
+    {
         $sql = "SELECT term
                 FROM offer
                 WHERE crse_code = 'XXXX'";
@@ -1010,28 +1024,29 @@ class StudentModel {
             $term = $res['term'];
 
         return $term;
-   }
+    }
 
-   public function getPrevTerm($conn){
-    $sql = "SELECT term
+    public function getPrevTerm($conn)
+    {
+        $sql = "SELECT term
             FROM offer
             WHERE crse_code = 'CCOM3001'
             AND term not in (SELECT term FROM offer WHERE crse_code = 'XXXX')";
 
-    $result = $conn->query($sql);
+        $result = $conn->query($sql);
 
-    if ($result === false) {
-        throw new Exception("Error en la consulta SQL: " . $conn->error);
-    }
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
 
-    foreach ($result as $res)
-        $term = $res['term'];
+        foreach ($result as $res)
+            $term = $res['term'];
 
-    return $term;
+        return $term;
     }
 
     public function generateAutoReports($conn, $date)
-    { 
+    {
         # CONSIDER adding error log lines
         $term = $this->getTerm($conn);
 
@@ -1039,15 +1054,14 @@ class StudentModel {
         $sql1 = 'SELECT student_num, cohort_year, status
                 FROM student
                 WHERE status = "Activo"';
-        
+
         $result = $conn->query($sql1);
 
         if ($result === false) {
             throw new Exception("Error en la consulta SQL1: " . $conn->error);
         }
 
-        foreach($result as $student)
-        {
+        foreach ($result as $student) {
             $cohort = $student['cohort_year'];
             # Find all the courses currently in offer for the following semester
             # Select only the courses that are found in that student's cohort
@@ -1059,8 +1073,7 @@ class StudentModel {
                 throw new Exception("Error en la consulta SQL2: " . $conn->error);
             }
 
-            foreach($res2 as $offer_course)
-            {
+            foreach ($res2 as $offer_course) {
                 $num = $student['student_num'];
                 $crse_code = $offer_course['crse_code'];
                 # Find if that student has that course recommended already in current semester
@@ -1080,18 +1093,16 @@ class StudentModel {
 
                     $checker1 = false;
                     $prevTerm = $this->getPrevTerm($conn);
-                    if($res4->num_rows > 0) # If student has seen this course before
+                    if ($res4->num_rows > 0) # If student has seen this course before
                     {
-                        foreach($res4 as $res4)
-                        {
-                            if($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm && $res4['crse_grade'] != 'W')
-                            {
+                        foreach ($res4 as $res4) {
+                            if ($res4['crse_status'] == 'P' || $res4['term'] == $prevTerm && $res4['crse_grade'] != 'W') {
                                 $checker1 = true; # Dismiss a class if student has passed it or is currently seeing it
                             }
                         }
                     }
 
-                    if($checker1 == false) # If student hasn't passed this course already or is seeing the course in term before the recommendations term
+                    if ($checker1 == false) # If student hasn't passed this course already or is seeing the course in term before the recommendations term
                     {
                         $sql5 = "SELECT * FROM ccom_requirements WHERE crse_code = '$crse_code' AND cohort_year = '$cohort' AND type = 'pre'
                         UNION
@@ -1102,10 +1113,9 @@ class StudentModel {
                         }
                         $checker2 = true;
 
-                        if($res5->num_rows > 0) # If the course has requirements in this cohort year
+                        if ($res5->num_rows > 0) # If the course has requirements in this cohort year
                         {
-                            foreach($res5 as $course5)
-                            {
+                            foreach ($res5 as $course5) {
                                 $req_crse_code = $course5['req_crse_code'];
                                 # Find each req in the student's courses
                                 $sql6 = "SELECT * FROM student_courses WHERE student_num = $num AND crse_code = '$req_crse_code'";
@@ -1115,24 +1125,22 @@ class StudentModel {
                                 }
                                 $req_status = '';
                                 $req_term = '';
-                                if($res6->num_rows > 0)
-                                {
-                                    foreach($res6 as $res6)
-                                    {
+                                if ($res6->num_rows > 0) {
+                                    foreach ($res6 as $res6) {
                                         $req_status =  $res6['crse_status'];
                                         $req_term = $res6['term'];
                                         $req_grade = $res6['crse_grade'];
                                     }
                                 }
 
-                                if($req_status == 'P' || $req_term == $prevTerm && $req_grade != 'W') # If req has been passed, then continue to next req
+                                if ($req_status == 'P' || $req_term == $prevTerm && $req_grade != 'W') # If req has been passed, then continue to next req
                                     continue;
                                 else
                                     $checker2 = false;
                             }
                         }
 
-                        if($checker2 == true) # If the course's requirements have been met, insert into recommendations
+                        if ($checker2 == true) # If the course's requirements have been met, insert into recommendations
                         {
                             $sql7 = "INSERT INTO recommended_courses VALUES($num, '$crse_code', '$term')";
                             $res7 = $conn->query($sql7);
@@ -1148,34 +1156,27 @@ class StudentModel {
                                 throw new Exception("Error en la consulta SQL8: " . $conn->error);
                             }
                         }
-
-    
-                    }
-                    else    
+                    } else
                         continue; # Otherwise, go to next course in offer
                 }
-
-
             }
-
         }
 
-       
-    $_SESSION['students_list_msg'] = 'Auto recomendaciones han sido actualizadas!!';
-    return;
+
+        $_SESSION['students_list_msg'] = 'Auto recomendaciones han sido actualizadas!!';
+        return;
     }
 
     public function validateLanguageGenerals($conn, $crse_code)
     {
-        if($crse_code == 'INGL3101' || $crse_code == 'INGL3103' || $crse_code == 'INGL3011')
+        if ($crse_code == 'INGL3101' || $crse_code == 'INGL3103' || $crse_code == 'INGL3011')
             return 'INGL0001';
-        if($crse_code == 'INGL3102' || $crse_code == 'INGL3104' || $crse_code == 'INGL3012')
+        if ($crse_code == 'INGL3102' || $crse_code == 'INGL3104' || $crse_code == 'INGL3012')
             return 'INGL0002';
-        if($crse_code == 'ESPA3101' || $crse_code == 'ESPA3003')
+        if ($crse_code == 'ESPA3101' || $crse_code == 'ESPA3003')
             return 'ESPA0001';
-        if($crse_code == 'ESPA3102' || $crse_code == 'ESPA3004')
+        if ($crse_code == 'ESPA3102' || $crse_code == 'ESPA3004')
             return 'ESPA0002';
-
     }
 
     /* New functions */
@@ -1209,6 +1210,4 @@ class StudentModel {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
     }
-
 }
-?>

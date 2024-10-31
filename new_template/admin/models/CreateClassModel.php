@@ -32,8 +32,7 @@ class CreateClassModel
 
         $sql->bind_param("s", $crse_code);
         $sql->execute();
-        $result = $sql->get_result();
-        $ccom_courses = $result->fetch_all();
+        $ccom_courses = $sql->get_result()->fetch_all();
 
         //Find if the course already exits
         //If it doesn't exist, create new course
@@ -80,8 +79,7 @@ class CreateClassModel
                 WHERE crse_code = ?");
         $sql->bind_param("s", $sanitized_code);
         $sql->execute();
-        $result = $sql->get_result();
-        $general_courses = $result->fetch_all();
+        $general_courses = $sql->get_result()->fetch_all();
         //Find if the course already exits
         //If it doesn't exist, create new course
         if (count($general_courses) == 0) {
