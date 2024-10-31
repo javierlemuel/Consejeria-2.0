@@ -141,11 +141,11 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                 </svg>
                             </button>
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                <li><a href="?status=Todos&q=<?php echo $searchKeyword ?>" @click="toggle">Todos</a></li>
-                                <li><a href="?status=Activos&q=<?php echo $searchKeyword ?>" @click="toggle">Activos</a></li>
-                                <li><a href="?status=Inactivos&q=<?php echo $searchKeyword ?>" @click="toggle">Inactivos</a></li>
-                                <li><a href="?status=Graduados&q=<?php echo $searchKeyword ?>" @click="toggle">Graduados</a></li>
-                                <li><a href="?status=Graduandos&q=<?php echo $searchKeyword ?>" @click="toggle">Graduandos</a></li>
+                                <li><a href="?status=Todos&q=<?php echo $q ?>" @click="toggle">Todos</a></li>
+                                <li><a href="?status=Activos&q=<?php echo $q ?>" @click="toggle">Activos</a></li>
+                                <li><a href="?status=Inactivos&q=<?php echo $q ?>" @click="toggle">Inactivos</a></li>
+                                <li><a href="?status=Graduados&q=<?php echo $q ?>" @click="toggle">Graduados</a></li>
+                                <li><a href="?status=Graduandos&q=<?php echo $q ?>" @click="toggle">Graduandos</a></li>
                             </ul>
                         </div>
                         <!-- Final del boton de dropdown-->
