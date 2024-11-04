@@ -1,11 +1,10 @@
 <?php
-    if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
-    {
-        header("Location: ../index.php");
-        exit;
-    }
+if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
+    header("Location: ../index.php");
+    exit;
+}
 
-    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
+$privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -65,7 +64,7 @@
             <!-- start header section -->
             <header class="z-40" :class="{'dark' : $store.app.semidark && $store.app.menu === 'horizontal'}">
                 <div class="shadow-sm">
-                <div class="relative flex w-full items-center" style="background-color: #2b2b2b; padding: 5px 5px; dark:bg-[#0e1726]">
+                    <div class="relative flex w-full items-center" style="background-color: #2b2b2b; padding: 5px 5px; dark:bg-[#0e1726]">
                         <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
                             <a href="index.html" class="main-logo flex shrink-0 items-center">
                                 <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="assets/images/university.png" alt="image" />
@@ -85,7 +84,7 @@
                             </div>
 
 
-                            
+
 
                             <div class="dropdown flex-shrink-0" x-data="dropdown" @click.outside="open = false">
                                 <a href="javascript:;" class="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60" @click="toggle()">
@@ -98,16 +97,16 @@
                                 <!-- user-profile -->
                                 <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="top-11 w-[230px] !py-0 font-semibold text-dark ltr:right-0 rtl:left-0 dark:text-white-dark dark:text-white-light/90">
                                     <li class="border-t border-white-light dark:border-white-light/10">
-                                    <form method="post" action="index.php">
-                                        <input type="hidden" name="signout" value="1">
-                                        <button type="submit" class="!py-3 text-danger">
-                                            <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                                <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            Sign Out
-                                        </button>
-                                    </form>
+                                        <form method="post" action="index.php">
+                                            <input type="hidden" name="signout" value="1">
+                                            <button type="submit" class="!py-3 text-danger">
+                                                <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                Sign Out
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -121,257 +120,290 @@
 
             <div class="animate__animated p-6" :class="[$store.app.animation]">
 
-            <?php if (isset($message)) { ?>
+                <?php if (isset($message)) { ?>
                     <div style='padding: 15px 0' class="flex flex-wrap items-center justify-between gap-4">
-                            
-                                <?php if ($message == 'No course') 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso requisito no existe.</h2>";
-                                      elseif ($message == "No cohort") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El cohorte no existe.</h2>";
-                                      elseif ($message == "Req exist") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso ya tiene este requisito.</h2>";
-                                      elseif ($message == "deleted") 
-                                            echo"<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue eliminado.</h2>";
-                                      elseif ($message == "success") 
-                                            echo"<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue actualizado!!!</h2>";
-                                      elseif ($message == "insert success") 
-                                            echo"<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue añadido!!!</h2>";
-                                      elseif ($message == "NoDelSC") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Student Courses'.</h2>";
-                                      elseif ($message == "NoDelRC") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Recommended Courses'.</h2>";
-                                      elseif ($message == "NoDelWT") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Will Take'.</h2>";
-                                      elseif ($message == "NoDelCR") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'CCOM Requirements'.</h2>";
-                                      elseif ($message == "NoDelGR") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'General Requirements'.</h2>";
-                                ?>
-                     <br>
+
+                        <?php if ($message == 'No course')
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso requisito no existe.</h2>";
+                        elseif ($message == "No cohort")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El cohorte no existe.</h2>";
+                        elseif ($message == "Req exist")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso ya tiene este requisito.</h2>";
+                        elseif ($message == "deleted")
+                            echo "<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue eliminado.</h2>";
+                        elseif ($message == "success")
+                            echo "<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue actualizado!!!</h2>";
+                        elseif ($message == "insert success")
+                            echo "<h2 style='color:limegreen; bold' class='text-xl'>El requisito fue añadido!!!</h2>";
+                        elseif ($message == "NoDelSC")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Student Courses'.</h2>";
+                        elseif ($message == "NoDelRC")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Recommended Courses'.</h2>";
+                        elseif ($message == "NoDelWT")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'Will Take'.</h2>";
+                        elseif ($message == "NoDelCR")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'CCOM Requirements'.</h2>";
+                        elseif ($message == "NoDelGR")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El curso no se puede eliminar. Existe en 'General Requirements'.</h2>";
+                        ?>
+                        <br>
                     </div>
                 <?php } ?>
 
-            <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'info'}"> 
-                <div class="mx-10 mb-5 sm:mb-0">
-                    <ul class="w-24 m-auto text-center font-semibold">
-                        
-                        <li>
-                            <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'info'}" @click="tab='info'">Info General</a>
-                        </li> <!--tab de class info -->
-                        <li>
-                            <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'req'}" @click="tab='req'">Requisitos</a>
-                        </li> <!--tab de class requisitos -->
-                    </ul>
-                </div>
+                <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'info'}">
+                    <div class="mx-10 mb-5 sm:mb-0">
+                        <ul class="w-24 m-auto text-center font-semibold">
 
-            
-            <div class='flex-1 text-sm' x-show='tab === "info"'>
-                <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
-                    <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
-
-                    <?php foreach ($class as $class) { ?>
-                            <form class="space-y-5" action="?edit=<?php echo $class['crse_code']?>" method="POST">
-                        <h1 style='font-size: 20px; font-weight: bold'><?php echo $class['crse_code'] ?></h1><br>
-                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <input type='hidden' name='oldcode' value="<?php echo $class['crse_code'] ?>">
-                            <div>
-                                <label for="code">Código</label>
-                                <input name="code" type="text" value="<?php echo $class['crse_code'] ?>" class="form-input" readonly required/>
-                            </div>
-                            <div>
-                                <label for="name">Nombre</label>
-                                <input name="name" type="text" value="<?php echo $class['name'] ?>" class="form-input" required/>
-                            </div>
-                            <div>
-                            <label for="cred">Créditos</label>
-                            <input name="cred" type="text" class="form-input" value=<?php echo $class['credits'] ?> required />
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            
-                            <div>
-                                <label for="type">Tipo</label>
-                                <select name="type" class="form-select text-white-dark">
-                                    <?php if((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
-                                    <option value='mandatory' <?php if($class['type']=='mandatory'){echo 'selected';} ?>>Curso requerido</option>
-                                    <option value='elective' <?php if($class['type']=='elective'){echo 'selected';} ?>>Electiva</option>
-                                    <?php } 
-                                    else { ?>
-                                        <option value='ESPA' <?php if($class['type']=='ESPA'){echo 'selected';} ?>>Español</option>
-                                        <option value='INGL' <?php if($class['type']=='INGL'){echo 'selected';} ?>>Inglés</option>
-                                        <option value='MATE' <?php if($class['type']=='MATE'){echo 'selected';} ?>>Matemáticas</option>
-                                        <option value='FISI' <?php if($class['type']=='FISI'){echo 'selected';} ?>>Física</option>
-                                        <option value='CIBI' <?php if($class['type']=='CIBI'){echo 'selected';} ?>>Ciencias Biólogicas</option>
-                                        <option value='CISO' <?php if($class['type']=='CISO'){echo 'selected';} ?>>Ciencias Sociales</option>
-                                        <option value='HUMA' <?php if($class['type']=='HUMA'){echo 'selected';} ?>>Humanidades</option>
-                                        <option value='FREE' <?php if($class['type']=='FREE'){echo 'selected';} ?>>Electiva Libre</option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div>
-                                <?php if((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
-                                <label for="level">Level</label>
-                                <select name='level' class="form-select text-white-dark">
-                                    <option value='NULL' <?php if($class['level']=='NULL'){echo 'selected';} ?>>NULL</option>
-                                    <option value='intermediate' <?php if($class['level']=='intermediate'){echo 'selected';} ?>>Intermedia</option>
-                                    <option value='advanced' <?php if($class['level']=='advanced'){echo 'selected';} ?>>Avanzada</option>
-                                </select>
-                                <?php } else { ?>
-                                    <label for='required'>¿General Requerida?</label>
-                                    <select name='required' class="form-select text-white-dark">
-                                        <option value='1' <?php if($class['required']=='1'){echo 'selected';} ?>>Sí</option>
-                                        <option value='0' <?php if($class['required']=='0'){echo 'selected';} ?>>No</option>
-                                    </select>
-                                <?php } ?>
-                            </div>
-                            <div>
-                                <?php if((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
-                                <label for="minor">Minor</label>
-                                <select name='minor' class='form-select text-white-dark'>
-                                    <option value='0'>No Minor</option>
-                                    <?php foreach($minors as $minor) { ?>
-                                        <option value='<?php echo $minor["ID"]; ?>' <?php if($class['minor_id']==strval($minor["ID"])){echo 'selected';} ?>>
-                                    <?php echo $minor['name']; ?></option>
-                                        <?php } ?>
-                                </select>
-                                <?php } ?>
-                            </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <div></div>
-                        <div style='padding: 0px 30%'>
-                        <?php if ($privileges == 1) {?>
-                        <button type="submit" class="btn btn-primary !mt-6">Actualizar</button>
-                        </form>
-                        <form action="?removeCourse" method="POST">
-                            <input type='hidden' value='<?php echo $class['crse_code']?>' name='course'>
-                            <button type="submit" class="btn btn-danger !mt-6">Eliminar</button>
-                            
-                        </form>
-                        <?php } ?>
-                        </div>
-
-                        
-                        </div>
-                        <?php } ?>
-                    
-
-                    </div>  
-                </div>
-
-
-            <div class='flex-1 text-sm' x-show='tab === "req"'>
-                <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
-                    <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
-                    <h1 style='font-size: 20px; font-weight: bold'><?php echo $course ?></h1><br>
-                    <?php $object = new ClassController(); 
-                          $requisitos = $object->getRequisitos($course); 
-                          if ($requisitos->num_rows > 0)
-                          {
-                            foreach($requisitos as $req) { ?>
-                            <form style="space-y-5" action='?editReqs' method='POST'>
-                            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                    <input type='hidden' name='course' value='<?php echo $course ?>'>
-                                    <input type='hidden' name='old_req' value='<?php echo $req['req_crse_code'] ?>'>
-                                    <input type='hidden' name='oldcohort' value='<?php echo $req['cohort_year'] ?>'>
-                                    <div>
-                                    <label for='req'>Pre/Corequisito</label>
-                                    <input type='text' name='req' class="form-input" value='<?php echo $req['req_crse_code'] ?>' required>
-                                    </div>
-                                    <div>
-                                    <label for='cohort'>Cohorte</label>
-                                    <input type='number' class="form-input" name='cohort' value='<?php echo $req['cohort_year'] ?>' required>
-                                    </div>
-                                    <div>
-                                    <label for='type'>Tipo</label>
-                                    <select class="form-input" style='color: black' name='type'>
-                                        <option style='color: black' value='pre' <?php if ($req['type']=='pre') {echo 'selected="selected"';} ?> >Prerequisito</option>
-                                        <option style='color: black' value='co' <?php if ($req['type']=='co') {echo 'selected="selected"';} ?> >Corequisito</option>
-                                    </select>
-                                    </div>
-                                    <div>
-                                        <br>
-                                        <div>
-                                        <?php if ($privileges == 1) {?>
-                                        <button class='badge whitespace-nowrap badge-outline-primary' type='submit' name='action' value='edit'>Editar</button>
-                                        </div>
-                                        <div>
-                                        <button class='badge whitespace-nowrap badge-outline-danger' type='submit' name='action' value='delete'>Eliminar</button>
-                                        <?php } ?>
-                                        </div>
-                                    </div>
-                            </div>
-                            </form>
-                        <?php } 
-                        }
-                      ?>
-                      <br><hr><br>
-
-                      <?php if ($privileges == 1) {?>
-                      <form style="space-y-5" action='?addReq' method='POST'>
-                             <input type='hidden' name='course' value='<?php echo $course ?>'>
-                             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                    <div>
-                                    <label for='req'>Pre/Corequisito</label>
-                                    <input type='text' class="form-input" name='req' placeholder="CCOM3001" required>
-                                    </div>
-                                    <div>
-                                    <label for='cohort'>Cohorte</label>
-                                    <input type='number' class="form-input" name='cohort' required>
-                                    </div>
-                                    <div>
-                                    <label for='type'>Tipo</label>
-                                    <select class="form-input" style='color: black' name='type'>
-                                        <option style='color: black' value='pre' selected>Prerequisito</option>
-                                        <option style='color: black' value='co'>Corequisito</option>
-                                    </select>
-                                    </div> 
-                                    <div>
-                                    <br>
-                                    <button class='badge whitespace-nowrap badge-outline-primary' type='submit'>Añadir</button>
-                                    </div>
-                             </div>
-                            
-                      </form>
-                      <?php } ?>
-                    </div>  
-                </div>
-            </div>
+                            <li>
+                                <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'info'}" @click="tab='info'">Info General</a>
+                            </li> <!--tab de class info -->
+                            <li>
+                                <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'req'}" @click="tab='req'">Requisitos</a>
+                            </li> <!--tab de class requisitos -->
+                        </ul>
                     </div>
-               
 
 
+                    <div class='flex-1 text-sm' x-show='tab === "info"'>
+                        <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
+                            <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
+
+                                <form class="space-y-5" action="?edit=<?php echo $class['crse_code'] ?>" method="POST">
+                                    <h1 style='font-size: 20px; font-weight: bold'><?php echo $class['crse_code'] ?></h1><br>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        <input type='hidden' name='oldcode' value="<?php echo $class['crse_code'] ?>">
+                                        <div>
+                                            <label for="code">Código</label>
+                                            <input name="code" type="text" value="<?php echo $class['crse_code'] ?>" class="form-input" readonly required />
+                                        </div>
+                                        <div>
+                                            <label for="name">Nombre</label>
+                                            <input name="name" type="text" value="<?php echo $class['name'] ?>" class="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label for="cred">Créditos</label>
+                                            <input name="cred" type="text" class="form-input" value=<?php echo $class['credits'] ?> required />
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                                        <div>
+                                            <label for="type">Tipo</label>
+                                            <select name="type" class="form-select text-white-dark">
+                                                <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
+                                                    <option value='mandatory' <?php if ($class['type'] == 'mandatory') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Curso requerido</option>
+                                                    <option value='elective' <?php if ($class['type'] == 'elective') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Electiva</option>
+                                                <?php } else { ?>
+                                                    <option value='ESPA' <?php if ($class['type'] == 'ESPA') {
+                                                                                echo 'selected';
+                                                                            } ?>>Español</option>
+                                                    <option value='INGL' <?php if ($class['type'] == 'INGL') {
+                                                                                echo 'selected';
+                                                                            } ?>>Inglés</option>
+                                                    <option value='MATE' <?php if ($class['type'] == 'MATE') {
+                                                                                echo 'selected';
+                                                                            } ?>>Matemáticas</option>
+                                                    <option value='FISI' <?php if ($class['type'] == 'FISI') {
+                                                                                echo 'selected';
+                                                                            } ?>>Física</option>
+                                                    <option value='CIBI' <?php if ($class['type'] == 'CIBI') {
+                                                                                echo 'selected';
+                                                                            } ?>>Ciencias Biólogicas</option>
+                                                    <option value='CISO' <?php if ($class['type'] == 'CISO') {
+                                                                                echo 'selected';
+                                                                            } ?>>Ciencias Sociales</option>
+                                                    <option value='HUMA' <?php if ($class['type'] == 'HUMA') {
+                                                                                echo 'selected';
+                                                                            } ?>>Humanidades</option>
+                                                    <option value='FREE' <?php if ($class['type'] == 'FREE') {
+                                                                                echo 'selected';
+                                                                            } ?>>Electiva Libre</option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
+                                                <label for="level">Level</label>
+                                                <select name='level' class="form-select text-white-dark">
+                                                    <option value='NULL' <?php if ($class['level'] == 'NULL') {
+                                                                                echo 'selected';
+                                                                            } ?>>NULL</option>
+                                                    <option value='intermediate' <?php if ($class['level'] == 'intermediate') {
+                                                                                        echo 'selected';
+                                                                                    } ?>>Intermedia</option>
+                                                    <option value='advanced' <?php if ($class['level'] == 'advanced') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Avanzada</option>
+                                                </select>
+                                            <?php } else { ?>
+                                                <label for='required'>¿General Requerida?</label>
+                                                <select name='required' class="form-select text-white-dark">
+                                                    <option value='1' <?php if ($class['required'] == '1') {
+                                                                            echo 'selected';
+                                                                        } ?>>Sí</option>
+                                                    <option value='0' <?php if ($class['required'] == '0') {
+                                                                            echo 'selected';
+                                                                        } ?>>No</option>
+                                                </select>
+                                            <?php } ?>
+                                        </div>
+                                        <div>
+                                            <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
+                                                <label for="minor">Minor</label>
+                                                <select name='minor' class='form-select text-white-dark'>
+                                                    <option value='0'>No Minor</option>
+                                                    <?php foreach ($minors as $minor) { ?>
+                                                        <option value='<?php echo $minor["ID"]; ?>' <?php if ($class['minor_id'] == strval($minor["ID"])) {
+                                                                                                        echo 'selected';
+                                                                                                    } ?>>
+                                                            <?php echo $minor['name']; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                <div></div>
+                                <div style='padding: 0px 30%'>
+                                    <?php if ($privileges == 1) { ?>
+                                        <button type="submit" class="btn btn-primary !mt-6">Actualizar</button>
+                                        </form>
+                                        <form action="?removeCourse" method="POST">
+                                            <input type='hidden' value='<?php echo $class['crse_code'] ?>' name='course'>
+                                            <button type="submit" class="btn btn-danger !mt-6">Eliminar</button>
+
+                                        </form>
+                                    <?php } ?>
+                                </div>
 
 
+                            </div>
 
 
-   
+                        </div>
+                    </div>
 
-</div>
 
-                        
-</div>          
-                        
-                    <!-- forms grid -->
+                    <div class='flex-1 text-sm' x-show='tab === "req"'>
+                        <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
+                            <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
+                                <h1 style='font-size: 20px; font-weight: bold'><?php echo $course ?></h1><br>
+                                <?php $object = new ClassController();
+                                $requisitos = $object->getRequisitos($course);
+                                if ($requisitos->num_rows > 0) {
+                                    foreach ($requisitos as $req) { ?>
+                                        <form style="space-y-5" action='?editReqs' method='POST'>
+                                            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                <input type='hidden' name='course' value='<?php echo $course ?>'>
+                                                <input type='hidden' name='old_req' value='<?php echo $req['req_crse_code'] ?>'>
+                                                <input type='hidden' name='oldcohort' value='<?php echo $req['cohort_year'] ?>'>
+                                                <div>
+                                                    <label for='req'>Pre/Corequisito</label>
+                                                    <input type='text' name='req' class="form-input" value='<?php echo $req['req_crse_code'] ?>' required>
+                                                </div>
+                                                <div>
+                                                    <label for='cohort'>Cohorte</label>
+                                                    <input type='number' class="form-input" name='cohort' value='<?php echo $req['cohort_year'] ?>' required>
+                                                </div>
+                                                <div>
+                                                    <label for='type'>Tipo</label>
+                                                    <select class="form-input" style='color: black' name='type'>
+                                                        <option style='color: black' value='pre' <?php if ($req['type'] == 'pre') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } ?>>Prerequisito</option>
+                                                        <option style='color: black' value='co' <?php if ($req['type'] == 'co') {
+                                                                                                    echo 'selected="selected"';
+                                                                                                } ?>>Corequisito</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <div>
+                                                        <?php if ($privileges == 1) { ?>
+                                                            <button class='badge whitespace-nowrap badge-outline-primary' type='submit' name='action' value='edit'>Editar</button>
+                                                    </div>
+                                                    <div>
+                                                        <button class='badge whitespace-nowrap badge-outline-danger' type='submit' name='action' value='delete'>Eliminar</button>
+                                                    <?php } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                <?php }
+                                }
+                                ?>
+                                <br>
+                                <hr><br>
 
+                                <?php if ($privileges == 1) { ?>
+                                    <form style="space-y-5" action='?addReq' method='POST'>
+                                        <input type='hidden' name='course' value='<?php echo $course ?>'>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                            <div>
+                                                <label for='req'>Pre/Corequisito</label>
+                                                <input type='text' class="form-input" name='req' placeholder="CCOM3001" required>
+                                            </div>
+                                            <div>
+                                                <label for='cohort'>Cohorte</label>
+                                                <input type='number' class="form-input" name='cohort' required>
+                                            </div>
+                                            <div>
+                                                <label for='type'>Tipo</label>
+                                                <select class="form-input" style='color: black' name='type'>
+                                                    <option style='color: black' value='pre' selected>Prerequisito</option>
+                                                    <option style='color: black' value='co'>Corequisito</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <br>
+                                                <button class='badge whitespace-nowrap badge-outline-primary' type='submit'>Añadir</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                
-                </div>
-            </div>
-                                                
-                <!-- end main content section -->
+
+
+
+
+
+
+
 
             </div>
 
-            <!-- start footer section -->
-            <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
-                © <span id="footer-year">2022</span>. UPRA All rights reserved.
-            </div>
-            <!-- end footer section -->
+
         </div>
+
+        <!-- forms grid -->
+
+    </div>
+
+
+    </div>
+    </div>
+
+    <!-- end main content section -->
+
+    </div>
+
+    <!-- start footer section -->
+    <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
+        © <span id="footer-year">2022</span>. UPRA All rights reserved.
+    </div>
+    <!-- end footer section -->
+    </div>
     </div>
 
     <script src="assets/js/alpine-collaspe.min.js"></script>
@@ -384,7 +416,7 @@
     <!-- <script src="assets/js/courses.js"></script> -->
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $("#sidebar").load("sidebar.php");
             $("#createclass").load("crear_clase.php");
         });
@@ -414,28 +446,28 @@
             }));
 
             Alpine.data('app', () => ({
-                    showUploadModal: false,
-                    formData: {
-                        file: null,
-                    },
-                    openUploadModal() {
-                        this.showUploadModal = true;
-                    },
-                    closeUploadModal() {
-                        this.showUploadModal = false;
-                    },
-                    submitForm() {
-                        // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
-                        // Luego, cierra el modal.
-                        if (this.formData.file) {
-                            console.log("Archivo seleccionado:", this.formData.file);
-                            // Aquí puedes realizar las acciones necesarias con el archivo.
-                        } else {
-                            console.log("Ningún archivo seleccionado.");
-                        }
-                        this.showUploadModal = false;
-                    },
-                }));
+                showUploadModal: false,
+                formData: {
+                    file: null,
+                },
+                openUploadModal() {
+                    this.showUploadModal = true;
+                },
+                closeUploadModal() {
+                    this.showUploadModal = false;
+                },
+                submitForm() {
+                    // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
+                    // Luego, cierra el modal.
+                    if (this.formData.file) {
+                        console.log("Archivo seleccionado:", this.formData.file);
+                        // Aquí puedes realizar las acciones necesarias con el archivo.
+                    } else {
+                        console.log("Ningún archivo seleccionado.");
+                    }
+                    this.showUploadModal = false;
+                },
+            }));
 
 
             // sidebar section
@@ -459,28 +491,28 @@
             }));
 
             Alpine.data('app2', () => ({
-                    showClassModal: false,
-                    formData: {
-                        file: null,
-                    },
-                    openClassModal() {
-                        this.showClassModal = true;
-                    },
-                    closeClassModal() {
-                        this.showClassModal = false;
-                    },
-                    submitForm() {
-                        // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
-                        // Luego, cierra el modal.
-                        if (this.formData.file) {
-                            console.log("Archivo seleccionado:", this.formData.file);
-                            // Aquí puedes realizar las acciones necesarias con el archivo.
-                        } else {
-                            console.log("Ningún archivo seleccionado.");
-                        }
-                        this.showClassModal = false;
-                    },
-                }));
+                showClassModal: false,
+                formData: {
+                    file: null,
+                },
+                openClassModal() {
+                    this.showClassModal = true;
+                },
+                closeClassModal() {
+                    this.showClassModal = false;
+                },
+                submitForm() {
+                    // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
+                    // Luego, cierra el modal.
+                    if (this.formData.file) {
+                        console.log("Archivo seleccionado:", this.formData.file);
+                        // Aquí puedes realizar las acciones necesarias con el archivo.
+                    } else {
+                        console.log("Ningún archivo seleccionado.");
+                    }
+                    this.showClassModal = false;
+                },
+            }));
 
             // header section
             Alpine.data('header', () => ({
@@ -555,31 +587,30 @@
             }));
 
             Alpine.data('app', () => ({
-                    showUploadModal: false,
-                    formData: {
-                        file: null,
-                    },
-                    openUploadModal() {
-                        this.showUploadModal = true;
-                    },
-                    closeUploadModal() {
-                        this.showUploadModal = false;
-                    },
-                    submitForm() {
-                        // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
-                        // Luego, cierra el modal.
-                        if (this.formData.file) {
-                            console.log("Archivo seleccionado:", this.formData.file);
-                            // Aquí puedes realizar las acciones necesarias con el archivo.
-                        } else {
-                            console.log("Ningún archivo seleccionado.");
-                        }
-                        this.showUploadModal = false;
-                    },
-                
-                }));
-        });
+                showUploadModal: false,
+                formData: {
+                    file: null,
+                },
+                openUploadModal() {
+                    this.showUploadModal = true;
+                },
+                closeUploadModal() {
+                    this.showUploadModal = false;
+                },
+                submitForm() {
+                    // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
+                    // Luego, cierra el modal.
+                    if (this.formData.file) {
+                        console.log("Archivo seleccionado:", this.formData.file);
+                        // Aquí puedes realizar las acciones necesarias con el archivo.
+                    } else {
+                        console.log("Ningún archivo seleccionado.");
+                    }
+                    this.showUploadModal = false;
+                },
 
+            }));
+        });
     </script>
 </body>
 

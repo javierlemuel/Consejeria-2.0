@@ -1,19 +1,19 @@
 <?php
 // models/StudentModel.php
-class ClassModel {
+class ClassModel
+{
 
-    public function getCourse($conn, $course)
+    public function getCourse(mysqli $conn, $course)
     {
         $table = 'general_courses';
 
-        if((strpos($course, 'CCOM') !== false))
+        if ((strpos($course, 'CCOM') !== false))
             $table = 'ccom_courses';
 
-        $sql = "SELECT *
-                FROM $table 
-                WHERE crse_code = '$course'";
+        $sql = $conn->prepare("SELECT * FROM $table WHERE crse_code = ?;");
 
-        $result = $conn->query($sql);
+        $sql->execute([$course]);
+        $result = $sql->get_result()->fetch_assoc();
 
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -22,7 +22,8 @@ class ClassModel {
         return $result;
     }
 
-    public function getMinors($conn){
+    public function getMinors($conn)
+    {
         $sql = "SELECT *
                 FROM minor";
         $result = $conn->query($sql);
@@ -34,21 +35,27 @@ class ClassModel {
         return $result;
     }
 
-    public function updateCourse($conn, $oldcourse, $course_id, $course_name, $credits,
-    $type, $level, $minor)
-    {
-        $sql = "UPDATE ccom_courses
-                SET crse_code = '$course_id',
-                name = '$course_name',
-                credits = $credits,
-                type = '$type',
-                level = '$level',
-                minor_id = '$minor'
-                WHERE crse_code = '$oldcourse'
-                ";
+    public function updateCourse(
+        mysqli $conn,
+        $oldcourse,
+        $course_id,
+        $course_name,
+        $credits,
+        $type,
+        $level,
+        $minor
+    ) {
+        $sql = $conn->prepare("UPDATE ccom_courses
+                SET crse_code = ?,
+                name = ?,
+                credits = ?,
+                type = ?,
+                level = ?,
+                minor_id = ?
+                WHERE crse_code = ?
+                ");
 
-        
-        $result = $conn->query($sql);
+        $result = $sql->execute([$course_id, $course_name, $credits, $type, $level, $minor, $oldcourse]);
 
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -62,46 +69,45 @@ class ClassModel {
         $checker = true;
         $sql1 = "SELECT * FROM student_courses WHERE crse_code = '$course'";
         $result = $conn->query($sql1);
-        if ($result->num_rows > 0){ //Don't delete if course found in Student Courses table
+        if ($result->num_rows > 0) { //Don't delete if course found in Student Courses table
             $checker = false;
             $message = 'NoDelSC';
         }
 
         $sql2 = "SELECT * FROM recommended_courses WHERE crse_code = '$course'";
         $result = $conn->query($sql2);
-        if ($result->num_rows > 0){ //Don't delete if course found in Recommended Courses table
+        if ($result->num_rows > 0) { //Don't delete if course found in Recommended Courses table
             $checker = false;
             $message = 'NoDelRC';
         }
 
         $sql3 = "SELECT * FROM will_take WHERE crse_code = '$course'";
         $result = $conn->query($sql3);
-        if ($result->num_rows > 0){ //Don't delete if course found in Will Take table
+        if ($result->num_rows > 0) { //Don't delete if course found in Will Take table
             $checker = false;
             $message = 'NoDelWT';
         }
 
         $sql4 = "SELECT * FROM ccom_requirements WHERE req_crse_code = '$course'";
         $result = $conn->query($sql4);
-        if ($result->num_rows > 0){ //Don't delete if course found in CCOM Requirements table
+        if ($result->num_rows > 0) { //Don't delete if course found in CCOM Requirements table
             $checker = false;
             $message = 'NoDelCR';
         }
 
         $sql5 = "SELECT * FROM general_requirements WHERE req_crse_code = '$course'";
         $result = $conn->query($sql5);
-        if ($result->num_rows > 0){ //Don't delete if course found in General Requirements table
+        if ($result->num_rows > 0) { //Don't delete if course found in General Requirements table
             $checker = false;
             $message = 'NoDelGR';
         }
 
-        if((strpos($course, 'CCOM') !== false))
+        if ((strpos($course, 'CCOM') !== false))
             $table = 'ccom_courses';
-        else   
+        else
             $table = 'general_courses';
 
-        if($checker == true)
-        {
+        if ($checker == true) {
             $sql6 = "DELETE FROM $table WHERE crse_code = '$course';";
             $result = $conn->query($sql6);
             if ($result === false) {
@@ -111,13 +117,17 @@ class ClassModel {
         }
 
         return $message;
-
-
     }
 
-    public function updateGeneralCourse($conn, $old_course_id, $course_id, 
-    $course_name, $credits, $type, $required)
-    {
+    public function updateGeneralCourse(
+        $conn,
+        $old_course_id,
+        $course_id,
+        $course_name,
+        $credits,
+        $type,
+        $required
+    ) {
         $sql = "UPDATE general_courses
                 SET crse_code = '$course_id',
                 name = '$course_name',
@@ -126,7 +136,7 @@ class ClassModel {
                 required = '$required'
                 WHERE crse_code = '$old_course_id'
                 ";
-        
+
         echo "Editing course: $old_course_id";
         $result = $conn->query($sql);
 
@@ -153,7 +163,7 @@ class ClassModel {
 
     public function editRequisites($conn, $course, $table, $req, $oldreq, $cohort, $oldcohort, $type)
     {
-        
+
 
         //Verifica si el curso requisito existe
         $sql = "SELECT crse_code
@@ -210,7 +220,7 @@ class ClassModel {
                 WHERE crse_code = '$course'
                 AND req_crse_code = '$oldreq'
                 AND cohort_year = '$oldcohort'";
-        $result3 = $conn->query($sql3); 
+        $result3 = $conn->query($sql3);
 
         if ($result3 === false) {
             throw new Exception("Error3 en la consulta SQL3: " . $conn->error);
@@ -233,12 +243,11 @@ class ClassModel {
         }
 
         return 'deleted';
-
     }
 
     public function addReq($conn, $course, $req, $cohort, $type, $table)
     {
-        
+
         //Verifica si el curso requisito existe
         $sql = "SELECT crse_code
         FROM ccom_courses
@@ -296,34 +305,34 @@ class ClassModel {
             throw new Exception("Error3 en la consulta SQL3: " . $conn->error);
 
         return 'insert success';
-
     }
-    public function selectCourseWNull($conn, $course) {
-        
+    public function selectCourseWNull($conn, $course)
+    {
+
         $table = 'general_courses';
-    
+
         if (strpos($course, 'CCOM') !== false) {
             $table = 'ccom_courses';
         }
-    
+
         $sql = "SELECT *
                 FROM $table 
                 WHERE crse_code = '$course'";
-    
+
         $result = $conn->query($sql);
-    
+
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
-    
+
         // Verificar si se encontraron filas
         if ($result->num_rows == 0) {
             return null; // Devolver null si no se encontraron filas
         }
-    
+
         // Obtener los datos como un arreglo asociativo
         $courseData = $result->fetch_assoc();
-    
+
         return $courseData;
     }
 }
