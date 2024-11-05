@@ -95,6 +95,8 @@ class StudentModel
             $sql .= " AND status = 'Inactivo'";
         } elseif ($status === 'Graduados') {
             $sql .= " AND status = 'Graduado'";
+        } elseif ($status === 'Graduandos') {
+            $sql .= " AND status = 'Graduando'";
         }
 
         if (!empty($q)) {

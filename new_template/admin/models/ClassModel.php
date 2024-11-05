@@ -7,8 +7,14 @@ class ClassModel
     {
         $table = 'general_courses';
 
-        if ((strpos($course, 'CCOM') !== false))
+        // Check if all letters are not a number
+        if (preg_match("/^[A-Z]{8}$/", $course) == true) {
+
+            $table = 'dummy_courses';
+        } elseif ((strpos($course, 'CCOM') == true)) {
+
             $table = 'ccom_courses';
+        }
 
         $sql = $conn->prepare("SELECT * FROM $table WHERE crse_code = ?;");
 

@@ -51,7 +51,7 @@ function generate_pagination($currPg = 1, $maxPg = 3)
 // Check if string is a course code, e.g: CCOM3001
 function isValidCode($cd)
 {
-    return preg_match("/^[A-Z]{4}[0-9]{4}$/", $cd);
+    return preg_match("/^[A-Z]{4}[0-9A-Z]{4}$/", $cd);
 }
 
 // Check if it's a grade
