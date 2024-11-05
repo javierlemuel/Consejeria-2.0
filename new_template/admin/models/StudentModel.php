@@ -29,111 +29,124 @@ class StudentModel
         return $result;
     }
 
-    public function getStudentsByPageAndStatusAndSearch($conn, $q = null, $currentPage = null, $status)
+    public function getStudents(mysqli $conn, $p = null, $status = null, $q = null)
     {
-
-        if (!isset($currentPage)) {
+        // Pagination settings
+        if (!isset($p)) {
             $p_limit = PHP_INT_MAX;
             $offset = 0;
         } else {
-            $offset = $this->calculateOffset($currentPage);
+            $p_limit = $this->pagination_limit ?? PHP_INT_MAX; // Use pagination limit or max value
+            $offset = $this->calculateOffset($p);
         }
-        $search = $q ?? "";
+
+        // search pattern
+        $search = "%{$q}%";
+
+        // Build the base SQL query for counting total rows
+        $countSql = "SELECT COUNT(DISTINCT student_num) AS total_rows
+                 FROM student
+                 WHERE 1 = 1";
+
+        $params = [];  // Parameters for bind_param
+        $types = "";   // Parameter types
+
+        // TODO: Check if all filters are taken care of
+
+        // Conditionally add status filter to the count query
         if ($status === 'Activos') {
-            $statusCondition = "status = 'Activo'";
+            $countSql .= " AND status = 'Activo'";
         } elseif ($status === 'Inactivos') {
-            $statusCondition = "status = 'Inactivo'";
+            $countSql .= " AND status = 'Inactivo'";
         } elseif ($status === 'Graduados') {
-            $statusCondition = "status = 'Graduado'";
-        } else {
-            $statusCondition = "1"; // Sin filtro, mostrar todos
+            $countSql .= " AND status = 'Graduado'";
+        } elseif ($status === 'Graduandos') {
+            $countSql .= " AND status = 'Graduando'";
         }
 
-        // Modificar la consulta SQL para incluir el filtro de estado y búsqueda
-        //JAVIER//
-        $sql = "SELECT student_num, name1, name2, last_name1, last_name2, conducted_counseling, status, edited_date
-                FROM student 
-                WHERE $statusCondition
-                AND (name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ? OR student_num LIKE ?)
-                ORDER BY name1 ASC 
-                LIMIT ? 
-                OFFSET ?
-                ";
-        //
 
+        // Conditionally add search filter to the count query
+        if (!empty($q)) {
+            $countSql .= " AND (student_num LIKE ? OR name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ?)";
+            $types .= "sssss";
+            $params = array_fill(0, 5, $search);
+        }
+
+        // Prepare and bind parameters for the count query
+        $countStmt = $conn->prepare($countSql);
+        if (!empty($types)) {
+            $countStmt->bind_param($types, ...$params);
+        }
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $row = $countResult->fetch_assoc();
+        $this->amountOfRows = $row['total_rows']; // Total rows 
+        $countStmt->close();
+
+        // Build the main query for fetching paginated results
+        $sql = "SELECT DISTINCT student_num, name1, name2, last_name1, last_name2, conducted_counseling, status, edited_date
+            FROM student
+            WHERE 1 = 1";
+
+        // Reuse the same filters in the main query
+        if ($status === 'Activos') {
+            $sql .= " AND status = 'Activo'";
+        } elseif ($status === 'Inactivos') {
+            $sql .= " AND status = 'Inactivo'";
+        } elseif ($status === 'Graduados') {
+            $sql .= " AND status = 'Graduado'";
+        }
+
+        if (!empty($q)) {
+            $sql .= " AND (student_num LIKE ? OR name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ?)";
+        }
+
+        // Add sorting and pagination
+        $sql .= " ORDER BY name1 ASC LIMIT ? OFFSET ?";
+        $types .= "ii"; // Add integer types for limit and offset
+        $params[] = $p_limit;
+        $params[] = $offset;
+
+        // Prepare and bind parameters for the main query
         $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
 
-        // Modificar el filtro de búsqueda para buscar en cualquier parte del nombre
-        $searchKeyword = "%$search%";
-        $finalLimit = $p_limit ?? $this->pagination_limit;
-        $stmt->bind_param("sssssii", $searchKeyword, $searchKeyword, $searchKeyword, $searchKeyword, $searchKeyword, $finalLimit, $offset);
+        // Execute the statement
         $stmt->execute();
         $result = $stmt->get_result();
 
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        // Process and return results
         $students = [];
+        $term = $this->getTerm($conn); // Get the current term
+
         while ($row = $result->fetch_assoc()) {
             $student_num = $row['student_num'];
             $formatted_student_num = substr($student_num, 0, 3) . '-' . substr($student_num, 3, 2) . '-' . substr($student_num, 5);
             $row['formatted_student_num'] = $formatted_student_num;
-            $term = $this->getTerm($conn);
 
-            //JAVIER (Add si el estudiante hizo consejeria)
-            $sql2 = "SELECT DISTINCT recommended_courses.student_num
-                FROM recommended_courses 
-                WHERE student_num = $student_num
-                AND term = '$term'";
-            $result2 = $conn->query($sql2);
+            // Secondary query to check if counseling was given
+            $sql2 = "SELECT DISTINCT student_num FROM recommended_courses WHERE student_num = ? AND term = ?";
+            $stmt2 = $conn->prepare($sql2);
+            $stmt2->bind_param("ss", $student_num, $term);
+            $stmt2->execute();
+            $result2 = $stmt2->get_result();
 
-            if ($result2 === false) {
-                throw new Exception("Error en la consulta SQL: " . $conn->error);
-            }
+            $row['given_counseling'] = $result2->num_rows > 0 ? 1 : 0;
 
-            $counseling = 0;
-
-            foreach ($result2 as $res)
-                $counseling = 1;
-
-            $row['given_counseling'] = $counseling;
-            //
+            // Close the secondary statement
+            $stmt2->close();
 
             $students[] = $row;
         }
+
+        // Close the primary statement
         $stmt->close();
 
         return $students;
-    }
-
-    public function getTotalStudentsByStatusAndSearch($conn, $status, $search)
-    {
-        if ($status === 'Activos') {
-            $statusCondition = "status = 'Activo'";
-        } elseif ($status === 'Inactivos') {
-            $statusCondition = "status = 'Inactivo'";
-        } elseif ($status === 'Graduados') {
-            $statusCondition = "status = 'Graduado'";
-        } elseif ($status === 'Graduandos') {
-            $statusCondition = "status = 'Graduando'";
-        } else {
-            $statusCondition = "1"; // Sin filtro, contar todos
-        }
-
-        // Modificar la consulta SQL para incluir el filtro de estado y búsqueda
-        $sql = "SELECT COUNT(*) as total 
-                FROM student 
-                WHERE $statusCondition 
-                AND (name1 LIKE ? OR student_num LIKE ?)";
-
-        $stmt = $conn->prepare($sql);
-
-        // Modificar el filtro de búsqueda para buscar en cualquier parte del nombre
-        $searchKeyword = "%$search%";
-        $stmt->bind_param("ss", $searchKeyword, $searchKeyword);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $row = $result->fetch_assoc();
-        $stmt->close();
-        return $row['total'];
     }
 
     public function insertStudent($conn, $nombre, $nombre2, $apellidoP, $apellidoM, $email, $minor, $numero, $cohorte, $estatus, $birthday)

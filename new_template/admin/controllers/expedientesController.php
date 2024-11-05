@@ -27,6 +27,10 @@ class ExpedientesController
         $q = $_GET["q"] ?? "";
         $q = sanitizeSearch($q);
         $p = $_GET["p"] ?? 1;
+
+        // Students filter
+        $statusFilter = $_GET['status'] ?? null;
+
         try {
             $p = (int)$p;
         } catch (Exception $e) {
@@ -626,23 +630,11 @@ class ExpedientesController
             }
         }
 
-        // Obtener los parámetros del filtro de estado y búsqueda
-        if (!isset($_SESSION['status']))
-            $_SESSION['status'] = isset($_GET['status']) ? $_GET['status'] : 'Todos';
-        if (isset($_GET['status']) && $_GET['status'] !== $_SESSION['status']) {
-            $_SESSION['status'] = $_GET['status'];
-        }
-        $statusFilter = isset($_GET['status']) ? $_GET['status'] : $_SESSION['status'];
 
 
 
-        // TODO combine these two functions
         // Obtenemos la lista de estudiantes según el filtro y la búsqueda
-        $students = $studentModel->getStudentsByPageAndStatusAndSearch($conn, $p, $statusFilter, $q);
-
-        // Contamos el total de estudiantes según el filtro y la búsqueda
-        $totalStudents = $studentModel->getTotalStudentsByStatusAndSearch($conn, $statusFilter, $q);
-
+        $students = $studentModel->getStudents($conn, $p, $statusFilter, $q);
         $amountOfPages = $studentModel->getPageAmount();
 
         //JAVIER (Add minors)
