@@ -1,9 +1,8 @@
 <?php
-    if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
-    {
-        header("Location: ../index.php");
-        exit;
-    }
+if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
+    header("Location: ../index.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -63,7 +62,7 @@
             <!-- start header section -->
             <header class="z-40" :class="{'dark' : $store.app.semidark && $store.app.menu === 'horizontal'}">
                 <div class="shadow-sm">
-                <div class="relative flex w-full items-center" style="background-color: #2b2b2b; padding: 5px 5px; dark:bg-[#0e1726]">
+                    <div class="relative flex w-full items-center" style="background-color: #2b2b2b; padding: 5px 5px; dark:bg-[#0e1726]">
                         <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
                             <a href="index.html" class="main-logo flex shrink-0 items-center">
                                 <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="assets/images/university.png" alt="image" />
@@ -83,7 +82,7 @@
                             </div>
 
 
-                            
+
 
                             <div class="dropdown flex-shrink-0" x-data="dropdown" @click.outside="open = false">
                                 <a href="javascript:;" class="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60" @click="toggle()">
@@ -96,16 +95,16 @@
                                 <!-- user-profile -->
                                 <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="top-11 w-[230px] !py-0 font-semibold text-dark ltr:right-0 rtl:left-0 dark:text-white-dark dark:text-white-light/90">
                                     <li class="border-t border-white-light dark:border-white-light/10">
-                                    <form method="post" action="index.php">
-                                        <input type="hidden" name="signout" value="1">
-                                        <button type="submit" class="!py-3 text-danger">
-                                            <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                                <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            Sign Out
-                                        </button>
-                                    </form>
+                                        <form method="post" action="index.php">
+                                            <input type="hidden" name="signout" value="1">
+                                            <button type="submit" class="!py-3 text-danger">
+                                                <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                Sign Out
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -119,111 +118,109 @@
 
             <div class="animate__animated p-6" :class="[$store.app.animation]">
 
-            <?php if (isset($_GET['message'])) { ?>
+                <?php if (isset($_GET['message'])) { ?>
                     <div style='padding: 15px 0' class="flex flex-wrap items-center justify-between gap-4">
-                            
-                                <?php 
-                                      if ($_GET['message'] == "failureEdit") 
-                                            echo"<h2 style='color:red; bold' class='text-xl'>El admin no pudo ser editado correctamente.</h2>";
-                                      elseif ($_GET['message'] == "successEdit") 
-                                            echo"<h2 style='color:limegreen; bold' class='text-xl'>El admin fue editado!!!</h2>";
-                                ?>
-                     <br>
+
+                        <?php
+                        if ($_GET['message'] == "failureEdit")
+                            echo "<h2 style='color:red; bold' class='text-xl'>El admin no pudo ser editado correctamente.</h2>";
+                        elseif ($_GET['message'] == "successEdit")
+                            echo "<h2 style='color:limegreen; bold' class='text-xl'>El admin fue editado!!!</h2>";
+                        ?>
+                        <br>
                     </div>
                 <?php } ?>
 
-            <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'info'}"> 
-                <div class="mx-10 mb-5 sm:mb-0">
-                    <ul class="w-24 m-auto text-center font-semibold">
-                        
-                        <li>
-                            <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'info'}" @click="tab='info'">Info General</a>
-                        </li> <!--tab de admin info -->
-                        <li>
-                    </ul>
-                </div>
+                <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'info'}">
+                    <div class="mx-10 mb-5 sm:mb-0">
+                        <ul class="w-24 m-auto text-center font-semibold">
 
-            
-            <div class='flex-1 text-sm' x-show='tab === "info"'>
-                <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
-                    <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
+                            <li>
+                                <a class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'info'}" @click="tab='info'">Info General</a>
+                            </li> <!--tab de admin info -->
+                            <li>
+                        </ul>
+                    </div>
 
-                    <?php foreach ($admin as $admin) { ?>
-                            <form class="space-y-5" action="?admin&changes" method="POST">
-                        <h1 style='font-size: 20px; font-weight: bold'><?php echo $admin['email'] ?></h1><br>
-                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <input type='hidden' name='old_email' value="<?php echo $admin['email'] ?>">
-                            <input type='hidden' name='old_p' value="<?php echo $admin['pass'] ?>">
-                            <div>
-                                <label for="email">Email</label>
-                                <input name="email" type="text" value="<?php echo $admin['email'] ?>" class="form-input" required/>
-                            </div>
-                            <div>
-                                <label for="pass">Password</label>
-                                <input name="pass" type="password" value="<?php echo $admin['pass'] ?>" class="form-input" required/>
+
+                    <div class='flex-1 text-sm' x-show='tab === "info"'>
+                        <div class="border border-[#d3d3d3] dark:border-[#1b2e4b] rounded">
+                            <div class="p-4 text-[13px] border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
+
+                                <form class="space-y-5" action="?admin&changes" method="POST">
+                                    <h1 style='font-size: 20px; font-weight: bold'><?php echo $admin['email'] ?></h1><br>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        <input type='hidden' name='old_email' value="<?php echo $admin['email'] ?>">
+                                        <input type='hidden' name='old_p' value="<?php echo $admin['pass'] ?>">
+                                        <div>
+                                            <label for="email">Email</label>
+                                            <input name="email" type="text" value="<?php echo $admin['email'] ?>" class="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label for="pass">Password</label>
+                                            <input name="pass" type="password" value="<?php echo $admin['pass'] ?>" class="form-input" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                                        <div>
+                                            <label for="fname">Primer Nombre</label>
+                                            <input name="fname" type="text" value="<?php echo $admin['name'] ?>" class="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label for="lname">Apellido</label>
+                                            <input name="lname" type="text" value="<?php echo $admin['last_name'] ?>" class="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label for="privileges">Privilegios</label>
+                                            <select name="privileges" class="form-select text-white-dark">
+                                                <option value=1 <?php if ($admin['privileges'] == 1) {
+                                                                    echo 'selected';
+                                                                } ?>>Completos</option>
+                                                <option value=0 <?php if ($admin['privileges'] == 0) {
+                                                                    echo 'selected';
+                                                                } ?>>Parciales</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary !mt-6">Actualizar</button>
+
+                                </form>
+
+                                <form class="space-y-5" action="?admin&delete=<?php echo $admin['email'] ?>" method="POST">
+                                    <button class="btn btn-danger !mt-6">Eliminar</button>
+                                </form>
+
                             </div>
                         </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            
-                            <div>
-                                <label for="fname">Primer Nombre</label>
-                                <input name="fname" type="text" value="<?php echo $admin['name'] ?>" class="form-input" required/>
-                            </div>
-                            <div>
-                                <label for="lname">Apellido</label>
-                                <input name="lname" type="text" value="<?php echo $admin['last_name'] ?>" class="form-input" required/>
-                            </div>
-                            <div>
-                                <label for="privileges">Privilegios</label>
-                                <select name="privileges" class="form-select text-white-dark">
-                                    <option value=1 <?php if($admin['privileges']==1){echo 'selected';} ?>>Completos</option>
-                                    <option value=0 <?php if($admin['privileges']==0){echo 'selected';} ?>>Parciales</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary !mt-6">Actualizar</button>
+                    </div>
 
-                        </form>
-
-                        <form class="space-y-5" action="?admin&delete=<?php echo $admin['email']?>" method="POST">
-                        <button class="btn btn-danger !mt-6">Eliminar</button>
-                        </form>
-
-                        <?php } ?>
-
-                        
-                    
-
-                    </div>  
-                </div>
-            </div>
-
-
-</div>
-
-                        
-</div>          
-                        
-                    <!-- forms grid -->
 
                 </div>
 
-                
-                </div>
-            </div>
-                                                
-                <!-- end main content section -->
 
             </div>
 
-            <!-- start footer section -->
-            <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
-                © <span id="footer-year">2022</span>. UPRA All rights reserved.
-            </div>
-            <!-- end footer section -->
+            <!-- forms grid -->
+
         </div>
+
+
+    </div>
+    </div>
+
+    <!-- end main content section -->
+
+    </div>
+
+    <!-- start footer section -->
+    <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
+        © <span id="footer-year">2022</span>. UPRA All rights reserved.
+    </div>
+    <!-- end footer section -->
+    </div>
     </div>
 
     <script src="assets/js/alpine-collaspe.min.js"></script>
@@ -236,7 +233,7 @@
     <!-- <script src="assets/js/courses.js"></script> -->
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $("#sidebar").load("sidebar.php");
             $("#createclass").load("crear_clase.php");
         });
@@ -266,28 +263,28 @@
             }));
 
             Alpine.data('app', () => ({
-                    showUploadModal: false,
-                    formData: {
-                        file: null,
-                    },
-                    openUploadModal() {
-                        this.showUploadModal = true;
-                    },
-                    closeUploadModal() {
-                        this.showUploadModal = false;
-                    },
-                    submitForm() {
-                        // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
-                        // Luego, cierra el modal.
-                        if (this.formData.file) {
-                            console.log("Archivo seleccionado:", this.formData.file);
-                            // Aquí puedes realizar las acciones necesarias con el archivo.
-                        } else {
-                            console.log("Ningún archivo seleccionado.");
-                        }
-                        this.showUploadModal = false;
-                    },
-                }));
+                showUploadModal: false,
+                formData: {
+                    file: null,
+                },
+                openUploadModal() {
+                    this.showUploadModal = true;
+                },
+                closeUploadModal() {
+                    this.showUploadModal = false;
+                },
+                submitForm() {
+                    // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
+                    // Luego, cierra el modal.
+                    if (this.formData.file) {
+                        console.log("Archivo seleccionado:", this.formData.file);
+                        // Aquí puedes realizar las acciones necesarias con el archivo.
+                    } else {
+                        console.log("Ningún archivo seleccionado.");
+                    }
+                    this.showUploadModal = false;
+                },
+            }));
 
 
             // sidebar section
@@ -311,28 +308,28 @@
             }));
 
             Alpine.data('app2', () => ({
-                    showClassModal: false,
-                    formData: {
-                        file: null,
-                    },
-                    openClassModal() {
-                        this.showClassModal = true;
-                    },
-                    closeClassModal() {
-                        this.showClassModal = false;
-                    },
-                    submitForm() {
-                        // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
-                        // Luego, cierra el modal.
-                        if (this.formData.file) {
-                            console.log("Archivo seleccionado:", this.formData.file);
-                            // Aquí puedes realizar las acciones necesarias con el archivo.
-                        } else {
-                            console.log("Ningún archivo seleccionado.");
-                        }
-                        this.showClassModal = false;
-                    },
-                }));
+                showClassModal: false,
+                formData: {
+                    file: null,
+                },
+                openClassModal() {
+                    this.showClassModal = true;
+                },
+                closeClassModal() {
+                    this.showClassModal = false;
+                },
+                submitForm() {
+                    // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
+                    // Luego, cierra el modal.
+                    if (this.formData.file) {
+                        console.log("Archivo seleccionado:", this.formData.file);
+                        // Aquí puedes realizar las acciones necesarias con el archivo.
+                    } else {
+                        console.log("Ningún archivo seleccionado.");
+                    }
+                    this.showClassModal = false;
+                },
+            }));
 
             // header section
             Alpine.data('header', () => ({
@@ -375,31 +372,30 @@
             }));
 
             Alpine.data('app', () => ({
-                    showUploadModal: false,
-                    formData: {
-                        file: null,
-                    },
-                    openUploadModal() {
-                        this.showUploadModal = true;
-                    },
-                    closeUploadModal() {
-                        this.showUploadModal = false;
-                    },
-                    submitForm() {
-                        // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
-                        // Luego, cierra el modal.
-                        if (this.formData.file) {
-                            console.log("Archivo seleccionado:", this.formData.file);
-                            // Aquí puedes realizar las acciones necesarias con el archivo.
-                        } else {
-                            console.log("Ningún archivo seleccionado.");
-                        }
-                        this.showUploadModal = false;
-                    },
-                
-                }));
-        });
+                showUploadModal: false,
+                formData: {
+                    file: null,
+                },
+                openUploadModal() {
+                    this.showUploadModal = true;
+                },
+                closeUploadModal() {
+                    this.showUploadModal = false;
+                },
+                submitForm() {
+                    // Aquí puedes realizar acciones con el archivo seleccionado, como enviarlo a un servidor.
+                    // Luego, cierra el modal.
+                    if (this.formData.file) {
+                        console.log("Archivo seleccionado:", this.formData.file);
+                        // Aquí puedes realizar las acciones necesarias con el archivo.
+                    } else {
+                        console.log("Ningún archivo seleccionado.");
+                    }
+                    this.showUploadModal = false;
+                },
 
+            }));
+        });
     </script>
 </body>
 
