@@ -8,10 +8,10 @@ class ClassModel
         $table = 'general_courses';
 
         // Check if all letters are not a number
-        if (preg_match("/^[A-Z]{8}$/", $course) == true) {
+        if (preg_match("/^[A-Z]{8}$/", $course)) {
 
             $table = 'dummy_courses';
-        } elseif ((strpos($course, 'CCOM') == true)) {
+        } elseif (preg_match("/^CCOM[0-9]{4}$/", $course)) {
 
             $table = 'ccom_courses';
         }
