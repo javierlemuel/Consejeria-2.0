@@ -181,7 +181,7 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
                         </div>
                         <div>
                             <label for="cred">Créditos</label>
-                            <input name="cred" type="text" class="form-input" required />
+                            <input id="cred" oninput="filterNumberOnly()" name="cred" type="text" class="form-input" required />
                         </div>
                     </div>
 
@@ -275,7 +275,16 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
     <!-- <script src="assets/js/courses.js"></script> -->
 
     <script>
-        $(document).ready(function () {
+        let theInput = document.getElementById("cred");
+        theInput.onkeydown = function(event) {
+            // Only allow if the e.key value is a number or if it's 'Backspace'
+            if (isNaN(event.key) && event.key !== 'Backspace') {
+                event.preventDefault();
+            }
+        };
+    </script>
+    <script>
+        $(document).ready(function() {
             $("#sidebar").load("sidebar.php");
             $("#createclass").load("crear_clase.php");
         });
@@ -437,7 +446,6 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
 
             }));
         });
-
     </script>
 </body>
 
