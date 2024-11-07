@@ -128,24 +128,33 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                 <!-- start main content section -->
                 <div x-data="contacts">
                     <div class="flex flex-wrap items-center justify-between gap-4">
-                        <h2 class="text-xl">Expedientes de Estudiantes (<?php if (isset($_SESSION['status'])) {
-                                                                            echo $_SESSION['status'];
-                                                                        } else {
-                                                                            echo 'Todos';
-                                                                        } ?>)</h2>
-                        <!-- Comienzo Boton drop down -->
+                        <h2 class="text-xl">Expedientes de Estudiantes </h2>
+
                         <div x-data="dropdown" @click.outside="open = false" class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" @click="toggle">Filtrar por Estatus
+                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por Hecho Consejeria ' . $_GET['did_counseling'] ?? '' ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
                                     <text x="50" y="65" font-size="48" fill="White">▼</text>
                                 </svg>
                             </button>
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                <li><a href="?status=Todos&q=<?php echo $q ?>" @click="toggle">Todos</a></li>
-                                <li><a href="?status=Activos&q=<?php echo $q ?>" @click="toggle">Activos</a></li>
-                                <li><a href="?status=Inactivos&q=<?php echo $q ?>" @click="toggle">Inactivos</a></li>
-                                <li><a href="?status=Graduados&q=<?php echo $q ?>" @click="toggle">Graduados</a></li>
-                                <li><a href="?status=Graduandos&q=<?php echo $q ?>" @click="toggle">Graduandos</a></li>
+                                <li><a href="?did_counseling=1&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">Hizo Consejeria</a></li>
+                                <li><a href="?did_counseling=0&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">No Hizo Consejeria</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Comienzo Boton drop down -->
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por ' . $_GET['status'] ?? 'Filtrar por Estatus' ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
+                                    <text x="50" y="65" font-size="48" fill="White">▼</text>
+                                </svg>
+                            </button>
+                            <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                <li><a href="?status=Todos&q=<?php echo $q . ('&did_counseling=' . $_GET['did_counseling']) ?? '' ?>" @click="toggle">Todos</a></li>
+                                <li><a href="?status=Activos&q=<?php echo $q . ('&did_counseling=' . $_GET['did_counseling']) ?? '' ?>" @click="toggle">Activos</a></li>
+                                <li><a href="?status=Inactivos&q=<?php echo $q . ('&did_counseling=' . $_GET['did_counseling']) ?? '' ?>" @click="toggle">Inactivos</a></li>
+                                <li><a href="?status=Graduados&q=<?php echo $q . ('&did_counseling=' . $_GET['did_counseling']) ?? '' ?>" @click="toggle">Graduados</a></li>
+                                <li><a href="?status=Graduandos&q=<?php echo $q . ('&did_counseling=' . $_GET['did_counseling']) ?? '' ?>" @click="toggle">Graduandos</a></li>
                             </ul>
                         </div>
                         <!-- Final del boton de dropdown-->
