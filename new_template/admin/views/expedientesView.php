@@ -131,13 +131,14 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         <h2 class="text-xl">Expedientes de Estudiantes </h2>
 
                         <div x-data="dropdown" @click.outside="open = false" class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por Hecho Consejeria ' . $_GET['did_counseling'] ?? '' ?>
+                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por Consejeria' .
+                                                                                                ($_GET['did_counseling'] == '1' ? ': Hecho' : ': No Hecho') ?? '' ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
                                     <text x="50" y="65" font-size="48" fill="White">▼</text>
                                 </svg>
                             </button>
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                <li><a href="?did_counseling=1&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">Hizo Consejeria</a></li>
+                                <li><a href="?did_counseling=1&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">Hecho Consejeria</a></li>
                                 <li><a href="?did_counseling=0&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">No Hizo Consejeria</a></li>
                             </ul>
                         </div>
