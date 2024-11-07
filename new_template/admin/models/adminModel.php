@@ -34,7 +34,7 @@ class AdminModel
         //Inserte el admin nuevo
         $sql = $conn->prepare("INSERT INTO advisor
                 VALUES (?,?,?,?,?)");
-        $result = $sql->execute([$email, $pass, $name, $lname, $privileges]);
+        $result = $sql->execute([$email, password_hash($pass, PASSWORD_DEFAULT), $name, $lname, $privileges]);
 
         //Devuelva failure o success dependiendo si se pudo insertar o no
         if ($result === false) {
@@ -46,7 +46,7 @@ class AdminModel
 
     public function getAdmin(mysqli $conn, $email)
     {
-        $sql = $conn->prepare("SELECT *
+        $sql = $conn->prepare("SELECT email, name, last_name, privileges
                 FROM advisor
                 WHERE email = ?");
         $sql->execute([$email]);
@@ -63,14 +63,20 @@ class AdminModel
 
     public function changeAdminInfoModel(mysqli $conn, $old_email, $email, $fname, $lname, $priv, $pass)
     {
+        $sql = "UPDATE advisor SET pass = ?";
+
+        $stmt = $conn->prepare($sql);
+        if (!empty($pass)) {
+            $stmt->execute([password_hash($pass, PASSWORD_DEFAULT)]);
+        }
+
         $sql = $conn->prepare("UPDATE advisor
                 SET email = ?,
-                pass = ?,
                 name = ?,
                 last_name = ?, 
                 privileges = ?
                 WHERE email = ?");
-        $result = $sql->execute([$email, $pass, $fname, $lname, $priv, $old_email]);
+        $result = $sql->execute([$email, $fname, $lname, $priv, $old_email]);
 
         // if ($priv == 0 || $priv == '0')
         //     $_SESSION['privileges'] = 0;
@@ -95,4 +101,3 @@ class AdminModel
         return "failure";
     }
 }
-

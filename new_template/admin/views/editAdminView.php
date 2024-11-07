@@ -157,8 +157,8 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
                                             <input name="email" type="text" value="<?php echo $admin['email'] ?>" class="form-input" required />
                                         </div>
                                         <div>
-                                            <label for="pass">Password</label>
-                                            <input name="pass" type="password" value="<?php echo $admin['pass'] ?>" class="form-input" required />
+                                            <label for="pass">Set New Password</label>
+                                            <input name="pass" type="password" value="" placeholder="New Password" class="form-input" required />
                                         </div>
                                     </div>
 
