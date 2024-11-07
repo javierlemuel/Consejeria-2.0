@@ -29,7 +29,8 @@ class ExpedientesController
         $p = $_GET["p"] ?? 1;
 
         // Students filter
-        $statusFilter = $_GET['status'] ?? null;
+        $statusFilter = $_GET['status'];
+        $didCounseling = $_GET['did_counseling'];
 
         try {
             $p = (int)$p;
@@ -634,7 +635,7 @@ class ExpedientesController
 
 
         // Obtenemos la lista de estudiantes según el filtro y la búsqueda
-        $students = $studentModel->getStudents($conn, $p, $statusFilter, $q);
+        $students = $studentModel->getStudents($conn, $p, $statusFilter, $q, $didCounseling);
         $amountOfPages = $studentModel->getPageAmount();
 
         //JAVIER (Add minors)
