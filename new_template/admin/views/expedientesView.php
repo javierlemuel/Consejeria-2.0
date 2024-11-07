@@ -131,21 +131,26 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                     <div class="flex flex-wrap items-center justify-between gap-4">
 
                         <div x-data="dropdown" @click.outside="open = false" class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por Consejeria' .
-                                                                                                ($_GET['did_counseling'] == '1' ? ': Hecho' : ': No Hecho') ?? '' ?>
+                            <button class="btn btn-primary dropdown-toggle" @click="toggle">
+                                <?php
+                                echo 'Filtrar por Consejeria' .
+                                    (isset($_GET['did_counseling']) && $_GET['did_counseling'] !== ''
+                                        ? ($_GET['did_counseling'] == '1' ? ': Hecho' : ': No Hecho')
+                                        : '');
+                                ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
                                     <text x="50" y="65" font-size="48" fill="White">▼</text>
                                 </svg>
                             </button>
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                <li><a href="?did_counseling=1&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">Hecho Consejeria</a></li>
-                                <li><a href="?did_counseling=0&q=<?php echo $q . ('&status=' . $_GET['status']) ?? '' ?>" @click="toggle">No Hizo Consejeria</a></li>
+                                <li><a href="?did_counseling=1&q=<?php echo $q . ('&status=' . ($_GET['status']) ?? '') ?>" @click="toggle">Hecho Consejeria</a></li>
+                                <li><a href="?did_counseling=0&q=<?php echo $q . ('&status=' . ($_GET['status']) ?? '') ?>" @click="toggle">No Hecho Consejeria</a></li>
                             </ul>
                         </div>
 
                         <!-- Comienzo Boton drop down -->
                         <div x-data="dropdown" @click.outside="open = false" class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por ' . $_GET['status'] ?? 'Filtrar por Estatus' ?>
+                            <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por ' . (!empty($_GET['status']) ? $_GET['status'] : 'Filtrar por Estatus') ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100">
                                     <text x="50" y="65" font-size="48" fill="White">▼</text>
                                 </svg>
