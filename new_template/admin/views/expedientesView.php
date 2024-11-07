@@ -127,8 +127,8 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                 </div>
                 <!-- start main content section -->
                 <div x-data="contacts">
+                    <h2 class="text-xl mb-2">Expedientes de Estudiantes </h2>
                     <div class="flex flex-wrap items-center justify-between gap-4">
-                        <h2 class="text-xl">Expedientes de Estudiantes </h2>
 
                         <div x-data="dropdown" @click.outside="open = false" class="dropdown">
                             <button class="btn btn-primary dropdown-toggle" @click="toggle"><?php echo 'Filtrar por Consejeria' .
