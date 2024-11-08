@@ -263,7 +263,7 @@
                                                         <option value='other'>Otras Clases</option>
                                                     </select>
                                                 </td>
-                                                <td style='padding: 5px;'><input type='text' name='grade' class='form-input' style='width: 4em;' value='' required></td>
+                                                <td style='padding: 5px;'><input type='text' name='grade' class='form-input' style='width: 4em;' value=''></td>
                                                 <td style='padding: 5px;'>
                                                     <select name='status' class='form-input'>
                                                         <option value=''></option>
@@ -471,6 +471,7 @@
                                             echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             if ($privileges == 1) {
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Eliminar</i></button></td>"; // TENGO QUE HACER LA FUNCIONALIDAD DE BORRAR
                                             }echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
@@ -608,7 +609,7 @@
                                             // Itera sobre los datos de los cursos y llena las celdas de la tabla
                                             $free_credits = 0;
                                             foreach ($notccomByNotCohort as $curso) {
-                                                $free_credits += intval($curso['credits']);
+                                                $free_credits += intval($curso['credits']); 
                                                 echo "<tr>";
                                                 echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
                                                 echo "<form method='POST' action='index.php'>";
@@ -870,25 +871,25 @@
                             <button type="submit" name="action" value="studentCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Someter Consejería</button>
                         </form>
                         <br> 
-                        <form method="POST" action="index.php">
+                        <!-- <form method="POST" action="index.php">
                             <input type='hidden' name='openCounseling' value='openCounseling'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
                             <button type="submit" name="action" value="openCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Reiniciar Consejería en Frontend</button>
-                        </form>
+                        </form> -->
                         <?php } ?>
                         <br> 
                         <?php if($studentData['counseling_lock'] == 0) { ?>
                             <form method="POST" action="index.php">
                             <input type='hidden' name='block' value='block'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Bloquear Consejería en Frontend</button>
+                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Cerrar Consejería al Estudiante</button>
                             </form>
                         <?php } 
                             else if($studentData['counseling_lock'] == 1) { ?>
                             <form method="POST" action="index.php">
-                            <input type='hidden' name='unblock' value='unblock'>
+                            <input type='hidden' name='openCounseling' value='openCounseling'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Desbloquear Consejería en Frontend</button>
+                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Abrir Consejería al Estudiante</button>
                             </form>
                         <?php } ?>
                         <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Volver a Estudiantes</button>

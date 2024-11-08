@@ -164,6 +164,12 @@
                             <td style='text-align:center'><?php echo $studentsEditados  ?></td>
                             <td></td>
                         </tr>
+                        <tr style='background-color: lightgray'>
+                            <td style='text-align:center'>Actualizar estudiantes inactivos</td>
+                            <td style='text-align:center'><?php echo $studentsInactivos  ?></td>
+                            <td style='text-align:center; vertical-align:middle'><a href='?reports&code=inactive'>
+                            <span class='badge whitespace-nowrap badge-outline-primary' style='background:#FFB6AC;'>Actualizar</span> </td>
+                        </tr>
                     </tbody></table>
 
 
