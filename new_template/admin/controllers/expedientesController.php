@@ -31,10 +31,7 @@ class ExpedientesController
         // Students filter
         $statusFilter = $_GET['status'] ?? null;
 
-        $didCounseling = null;
-        if (isset($_GET['did_counseling'])) {
-            $didCounseling = $_GET['did_counseling'];
-        }
+        $didCounseling = $_GET['did_counseling'] ?? null;
 
         if (isset($_GET['autorecommend'])) {
             // Entrar función de auto-recomendación de cursos en oferta a todos los estudiantes

@@ -72,7 +72,7 @@ class StudentModel
             $params = array_fill(0, 5, $search);
         }
 
-        if (isset($conducted_counseling)) {
+        if (ctype_digit($conducted_counseling)) {
             $countSql .= " AND conducted_counseling = ?";
             $params[] = $conducted_counseling;
             $types .= "i";
@@ -108,7 +108,7 @@ class StudentModel
             $sql .= " AND (student_num LIKE ? OR name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ?)";
         }
 
-        if (isset($conducted_counseling)) {
+        if (ctype_digit($conducted_counseling)) {
             $sql .= " AND conducted_counseling = ?";
         }
 
