@@ -188,46 +188,63 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
                                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-                                        <div>
-                                            <label for="type">Tipo</label>
-                                            <select name="type" class="form-select text-white-dark">
-                                                <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
-                                                    <option value='mandatory' <?php if ($class['type'] == 'mandatory') {
+
+                                        <?php if (array_key_exists('type', $class)): ?>
+                                            <div>
+                                                <label for="type">Tipo</label>
+                                                <select name="type" class="form-select text-white-dark">
+                                                    <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
+                                                        <option value='mandatory' <?php if ($class['type'] == 'mandatory') {
+                                                                                        echo 'selected';
+                                                                                    } ?>>Curso requerido</option>
+                                                        <option value='elective' <?php if ($class['type'] == 'elective') {
+                                                                                        echo 'selected';
+                                                                                    } ?>>Electiva</option>
+                                                    <?php } else { ?>
+                                                        <option value='ESPA' <?php if ($class['type'] == 'ESPA') {
                                                                                     echo 'selected';
-                                                                                } ?>>Curso requerido</option>
-                                                    <option value='elective' <?php if ($class['type'] == 'elective') {
+                                                                                } ?>>Español</option>
+                                                        <option value='INGL' <?php if ($class['type'] == 'INGL') {
                                                                                     echo 'selected';
-                                                                                } ?>>Electiva</option>
-                                                <?php } else { ?>
-                                                    <option value='ESPA' <?php if ($class['type'] == 'ESPA') {
-                                                                                echo 'selected';
-                                                                            } ?>>Español</option>
-                                                    <option value='INGL' <?php if ($class['type'] == 'INGL') {
-                                                                                echo 'selected';
-                                                                            } ?>>Inglés</option>
-                                                    <option value='MATE' <?php if ($class['type'] == 'MATE') {
-                                                                                echo 'selected';
-                                                                            } ?>>Matemáticas</option>
-                                                    <option value='FISI' <?php if ($class['type'] == 'FISI') {
-                                                                                echo 'selected';
-                                                                            } ?>>Física</option>
-                                                    <option value='CIBI' <?php if ($class['type'] == 'CIBI') {
-                                                                                echo 'selected';
-                                                                            } ?>>Ciencias Biólogicas</option>
-                                                    <option value='CISO' <?php if ($class['type'] == 'CISO') {
-                                                                                echo 'selected';
-                                                                            } ?>>Ciencias Sociales</option>
-                                                    <option value='HUMA' <?php if ($class['type'] == 'HUMA') {
-                                                                                echo 'selected';
-                                                                            } ?>>Humanidades</option>
-                                                    <option value='FREE' <?php if ($class['type'] == 'FREE') {
-                                                                                echo 'selected';
-                                                                            } ?>>Electiva Libre</option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
+                                                                                } ?>>Inglés</option>
+                                                        <option value='MATE' <?php if ($class['type'] == 'MATE') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Matemáticas</option>
+                                                        <option value='FISI' <?php if ($class['type'] == 'FISI') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Física</option>
+                                                        <option value='CIBI' <?php if ($class['type'] == 'CIBI') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Ciencias Biólogicas</option>
+                                                        <option value='CISO' <?php if ($class['type'] == 'CISO') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Ciencias Sociales</option>
+                                                        <option value='HUMA' <?php if ($class['type'] == 'HUMA') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Humanidades</option>
+                                                        <option value='FREE' <?php if ($class['type'] == 'FREE') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Electiva Libre</option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (array_key_exists('required', $class)): ?>
+                                            <div>
+                                                <label for='required'>¿General Requerida?</label>
+                                                <select name='required' class="form-select text-white-dark">
+                                                    <option value='1' <?php if ($class['required'] == '1') {
+                                                                            echo 'selected';
+                                                                        } ?>>Sí</option>
+                                                    <option value='0' <?php if ($class['required'] == '0') {
+                                                                            echo 'selected';
+                                                                        } ?>>No</option>
+                                                </select>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if (array_key_exists('level', $class)): ?>
+                                            <div>
                                                 <label for="level">Level</label>
                                                 <select name='level' class="form-select text-white-dark">
                                                     <option value='NULL' <?php if ($class['level'] == 'NULL') {
@@ -240,20 +257,12 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                                                                     echo 'selected';
                                                                                 } ?>>Avanzada</option>
                                                 </select>
-                                            <?php } else { ?>
-                                                <label for='required'>¿General Requerida?</label>
-                                                <select name='required' class="form-select text-white-dark">
-                                                    <option value='1' <?php if ($class['required'] == '1') {
-                                                                            echo 'selected';
-                                                                        } ?>>Sí</option>
-                                                    <option value='0' <?php if ($class['required'] == '0') {
-                                                                            echo 'selected';
-                                                                        } ?>>No</option>
-                                                </select>
-                                            <?php } ?>
-                                        </div>
-                                        <div>
-                                            <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
+
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if (array_key_exists('minor_id', $class)): ?>
+                                            <div>
                                                 <label for="minor">Minor</label>
                                                 <select name='minor' class='form-select text-white-dark'>
                                                     <option value='0'>No Minor</option>
@@ -264,8 +273,9 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                                             <?php echo $minor['name']; ?></option>
                                                     <?php } ?>
                                                 </select>
-                                            <?php } ?>
-                                        </div>
+                                            </div>
+                                        <?php endif; ?>
+
                                     </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

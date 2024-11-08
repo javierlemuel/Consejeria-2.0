@@ -29,7 +29,7 @@ class StudentModel
         return $result;
     }
 
-    public function getStudents(mysqli $conn, $p = null, $status = null, $q = null)
+    public function getStudents(mysqli $conn, $p = null, $status = null, $q = null, $conducted_counseling = null)
     {
         // Pagination settings
         if (!isset($p)) {
@@ -72,6 +72,11 @@ class StudentModel
             $params = array_fill(0, 5, $search);
         }
 
+        if (!empty($conducted_counseling)) {
+            $countSql .= " AND conducted_counseling = ?";
+            $params[] = $conducted_counseling;
+            $types .= "i";
+        }
         // Prepare and bind parameters for the count query
         $countStmt = $conn->prepare($countSql);
         if (!empty($types)) {
@@ -101,6 +106,10 @@ class StudentModel
 
         if (!empty($q)) {
             $sql .= " AND (student_num LIKE ? OR name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ?)";
+        }
+
+        if (!empty($conducted_counseling)) {
+            $sql .= " AND conducted_counseling = ?";
         }
 
         // Add sorting and pagination
