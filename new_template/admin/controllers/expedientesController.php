@@ -24,13 +24,17 @@ class ExpedientesController
         //
 
         // Search query (q) and pagination (p)
-        $q = $_GET["q"] ?? "";
+        $q = $_GET["q"] ?? null;
         $q = sanitizeSearch($q);
         $p = $_GET["p"] ?? 1;
 
         // Students filter
-        $statusFilter = $_GET['status'];
-        $didCounseling = $_GET['did_counseling'];
+        $statusFilter = $_GET['status'] ?? null;
+
+        $didCounseling = null;
+        if (ctype_digit($_GET['did_counseling'])) {
+            $didCounseling = $_GET['did_counseling'];
+        }
 
         try {
             $p = (int)$p;
