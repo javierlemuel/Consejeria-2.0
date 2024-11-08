@@ -115,6 +115,7 @@ class StudentModel
         // Add sorting and pagination
         $sql .= " ORDER BY name1 ASC LIMIT ? OFFSET ?";
         $types .= "ii"; // Add integer types for limit and offset
+        array_push($params, $p_limit, $offset);
         $params[] = $p_limit;
         $params[] = $offset;
 
