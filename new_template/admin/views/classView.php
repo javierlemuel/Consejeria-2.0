@@ -229,51 +229,53 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                                 </select>
                                             </div>
                                         <?php endif; ?>
+                                        <?php if (array_key_exists('required', $class)): ?>
+                                            <div>
+                                                <label for='required'>¿General Requerida?</label>
+                                                <select name='required' class="form-select text-white-dark">
+                                                    <option value='1' <?php if ($class['required'] == '1') {
+                                                                            echo 'selected';
+                                                                        } ?>>Sí</option>
+                                                    <option value='0' <?php if ($class['required'] == '0') {
+                                                                            echo 'selected';
+                                                                        } ?>>No</option>
+                                                </select>
+                                            </div>
+                                        <?php endif; ?>
 
                                         <?php if (array_key_exists('level', $class)): ?>
                                             <div>
-                                                <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
-                                                    <label for="level">Level</label>
-                                                    <select name='level' class="form-select text-white-dark">
-                                                        <option value='NULL' <?php if ($class['level'] == 'NULL') {
-                                                                                    echo 'selected';
-                                                                                } ?>>NULL</option>
-                                                        <option value='intermediate' <?php if ($class['level'] == 'intermediate') {
-                                                                                            echo 'selected';
-                                                                                        } ?>>Intermedia</option>
-                                                        <option value='advanced' <?php if ($class['level'] == 'advanced') {
+                                                <label for="level">Level</label>
+                                                <select name='level' class="form-select text-white-dark">
+                                                    <option value='NULL' <?php if ($class['level'] == 'NULL') {
+                                                                                echo 'selected';
+                                                                            } ?>>NULL</option>
+                                                    <option value='intermediate' <?php if ($class['level'] == 'intermediate') {
                                                                                         echo 'selected';
-                                                                                    } ?>>Avanzada</option>
-                                                    </select>
-                                                <?php } else { ?>
-                                                    <label for='required'>¿General Requerida?</label>
-                                                    <select name='required' class="form-select text-white-dark">
-                                                        <option value='1' <?php if ($class['required'] == '1') {
-                                                                                echo 'selected';
-                                                                            } ?>>Sí</option>
-                                                        <option value='0' <?php if ($class['required'] == '0') {
-                                                                                echo 'selected';
-                                                                            } ?>>No</option>
-                                                    </select>
-                                                <?php } ?>
+                                                                                    } ?>>Intermedia</option>
+                                                    <option value='advanced' <?php if ($class['level'] == 'advanced') {
+                                                                                    echo 'selected';
+                                                                                } ?>>Avanzada</option>
+                                                </select>
+
                                             </div>
                                         <?php endif; ?>
+
                                         <?php if (array_key_exists('minor_id', $class)): ?>
                                             <div>
-                                                <?php if ((strpos($class['crse_code'], 'CCOM') !== false)) { ?>
-                                                    <label for="minor">Minor</label>
-                                                    <select name='minor' class='form-select text-white-dark'>
-                                                        <option value='0'>No Minor</option>
-                                                        <?php foreach ($minors as $minor) { ?>
-                                                            <option value='<?php echo $minor["ID"]; ?>' <?php if ($class['minor_id'] == strval($minor["ID"])) {
-                                                                                                            echo 'selected';
-                                                                                                        } ?>>
-                                                                <?php echo $minor['name']; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                <?php } ?>
+                                                <label for="minor">Minor</label>
+                                                <select name='minor' class='form-select text-white-dark'>
+                                                    <option value='0'>No Minor</option>
+                                                    <?php foreach ($minors as $minor) { ?>
+                                                        <option value='<?php echo $minor["ID"]; ?>' <?php if ($class['minor_id'] == strval($minor["ID"])) {
+                                                                                                        echo 'selected';
+                                                                                                    } ?>>
+                                                            <?php echo $minor['name']; ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                         <?php endif; ?>
+
                                     </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
