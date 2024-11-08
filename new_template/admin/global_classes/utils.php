@@ -57,7 +57,7 @@ function isValidCode($cd)
 // Check if it's a grade
 function isValidGrade($grd)
 {
-    return preg_match("/^(A|B|C|D|F|IC|W|W\*|P|NP)$/", $grd);
+    return preg_match("/^(A|B|C|D|F|IB|IC|ID|IF|W|P|NP)\*?$/", $grd);
 }
 
 // Removes anything that isn't a letter or number
