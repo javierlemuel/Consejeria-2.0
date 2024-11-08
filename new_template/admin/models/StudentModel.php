@@ -72,7 +72,7 @@ class StudentModel
             $params = array_fill(0, 5, $search);
         }
 
-        if (ctype_digit($conducted_counseling)) {
+        if (isset($conducted_counseling)) {
             $countSql .= " AND conducted_counseling = ?";
             $params[] = $conducted_counseling;
             $types .= "i";
@@ -108,7 +108,7 @@ class StudentModel
             $sql .= " AND (student_num LIKE ? OR name1 LIKE ? OR name2 LIKE ? OR last_name1 LIKE ? OR last_name2 LIKE ?)";
         }
 
-        if (ctype_digit($conducted_counseling)) {
+        if (isset($conducted_counseling)) {
             $sql .= " AND conducted_counseling = ?";
         }
 
@@ -116,8 +116,6 @@ class StudentModel
         $sql .= " ORDER BY name1 ASC LIMIT ? OFFSET ?";
         $types .= "ii"; // Add integer types for limit and offset
         array_push($params, $p_limit, $offset);
-        $params[] = $p_limit;
-        $params[] = $offset;
 
         // Prepare and bind parameters for the main query
         $stmt = $conn->prepare($sql);
