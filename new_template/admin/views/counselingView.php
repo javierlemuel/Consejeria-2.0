@@ -1,11 +1,10 @@
 <?php
-    if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
-    {
-        header("Location: ../index.php");
-        exit;
-    }
+if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
+    header("Location: ../index.php");
+    exit;
+}
 
-    $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
+$privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -59,8 +58,8 @@
     </div>
 
     <div class="main-container min-h-screen text-black dark:text-white-dark" :class="[$store.app.navbar]">
-       <!-- start sidebar section -->
-       <div id="sidebar"></div>
+        <!-- start sidebar section -->
+        <div id="sidebar"></div>
         <!-- end sidebar section -->
 
         <div class="main-content flex flex-col min-h-screen">
@@ -96,16 +95,16 @@
                                 <!-- user-profile -->
                                 <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="top-11 w-[230px] !py-0 font-semibold text-dark ltr:right-0 rtl:left-0 dark:text-white-dark dark:text-white-light/90">
                                     <li class="border-t border-white-light dark:border-white-light/10">
-                                    <form method="post" action="index.php">
-                                        <input type="hidden" name="signout" value="1">
-                                        <button type="submit" class="!py-3 text-danger">
-                                            <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                                <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            Sign Out
-                                        </button>
-                                    </form>
+                                        <form method="post" action="index.php">
+                                            <input type="hidden" name="signout" value="1">
+                                            <button type="submit" class="!py-3 text-danger">
+                                                <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5" d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                Sign Out
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -120,36 +119,35 @@
                 <!-- start main content section -->
                 <div class="flex-1 text-sm ">
                     <div style='text-align: center'>
-                        <?php 
-                            if(isset($_SESSION['consejeria_msg'])) 
-                            {
-                                if(strpos($_SESSION['consejeria_msg'], 'No') !== false)
-                                    echo "<h2 style='color:red; bold' class='text-xl'>".$_SESSION['consejeria_msg']."</h2>";
-                                else
-                                    echo "<h2 style='color:limegreen; bold' class='text-xl'>".$_SESSION['consejeria_msg']."</h2>";
-                                unset($_SESSION['consejeria_msg']);
-                            }
+                        <?php
+                        if (isset($_SESSION['consejeria_msg'])) {
+                            if (strpos($_SESSION['consejeria_msg'], 'No') !== false)
+                                echo "<h2 style='color:red; bold' class='text-xl'>" . $_SESSION['consejeria_msg'] . "</h2>";
+                            else
+                                echo "<h2 style='color:limegreen; bold' class='text-xl'>" . $_SESSION['consejeria_msg'] . "</h2>";
+                            unset($_SESSION['consejeria_msg']);
+                        }
                         ?>
                     </div>
                     <div>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em;">Nombre: <?php echo $studentData['name1'] . " " . $studentData['last_name1'] . " " . $studentData['last_name2']; ?></h2>
                         <!-- formateo de nuermo de estudiante-->
                         <?php
-                            $studentNum = $studentData['student_num'];
-                            $formattedStudentNum = substr($studentNum, 0, 3) . '-' . substr($studentNum, 3, 2) . '-' . substr($studentNum, 5);
+                        $studentNum = $studentData['student_num'];
+                        $formattedStudentNum = substr($studentNum, 0, 3) . '-' . substr($studentNum, 3, 2) . '-' . substr($studentNum, 5);
                         ?>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Número de estudiante: <?php echo $formattedStudentNum; ?></h2>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Correo electrónico: <?php echo $studentData['email']; ?></h2>
                         <h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Cohorte: <?php echo $studentData['cohort_year']; ?></h2>
                         <?php
-                            if($studentHaveMinor != NULL){
-                                echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Concentración Menor: ' . $studentHaveMinor . '</h2>';
-                            }
+                        if ($studentHaveMinor != NULL) {
+                            echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; margin-top: 1em; margin-bottom: 1em;">Concentración Menor: ' . $studentHaveMinor . '</h2>';
+                        }
                         ?>
                         <form id="myForm" method="POST" action="index.php">
                             <input type="hidden" name="action" value="selecteStudent">
                             <input type="hidden" name="student_num" value="<?= $studentNum ?>">
-                            <a href="#" onclick="document.getElementById('myForm').submit();" style="font-size: 1em; text-decoration: underline;">Editar</a>
+                            <a href="#" onclick="document.getElementById('myForm').submit();" class='btn btn-primary ltr:ml-2 rtl:mr-2' style="width: 10vw; text-align: center">Editar Estudiante</a>
                         </form>
                         <div class="flex justify-center items-center h-screen">
                             <div class="w-1/3">
@@ -163,7 +161,7 @@
                                             <select id="termSelect" class="form-select text-white-dark w-full" name="estatus" x-data="dropdown" @click.outside="open = false">
                                                 <option value=""></option>
                                                 <?php foreach ($studentRecommendedTerms as $term): ?>
-                                                    <option value="<?php echo $term?>"><?php echo $term?></option>
+                                                    <option value="<?php echo $term ?>"><?php echo $term ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <input type="hidden" name="student_num" value="<?= $studentData['student_num'] ?>">
@@ -178,7 +176,7 @@
                         // Verificar si la variable $studentRecommendedClasses no es NULL y no está vacía
                         if ($studentRecommendedClasses !== NULL && !empty($studentRecommendedClasses)) {
                         ?>
-                        <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Cursos Recomendados en el Semestre: <?php echo $selectedTerm?></h2>
+                            <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Cursos Recomendados en el Semestre: <?php echo $selectedTerm ?></h2>
                             <!-- tabla de los cursos recomendados -->
                             <div class="table-responsive">
                                 <table style="font-size: 12px; border-collapse: collapse;">
@@ -192,26 +190,26 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                            foreach ($studentRecommendedClasses as $recomendedCourse) {
-                                                echo "<tr>";
-                                                echo "<form method='POST' action='index.php'>";
-                                                echo "<input type='hidden' name='deleteRecomendation' value='deleteRecomendation'>";
-                                                echo "<td style='padding: 5px;'>" . $recomendedCourse['crse_code'] . "</td>";
-                                                echo "<input type='hidden' name='crse_code' value='" . $recomendedCourse['crse_code'] . "'/>";
-                                                echo "<td style='padding: 5px;'>" . $recomendedCourse['name'] . "</td>";
-                                                echo "<td style='padding: 5px;'>" . $recomendedCourse['credits'] . "</td>";
-                                                echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
-                                                echo "<input type='hidden' name='selectedTerm' value=" . $selectedTerm . ">";
-                                                if($privileges == 1) {
+                                        // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                        foreach ($studentRecommendedClasses as $recomendedCourse) {
+                                            echo "<tr>";
+                                            echo "<form method='POST' action='index.php'>";
+                                            echo "<input type='hidden' name='deleteRecomendation' value='deleteRecomendation'>";
+                                            echo "<td style='padding: 5px;'>" . $recomendedCourse['crse_code'] . "</td>";
+                                            echo "<input type='hidden' name='crse_code' value='" . $recomendedCourse['crse_code'] . "'/>";
+                                            echo "<td style='padding: 5px;'>" . $recomendedCourse['name'] . "</td>";
+                                            echo "<td style='padding: 5px;'>" . $recomendedCourse['credits'] . "</td>";
+                                            echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
+                                            echo "<input type='hidden' name='selectedTerm' value=" . $selectedTerm . ">";
+                                            if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</button></td>";
-                                                }
-                                                echo "</form>";
-                                                echo "</tr>";
                                             }
-                                            
+                                            echo "</form>";
+                                            echo "</tr>";
+                                        }
+
                                         ?>
-                                        
+
                                     </tbody>
                                 </table>
                                 <form method='POST' action='index.php'>
@@ -229,9 +227,9 @@
                         }
                         ?>
                         <!-- Añadir Calificacion para el estuidante -->
-                        <?php if ($privileges == 1) {?>
-                        <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Añadir Calificación</h2>
-                        <h2 class="m-0 dark:text-white-dark" style="font-size: 1em; text-align: center; margin-top: 1em; margin-bottom: 1em;">Si la clase existe en la base de datos no tiene que proveer los créditos. Si no se provee el semestre se inserta con el semestre actual.</h2>
+                        <?php if ($privileges == 1) { ?>
+                            <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Añadir Calificación</h2>
+                            <h2 class="m-0 dark:text-white-dark" style="font-size: 1em; text-align: center; margin-top: 1em; margin-bottom: 1em;">Si la clase existe en la base de datos no tiene que proveer los créditos. Si no se provee el semestre se inserta con el semestre actual.</h2>
                             <div class="table-responsive">
                                 <table style="font-size: 12px; border-collapse: collapse;">
                                     <thead>
@@ -298,31 +296,31 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                            foreach ($currentlyTaking as $curso) {
-                                                echo "<tr>";
-                                                echo"<form method='POST' action='index.php'>";
-                                                echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
-                                                echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
-                                                echo "<td style='padding: 5px;'>" . $curso['course_name'] . "</td>";
-                                                echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
-                                                echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
-                                                echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
-                                                echo "<td style='padding: 5px;'>" . $curso['term'] . "</td>";
-                                                echo "<input type='hidden' name='term' value='" . $curso['term'] . "'/>";
-                                                echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
-                                                if ($privileges == 1) {
+                                        // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                        foreach ($currentlyTaking as $curso) {
+                                            echo "<tr>";
+                                            echo "<form method='POST' action='index.php'>";
+                                            echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
+                                            echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
+                                            echo "<td style='padding: 5px;'>" . $curso['course_name'] . "</td>";
+                                            echo "<td style='padding: 5px;'>" . $curso['credits'] . "</td>";
+                                            echo "<input type='hidden' name='credits' value='" . $curso['credits'] . "'/>";
+                                            echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
+                                            echo "<td style='padding: 5px;'>" . $curso['term'] . "</td>";
+                                            echo "<input type='hidden' name='term' value='" . $curso['term'] . "'/>";
+                                            echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                            if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                }
-                                                echo "</tr>";
-                                                echo "<input type='hidden' name='equivalencia' value=''/>";
-                                                echo "<input type='hidden' name='convalidacion' value=''/>";
-                                                echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
-                                                echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
-                                                echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
-                                                echo "<input type='hidden' name='category' value=" . $curso['category'] . ">";
-                                                echo "</form>";
                                             }
+                                            echo "</tr>";
+                                            echo "<input type='hidden' name='equivalencia' value=''/>";
+                                            echo "<input type='hidden' name='convalidacion' value=''/>";
+                                            echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
+                                            echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
+                                            echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
+                                            echo "<input type='hidden' name='category' value=" . $curso['category'] . ">";
+                                            echo "</form>";
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
@@ -348,17 +346,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
+                                        <?php
                                         // Itera sobre los datos de los cursos y llena las celdas de la tabla
                                         # CCOM CONCENTRATION COURSES
                                         $ccom_credits = 0;
                                         foreach ($ccomByCohort as $curso) {
                                             if (!empty($curso['crse_grade'])) {
                                                 // Check if the input string does not contain specific substrings
-                                                if (strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
-                                                    strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false && strpos($curso['crse_grade'], 'D') === false)
-                                                {
-                                                        $ccom_credits += intval($curso['credits']);
+                                                if (
+                                                    strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
+                                                    strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false && strpos($curso['crse_grade'], 'D') === false
+                                                ) {
+                                                    $ccom_credits += intval($curso['credits']);
                                                 }
                                             }
                                             echo "<tr>";
@@ -372,15 +371,15 @@
                                             <select name='category' class='form-input' style='width: 8em;'>";
                                             $options = array("", "mandatory", "free", "general", "elective");
                                         ?>
-                                            <option value=""<?php if ($curso['category'] == '') echo 'selected'; ?>></option>
-                                            <option value="mandatory"<?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
-                                            <option value="elective"<?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
-                                            <option value="general"<?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
-                                            <option value="free"<?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
-                                            <option value="other"<?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
+                                            <option value="" <?php if ($curso['category'] == '') echo 'selected'; ?>></option>
+                                            <option value="mandatory" <?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
+                                            <option value="elective" <?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
+                                            <option value="general" <?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
+                                            <option value="free" <?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
+                                            <option value="other" <?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
                                         <?php
-                                        echo "</select></td>";
-                                                echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
+                                            echo "</select></td>";
+                                            echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
                                             if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                 echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . ($curso['crse_grade'] ?? '') . "'/></td>";
                                             } else {
@@ -392,18 +391,19 @@
                                             echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                             echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             if ($privileges == 1) {
-                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                            } echo "</tr>";
+                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                            }
+                                            echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
                                         }
                                         echo "<tr>";
-                                            echo "<td></td><td></td>";
-                                            echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
-                                            echo "<td style='padding: 5px;'> ". $ccom_credits."</td>";
-                                            echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                        echo "<td></td><td></td>";
+                                        echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                        echo "<td style='padding: 5px;'> " . $ccom_credits . "</td>";
+                                        echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
                                         echo "</tr>";
-                                    ?>
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -433,15 +433,16 @@
                                         foreach ($notccomByCohort as $curso) {
                                             if (!empty($curso['crse_grade'])) {
                                                 // Check if the input string does not contain specific substrings
-                                                if (strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
-                                                    strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false)
-                                                {
-                                                        $general_credits += intval($curso['credits']);
+                                                if (
+                                                    strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
+                                                    strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false
+                                                ) {
+                                                    $general_credits += intval($curso['credits']);
                                                 }
                                             }
                                             echo "<tr>";
                                             echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                            echo"<form method='POST' action='index.php'>";
+                                            echo "<form method='POST' action='index.php'>";
                                             echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
                                             echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
                                             echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
@@ -450,15 +451,15 @@
                                             <select name='category' class='form-input' style='width: 8em;'>";
                                             $options = array("", "mandatory", "free", "general", "elective");
                                         ?>
-                                            <option value=""<?php if ($curso['category'] == '') echo 'selected'; ?>></option>
-                                            <option value="mandatory"<?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
-                                            <option value="elective"<?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
-                                            <option value="general"<?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
-                                            <option value="free"<?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
-                                            <option value="other"<?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
+                                            <option value="" <?php if ($curso['category'] == '') echo 'selected'; ?>></option>
+                                            <option value="mandatory" <?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
+                                            <option value="elective" <?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
+                                            <option value="general" <?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
+                                            <option value="free" <?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
+                                            <option value="other" <?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
                                         <?php
-                                        echo "</select></td>";
-                                                echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
+                                            echo "</select></td>";
+                                            echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
                                             if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                                                 echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . ($curso['crse_grade'] ?? '') . "' /></td>";
                                             } else {
@@ -468,7 +469,7 @@
                                             echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                             echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
-                                            echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                            echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             if ($privileges == 1) {
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Eliminar</i></button></td>"; // TENGO QUE HACER LA FUNCIONALIDAD DE BORRAR
@@ -477,11 +478,11 @@
                                             echo "</form>";
                                         }
                                         echo "<tr>";
-                                            echo "<td></td><td></td>";
-                                            echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
-                                            echo "<td style='padding: 5px;'> ". $general_credits."</td>";
-                                            echo "<td>HUMA: ".$_SESSION['HUMA_credits']."</td>
-                                            <td colspan=2>CISO: ".$_SESSION['CISO_credits']."</td>
+                                        echo "<td></td><td></td>";
+                                        echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                        echo "<td style='padding: 5px;'> " . $general_credits . "</td>";
+                                        echo "<td>HUMA: " . $_SESSION['HUMA_credits'] . "</td>
+                                            <td colspan=2>CISO: " . $_SESSION['CISO_credits'] . "</td>
                                             <td></td><td></td><td></td><td></td><td></td>";
                                         echo "</tr>";
                                         ?>
@@ -490,11 +491,11 @@
                             </div>
                             <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Electivas de CCOM</h2>
                             <?php
-                                # CCOM ELECTIVE COURSES
-                                if (empty($ccomFreeByNotCohort)) {
-                                    echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">El estudiante aún no a tomado ninguna Electiva de CCOM</h2>';
-                                } else {
-                                ?>
+                            # CCOM ELECTIVE COURSES
+                            if (empty($ccomFreeByNotCohort)) {
+                                echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">El estudiante aún no a tomado ninguna Electiva de CCOM</h2>';
+                            } else {
+                            ?>
                                 <!-- basic table -->
                                 <div class="table-responsive">
                                     <table style="font-size: 12px; border-collapse: collapse;">
@@ -520,10 +521,11 @@
                                             foreach ($ccomFreeByNotCohort as $curso) {
                                                 if (!empty($curso['crse_grade'])) {
                                                     // Check if the input string does not contain specific substrings
-                                                    if (strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
-                                                        strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false && strpos($curso['crse_grade'], 'D') === false)
-                                                    {
-                                                            $elective_credits += intval($curso['credits']);
+                                                    if (
+                                                        strpos($curso['crse_grade'], 'I') === false && strpos($curso['crse_grade'], 'F') === false &&
+                                                        strpos($curso['crse_grade'], 'NP') === false && strpos($curso['crse_grade'], 'W') === false && strpos($curso['crse_grade'], 'D') === false
+                                                    ) {
+                                                        $elective_credits += intval($curso['credits']);
                                                     }
                                                 }
                                                 echo "<tr>";
@@ -534,23 +536,23 @@
                                                 echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
                                                 echo "<td style='padding: 5px;'> <input type='number' name='credits' class='form-input' style='width: 5em;' value='" . $curso['credits'] . "'/></td>";
                                                 echo "<td><select name='category' class='form-input' style='width: 8em;'>";
-                                                    $options = array("", "mandatory", "free", "general", "elective");
-                                                ?>
-                                                    <option value=""<?php if ($curso['category'] == '') echo 'selected'; ?>></option>
-                                                    <option value="mandatory"<?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
-                                                    <option value="elective"<?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
-                                                    <option value="general"<?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
-                                                    <option value="free"<?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
-                                                    <option value="other"<?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
+                                                $options = array("", "mandatory", "free", "general", "elective");
+                                            ?>
+                                                <option value="" <?php if ($curso['category'] == '') echo 'selected'; ?>></option>
+                                                <option value="mandatory" <?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
+                                                <option value="elective" <?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
+                                                <option value="general" <?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
+                                                <option value="free" <?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
+                                                <option value="other" <?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
                                                 <?php
                                                 echo "</select></td>";
                                                 echo "<td style='padding: 5px;'>
                                                 <select name='level' class='form-input' style='width: 8em;'>";
                                                 ?>
-                                                <option value='NULL' <?php if($curso['level'] != 'intermediate' && $curso['level'] != 'advanced') echo 'selected'?>>N/A</option>
-                                                <option value='intermediate' <?php if($curso['level'] == 'intermediate') echo 'selected'?>>Intermedia</option>
-                                                <option value='advanced' <?php if($curso['level'] == 'advanced') echo 'selected'?>>Avanzada</option>
-                                                <?php
+                                                <option value='NULL' <?php if ($curso['level'] != 'intermediate' && $curso['level'] != 'advanced') echo 'selected' ?>>N/A</option>
+                                                <option value='intermediate' <?php if ($curso['level'] == 'intermediate') echo 'selected' ?>>Intermedia</option>
+                                                <option value='advanced' <?php if ($curso['level'] == 'advanced') echo 'selected' ?>>Avanzada</option>
+                                            <?php
                                                 echo "</select></td>";
                                                 echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
                                                 if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
@@ -564,29 +566,30 @@
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                                 if ($privileges == 1) {
-                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                }echo "</tr>";
+                                                    echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                                }
+                                                echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
                                             echo "<tr>";
-                                                    echo "<td></td><td></td>";
-                                                    echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
-                                                    echo "<td style='padding: 5px;'> ". $elective_credits."</td>";
-                                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                            echo "<td></td><td></td>";
+                                            echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                            echo "<td style='padding: 5px;'> " . $elective_credits . "</td>";
+                                            echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
                                             echo "</tr>";
                                             ?>
                                         </tbody>
                                     </table>
                                 </div>
-                            <?php }?>
+                            <?php } ?>
                             <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases Electivas Libres</h2>
                             <?php
-                                # FREE ELECTIVE COURSES
-                                if (empty($notccomByNotCohort)) {
-                                    echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">El estudiante aún no a tomado ninguna Electiva libre</h2>';
-                                } else {
-                                ?>
+                            # FREE ELECTIVE COURSES
+                            if (empty($notccomByNotCohort)) {
+                                echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">El estudiante aún no a tomado ninguna Electiva libre</h2>';
+                            } else {
+                            ?>
                                 <!-- basic table -->
                                 <div class="table-responsive">
                                     <table style="font-size: 12px; border-collapse: collapse;">
@@ -619,15 +622,15 @@
                                                 echo "<td style='padding: 5px;'> <input type='number' name='credits' class='form-input' style='width: 5em;' value='" . $curso['credits'] . "'/></td>";
                                                 echo "<td style='padding: 5px;'> 
                                                 <select name='category' class='form-input' style='width: 8em;'>";
-                                                    $options = array("", "mandatory", "free", "general", "elective");
-                                                ?>
-                                                    <option value=""<?php if ($curso['category'] == '') echo 'selected'; ?>></option>
-                                                    <option value="mandatory"<?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
-                                                    <option value="elective"<?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
-                                                    <option value="general"<?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
-                                                    <option value="free"<?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
-                                                    <option value="other"<?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
-                                                <?php
+                                                $options = array("", "mandatory", "free", "general", "elective");
+                                            ?>
+                                                <option value="" <?php if ($curso['category'] == '') echo 'selected'; ?>></option>
+                                                <option value="mandatory" <?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
+                                                <option value="elective" <?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
+                                                <option value="general" <?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
+                                                <option value="free" <?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
+                                                <option value="other" <?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
+                                            <?php
                                                 echo "</select></td>";
                                                 echo "<input type='hidden' name='old_category' value=" . $curso['category'] . ">";
                                                 if (in_array($curso['crse_grade'], ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
@@ -641,234 +644,236 @@
                                                 echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                                 echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                                 if ($privileges == 1) {
-                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                }echo "</tr>";
+                                                    echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                                }
+                                                echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
                                             echo "<tr>";
-                                                    echo "<td></td><td></td>";
-                                                    echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
-                                                    echo "<td style='padding: 5px;'> ". $free_credits."</td>";
-                                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                            echo "<td></td><td></td>";
+                                            echo "<td style='text-align: right'> <b>Créditos Aprobados: </b> </td>";
+                                            echo "<td style='padding: 5px;'> " . $free_credits . "</td>";
+                                            echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
                                             echo "</tr>";
                                             ?>
                                         </tbody>
                                     </table>
                                 </div>
-                                        </form>
-                            <?php }?>
-                            <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Otras Clases</h2>
-                            <?php
-                                if ($otherClasses->num_rows === 0) {
-                                    echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">No hay otras clases que el estudiante haya tomado</h2>';
-                                } else {
-                                ?>
+                        </form>
+                    <?php } ?>
+                    <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Otras Clases</h2>
+                    <?php
+                    if ($otherClasses->num_rows === 0) {
+                        echo '<h2 class="m-0 dark:text-white-dark" style="font-size: 1.5em; text-align: center; margin-top: 1em; margin-bottom: 1em;">No hay otras clases que el estudiante haya tomado</h2>';
+                    } else {
+                    ?>
 
-                                <!-- basic table -->
-                                <div class="table-responsive">
-                                    <table style="font-size: 12px; border-collapse: collapse;">
-                                        <thead>
-                                            <tr>
-                                                <th style="padding: 5px;"></th>
-                                                <th style="padding: 5px;">Código Del Curso</th>
-                                                <th style="padding: 5px;">Nombre</th>
-                                                <th style="padding: 5px;">Créditos</th>
-                                                <th style="padding: 5px;">Categoría</th>
-                                                <th style="padding: 5px;">Nota</th>
-                                                <th style="padding: 5px;">Semestre</th>
-                                                <th style="padding: 5px;">Equivalencia</th>
-                                                <th style="padding: 5px;">Convalidación</th>
-                                                <th style="padding: 5px;"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                            foreach ($otherClasses as $curso) {
-                                                echo "<tr>";
-                                                echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                                echo"<form method='POST' action='index.php'>";
-                                                echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
-                                                echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
-                                                echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
-                                                echo "<td style='padding: 5px;'> <input type='number' name='credits' class='form-input' style='width: 5em;' value='" . $curso['credits'] . "'/></td>";
-                                                echo "<td style='padding: 5px;'> 
+                        <!-- basic table -->
+                        <div class="table-responsive">
+                            <table style="font-size: 12px; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 5px;"></th>
+                                        <th style="padding: 5px;">Código Del Curso</th>
+                                        <th style="padding: 5px;">Nombre</th>
+                                        <th style="padding: 5px;">Créditos</th>
+                                        <th style="padding: 5px;">Categoría</th>
+                                        <th style="padding: 5px;">Nota</th>
+                                        <th style="padding: 5px;">Semestre</th>
+                                        <th style="padding: 5px;">Equivalencia</th>
+                                        <th style="padding: 5px;">Convalidación</th>
+                                        <th style="padding: 5px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                    foreach ($otherClasses as $curso) {
+                                        echo "<tr>";
+                                        echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
+                                        echo "<form method='POST' action='index.php'>";
+                                        echo "<td style='padding: 5px;'>" . $curso['crse_code'] . "</td>";
+                                        echo "<td style='padding: 5px;'>" . $curso['name'] . "</td>";
+                                        echo "<input type='hidden' name='crse_code' value='" . $curso['crse_code'] . "'/>";
+                                        echo "<td style='padding: 5px;'> <input type='number' name='credits' class='form-input' style='width: 5em;' value='" . $curso['credits'] . "'/></td>";
+                                        echo "<td style='padding: 5px;'> 
                                                 <select name='category' class='form-input' style='width: 8em;'>";
-                                                    $options = array("", "mandatory", "free", "general", "elective");
-                                                ?>
-                                                    <option value=""<?php if ($curso['category'] == '') echo 'selected'; ?>></option>
-                                                    <option value="mandatory"<?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
-                                                    <option value="elective"<?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
-                                                    <option value="general"<?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
-                                                    <option value="free"<?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
-                                                    <option value="other"<?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
-                                                <?php
-                                                echo "</select></td>";
-                                                if (in_array($curso['crse_grade'], ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
-                                                    echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
-                                                } else {
-                                                    echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
-                                                }echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "'/></td>";
-                                                echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
-                                                echo "<input type='hidden' name='old_category' value= '". $curso['category'] . "'/>";
-                                                echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
-                                                echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
-                                                echo"<input type='hidden' name='updateGrade' value='updateGrade'>";
-                                                if(/*$curso['db'] == 'yes' && */$privileges == 1)
-                                                    echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                echo "</tr>";
-                                                echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
-                                                echo "</form>";
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php }?>
-                            <?php if ($privileges == 1) {?>
-                            <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases a recomendar</h2>
-                            <!-- Vertical line tabs -->
-                            <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'home'}">
-                                <!-- buttons -->
-                                <div class="mx-10 mb-5 sm:mb-0">
-                                    <ul class="w-24 m-auto text-center font-semibold">
-                                        <li>
-                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'mandatory'}" @click="tab='mandatory'">CCOM Requeridas</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'ccomElective'}" @click="tab='ccomElective'">CCOM Electivas</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'elective'}" @click="tab='elective'">Cursos Dummy</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'general'}" @click="tab='general'">Generales</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        $options = array("", "mandatory", "free", "general", "elective");
+                                    ?>
+                                        <option value="" <?php if ($curso['category'] == '') echo 'selected'; ?>></option>
+                                        <option value="mandatory" <?php if ($curso['category'] == 'mandatory') echo 'selected'; ?>>Concentración CCOM</option>
+                                        <option value="elective" <?php if ($curso['category'] == 'elective') echo 'selected'; ?>>Electiva CCOM</option>
+                                        <option value="general" <?php if ($curso['category'] == 'general') echo 'selected'; ?>>General</option>
+                                        <option value="free" <?php if ($curso['category'] == 'free') echo 'selected'; ?>>Electiva Libre</option>
+                                        <option value="other" <?php if ($curso['category'] == 'other') echo 'selected'; ?>>Otras Clases</option>
+                                    <?php
+                                        echo "</select></td>";
+                                        if (in_array($curso['crse_grade'], ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
+                                            echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em; color: red;' value='" . $curso['crse_grade'] . "'/></td>";
+                                        } else {
+                                            echo "<td style='padding: 5px;'> <input type='text' name='grade' class='form-input' style='width: 4em;' value='" . $curso['crse_grade'] . "'/></td>";
+                                        }
+                                        echo "<td style='padding: 5px;'> <input type='text' name='term' class='form-input' style='width: 5em;' value='" . $curso['term'] . "'/></td>";
+                                        echo "<input type='hidden' name='old_term' value='" . $curso['term'] . "'/>";
+                                        echo "<input type='hidden' name='old_category' value= '" . $curso['category'] . "'/>";
+                                        echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
+                                        echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
+                                        echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
+                                        if (/*$curso['db'] == 'yes' && */$privileges == 1)
+                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
+                                        echo "</tr>";
+                                        echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
+                                        echo "</form>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php } ?>
+                    <?php if ($privileges == 1) { ?>
+                        <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Clases a recomendar</h2>
+                        <!-- Vertical line tabs -->
+                        <div class="mb-5 flex flex-col sm:flex-row" x-data="{ tab: 'home'}">
+                            <!-- buttons -->
+                            <div class="mx-10 mb-5 sm:mb-0">
+                                <ul class="w-24 m-auto text-center font-semibold">
+                                    <li>
+                                        <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'mandatory'}" @click="tab='mandatory'">CCOM Requeridas</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 hover:before:h-[80%] before:bg-secondary" :class="{'text-secondary before:!h-[80%]' : tab === 'ccomElective'}" @click="tab='ccomElective'">CCOM Electivas</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'elective'}" @click="tab='elective'">Cursos Dummy</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:" class="p-3.5 py-4 -mb-[1px] block ltr:border-r rtl:border-l border-white-light dark:border-[#191e3a] relative before:transition-all before:duration-700 hover:text-secondary before:absolute before:w-[1px] before:bottom-0 before:top-0 ltr:before:-right-[1px] rtl:before:-left-[1px] before:m-auto before:h-0 before:bg-secondary hover:before:h-[80%]" :class="{'text-secondary before:!h-[80%]' : tab === 'general'}" @click="tab='general'">Generales</a>
+                                    </li>
+                                </ul>
+                            </div>
 
-                                <!-- description -->
-                                <div class="flex-1 text-sm ">
-                                    <div x-show="tab === 'mandatory'">
-                                        <!-- basic table -->
-                                        <div class="table-responsive">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Código Del Curso</th>
-                                                        <th>Nombre</th>
-                                                        <th>Créditos</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                                    foreach ($mandatoryClasses as $curso) {
-                                                        echo "<tr>";
-                                                        echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                                        echo "<td>" . $curso['crse_code'] . "</td>";
-                                                        echo "<td>" . $curso['name'] . "</td>";
-                                                        echo "<td>" . $curso['credits'] . "</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                            <!-- description -->
+                            <div class="flex-1 text-sm ">
+                                <div x-show="tab === 'mandatory'">
+                                    <!-- basic table -->
+                                    <div class="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Código Del Curso</th>
+                                                    <th>Nombre</th>
+                                                    <th>Créditos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                                foreach ($mandatoryClasses as $curso) {
+                                                    echo "<tr>";
+                                                    echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
+                                                    echo "<td>" . $curso['crse_code'] . "</td>";
+                                                    echo "<td>" . $curso['name'] . "</td>";
+                                                    echo "<td>" . $curso['credits'] . "</td>";
+                                                    echo "</tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div x-show="tab === 'elective'">
-                                        <!-- basic table -->
-                                        <div class="table-responsive">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Código Del Curso</th>
-                                                        <th>Nombre</th>
-                                                        <th>Créditos</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                                    foreach ($dummyClasses as $curso) {
-                                                        echo "<tr>";
-                                                        echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                                        echo "<td>" . $curso['crse_code'] . "</td>";
-                                                        echo "<td>" . $curso['name'] . "</td>";
-                                                        echo "<td>" . $curso['credits'] . "</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                </div>
+                                <div x-show="tab === 'elective'">
+                                    <!-- basic table -->
+                                    <div class="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Código Del Curso</th>
+                                                    <th>Nombre</th>
+                                                    <th>Créditos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                                foreach ($dummyClasses as $curso) {
+                                                    echo "<tr>";
+                                                    echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
+                                                    echo "<td>" . $curso['crse_code'] . "</td>";
+                                                    echo "<td>" . $curso['name'] . "</td>";
+                                                    echo "<td>" . $curso['credits'] . "</td>";
+                                                    echo "</tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div x-show="tab === 'ccomElective'">
-                                        <!-- basic table -->
-                                        <div class="table-responsive">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Código Del Curso</th>
-                                                        <th>Nombre</th>
-                                                        <th>Créditos</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                                    foreach ($electiveClasses as $curso) {
-                                                        echo "<tr>";
-                                                        echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                                        echo "<td>" . $curso['crse_code'] . "</td>";
-                                                        echo "<td>" . $curso['name'] . "</td>";
-                                                        echo "<td>" . $curso['credits'] . "</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                </div>
+                                <div x-show="tab === 'ccomElective'">
+                                    <!-- basic table -->
+                                    <div class="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Código Del Curso</th>
+                                                    <th>Nombre</th>
+                                                    <th>Créditos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                                foreach ($electiveClasses as $curso) {
+                                                    echo "<tr>";
+                                                    echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
+                                                    echo "<td>" . $curso['crse_code'] . "</td>";
+                                                    echo "<td>" . $curso['name'] . "</td>";
+                                                    echo "<td>" . $curso['credits'] . "</td>";
+                                                    echo "</tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div x-show="tab === 'general'">
-                                        <!-- basic table -->
-                                        <div class="table-responsive">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Código Del Curso</th>
-                                                        <th>Nombre</th>
-                                                        <th>Créditos</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    // Itera sobre los datos de los cursos y llena las celdas de la tabla
-                                                    foreach ($generalClasses as $curso) {
-                                                        
-                                                        echo "<tr>";
-                                                        echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
-                                                        echo "<td>" . $curso['crse_code'] . "</td>";
-                                                        echo "<td>" . $curso['name'] . "</td>";
-                                                        echo "<td>" . $curso['credits'] . "</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                    
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                </div>
+                                <div x-show="tab === 'general'">
+                                    <!-- basic table -->
+                                    <div class="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Código Del Curso</th>
+                                                    <th>Nombre</th>
+                                                    <th>Créditos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Itera sobre los datos de los cursos y llena las celdas de la tabla
+                                                foreach ($generalClasses as $curso) {
+
+                                                    echo "<tr>";
+                                                    echo "<td><input type='checkbox' name='seleccion[]' value='" . $curso['crse_code'] . "'></td>";
+                                                    echo "<td>" . $curso['crse_code'] . "</td>";
+                                                    echo "<td>" . $curso['name'] . "</td>";
+                                                    echo "<td>" . $curso['credits'] . "</td>";
+                                                    echo "</tr>";
+                                                }
+
+                                                ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <input type='hidden' name='makecounseling' value='makecounseling'>
-                            <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                            <button type="submit" name="action" value="studentCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Someter Consejería</button>
+                        </div>
+                        <input type='hidden' name='makecounseling' value='makecounseling'>
+                        <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
+                        <button type="submit" name="action" value="studentCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Someter Consejería</button>
                         </form>
                         <br> 
                         <!-- <form method="POST" action="index.php">
@@ -898,12 +903,12 @@
                 <!-- end main content section -->
             </div>
 
-    <!-- start footer section -->
-    <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
-        © <span id="footer-year">2022</span>. UPRA All rights reserved.
-    </div>
-    <!-- end footer section -->
-    </div>
+            <!-- start footer section -->
+            <div class="p-6 pt-0 mt-auto text-center dark:text-white-dark ltr:sm:text-left rtl:sm:text-right">
+                © <span id="footer-year">2022</span>. UPRA All rights reserved.
+            </div>
+            <!-- end footer section -->
+        </div>
     </div>
 
     <script src="assets/js/alpine-collaspe.min.js"></script>
@@ -916,15 +921,14 @@
     <!-- <script src="assets/js/courses.js"></script> -->
 
     <script>
-        
-        $(document).ready(function(){
-                $("#sidebar").load("sidebar.php");
-            });
+        $(document).ready(function() {
+            $("#sidebar").load("sidebar.php");
+        });
         document.getElementById('termSelect').addEventListener('change', function() {
-                var selectedTerm = this.value;
-                document.getElementById('selectedTerm').value = selectedTerm;
-                document.getElementById('termForm').submit();
-            });
+            var selectedTerm = this.value;
+            document.getElementById('selectedTerm').value = selectedTerm;
+            document.getElementById('termForm').submit();
+        });
 
         document.addEventListener('alpine:init', () => {
             // main section

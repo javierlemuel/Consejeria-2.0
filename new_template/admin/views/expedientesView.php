@@ -141,11 +141,11 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                 </svg>
                             </button>
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                <li><a href="?status=Todos&search=<?php echo $searchKeyword ?>" @click="toggle">Todos</a></li>
-                                <li><a href="?status=Activos&search=<?php echo $searchKeyword ?>" @click="toggle">Activos</a></li>
-                                <li><a href="?status=Inactivos&search=<?php echo $searchKeyword ?>" @click="toggle">Inactivos</a></li>
-                                <li><a href="?status=Graduados&search=<?php echo $searchKeyword ?>" @click="toggle">Graduados</a></li>
-                                <li><a href="?status=Graduandos&search=<?php echo $searchKeyword ?>" @click="toggle">Graduandos</a></li>
+                                <li><a href="?status=Todos&q=<?php echo $q ?>" @click="toggle">Todos</a></li>
+                                <li><a href="?status=Activos&q=<?php echo $q ?>" @click="toggle">Activos</a></li>
+                                <li><a href="?status=Inactivos&q=<?php echo $q ?>" @click="toggle">Inactivos</a></li>
+                                <li><a href="?status=Graduados&q=<?php echo $q ?>" @click="toggle">Graduados</a></li>
+                                <li><a href="?status=Graduandos&q=<?php echo $q ?>" @click="toggle">Graduandos</a></li>
                             </ul>
                         </div>
                         <!-- Final del boton de dropdown-->
@@ -299,9 +299,9 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                 <form action="index.php" method="GET">
                                     <input
                                         type="text"
-                                        name="search"
+                                        name="q"
                                         placeholder="Buscar por nombre o #"
-                                        value="<?php echo $_GET['search'] ?? "" ?>"
+                                        value="<?php echo $_GET['q'] ?? "" ?>"
                                         class="peer form-input py-2 ltr:pr-11 rtl:pl-11" />
                                     <!-- Agrega campos ocultos para los parámetros de filtro de estado -->
                                     <input type="hidden" name="status" value="<?php echo $statusFilter; ?>">
@@ -388,38 +388,9 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                     </div> <br>
                     <!-- final de tabla para presentar los estudiantes-->
                     <!--inicio de paginacion -->
-                    <div class="pagination">
-                        <ul class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto">
-                            <li>
-                                <a href="?page=<?php echo $currentPage > 1 ? $currentPage - 1 : 1; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                    <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover:text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
-                                        <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                                        </svg>
-                                    </button>
-                                </a>
-                            </li>
-                            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                <li>
-                                    <a href="?page=<?php echo $i; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                        <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition <?php echo ($i == $currentPage) ? 'bg-primary text-white' : 'bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary'; ?>">
-                                            <?php echo $i; ?>
-                                        </button>
-                                    </a>
-                                </li>
-                            <?php endfor; ?>
-                            <li>
-                                <a href="?page=<?php echo $currentPage < $totalPages ? $currentPage + 1 : $totalPages; ?>&status=<?php echo $statusFilter; ?>&search=<?php echo $searchKeyword; ?>">
-                                    <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded transition bg-white-light text-dark hover-text-white hover-bg-primary dark-text-white-light dark-bg-[#191e3a] dark-hover-bg-primary">
-                                        <svg xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                        </svg>
-                                    </button>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- termina la paginacion UTILIZA SCRIPTS-->
+
+                    <?php include_once(__ROOT__ . "/admin/global_classes/utils.php") ?>
+                    <?php generate_pagination($p ?? 1, $amountOfPages ?? 1); ?>
                 </div> <br>
                 <!-- end main content section -->
 

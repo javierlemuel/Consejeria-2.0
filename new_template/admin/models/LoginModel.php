@@ -1,22 +1,25 @@
 <?php
 // models/LoginModel.php
 session_start();
-class LoginModel {
-    public function authenticateUser($conn, $email, $password) {
+class LoginModel
+{
+    public function authenticateUser(mysqli $conn, $email, $password)
+    {
         // Implementa la lógica de autenticación aquí
         // Por ejemplo, puedes realizar una consulta SQL para verificar las credenciales
         $email = mysqli_real_escape_string($conn, $email); // Evita inyección SQL
 
-        $sql = "SELECT * FROM advisor WHERE email = '$email'";
 
-        $result = $conn->query($sql);
+        $sql = $conn->prepare("SELECT email, pass, privileges FROM advisor WHERE email = ?");
+        $sql->execute([$email]);
+        $result = $sql->get_result()->fetch_assoc();
 
-        if ($result && $result->num_rows == 1) {
-            $user = $result->fetch_assoc();
+        if ($result) {
+            $user = $result;
             if (password_verify($password, $user['pass'])) {
                 // Las credenciales son correctas, el usuario está autenticado
-                    $privileges = $user['privileges'];
-                    $_SESSION['privileges'] = $privileges;
+                $privileges = $user['privileges'];
+                $_SESSION['privileges'] = $privileges;
                 return true;
             } else {
                 // Las credenciales son incorrectas, la autenticación falló
@@ -30,4 +33,3 @@ class LoginModel {
         }
     }
 }
-?>

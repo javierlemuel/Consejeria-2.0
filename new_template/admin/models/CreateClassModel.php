@@ -3,7 +3,7 @@ require_once(__DIR__ . "/../global_classes/utils.php");
 class CreateClassModel
 {
     public function createCcomCourse(
-        $conn,
+        mysqli $conn,
         $crse_code,
         $crse_name,
         $cred,
@@ -11,44 +11,52 @@ class CreateClassModel
         $level,
         $minor
     ) {
-        $sql = "SELECT *
-                FROM ccom_courses
-                WHERE crse_code = '$crse_code'";
-
         // Sanitize the input and check if it is correct
         // Remove anything that is not number or letter
         $sanitized_code = preg_replace('/[^a-z0-9 ]/i', '', $crse_code);
         // Check if course is of pattern LLLLNNNN
-        $crse_code_is_matched = isValidCode($crse_code);
+        $crse_code_is_matched = isValidCode($sanitized_code);
         if (!$crse_code_is_matched) {
             // course code is wrong, stop
             return "El código no es formato valido.";
         }
 
+        // Check if credit is integer
+        if (!ctype_digit($cred)) {
+            return "El credito no puede tener letras.";
+        }
 
-        $result = $conn->query($sql);
+        $sql = $conn->prepare("SELECT *
+                FROM ccom_courses
+                WHERE crse_code = ?");
+
+        $sql->bind_param("s", $crse_code);
+        $sql->execute();
+        $ccom_courses = $sql->get_result()->fetch_all();
 
         //Find if the course already exits
-        if ($result) {
-            //If it doesn't exist, create new course
-            if ($result->num_rows == 0) {
-                $sql = "INSERT INTO ccom_courses
-                        VALUES('$crse_code', '$crse_name', $cred, '$type', '$level', $minor)";
+        //If it doesn't exist, create new course
+        if (count($ccom_courses) == 0) {
 
-                $result = $conn->query($sql);
-                if ($result === false) {
-                    throw new Exception("Error en la consulta SQL: " . $conn->error);
-                }
-            } else //return if course exists
-            {
-                return "Ese código de curso ya existe!!";
+
+            $sql = $conn->prepare("INSERT INTO ccom_courses
+                        VALUES(?, ?, ?, ?, ?, ?)");
+
+            $sql->bind_param("ssisss", $sanitized_code, $crse_name, $cred, $type, $level, $minor);
+
+            $new_course = $sql->execute();
+            if ($new_course === false) {
+                throw new Exception("Error en la consulta SQL: " . $conn->error);
             }
+        } else //return if course exists
+        {
+            return "Ese código de curso ya existe!!";
         }
         return;
     }
 
     public function createGeneralCourse(
-        $conn,
+        mysqli $conn,
         $crse_code,
         $crse_name,
         $cred,
@@ -59,34 +67,34 @@ class CreateClassModel
         // Remove anything that is not number or letter
         $sanitized_code = preg_replace('/[^a-z0-9 ]/i', '', $crse_code);
         // Check if course is of pattern LLLLNNNN
-        $crse_code_is_matched = isValidCode($crse_code);
+        $crse_code_is_matched = isValidCode($sanitized_code);
 
         if (!$crse_code_is_matched) {
             // course code is wrong, stop
             return "El código no es formato valido.";
         }
 
-        $sql = "SELECT crse_code
+        $sql = $conn->prepare("SELECT crse_code
                 FROM general_courses
-                WHERE crse_code = '$crse_code'";
-
-        $result = $conn->query($sql);
-
+                WHERE crse_code = ?");
+        $sql->bind_param("s", $sanitized_code);
+        $sql->execute();
+        $general_courses = $sql->get_result()->fetch_all();
         //Find if the course already exits
-        if ($result) {
-            //If it doesn't exist, create new course
-            if ($result->num_rows == 0) {
-                $sql = "INSERT INTO general_courses
-                        VALUES('$crse_code', '$crse_name', $cred, $required, '$type')";
+        //If it doesn't exist, create new course
+        if (count($general_courses) == 0) {
 
-                $result = $conn->query($sql);
-                if ($result === false) {
-                    throw new Exception("Error en la consulta SQL: " . $conn->error);
-                }
-            } else //return if course exists
-            {
-                return "Ese código de curso ya existe!!";
+            $sql = $conn->prepare("INSERT INTO general_courses
+                        VALUES(?,?,?,?,?)");
+
+            $sql->bind_param("ssiss", $sanitized_code, $crse_name, $cred, $required, $type);
+            $new_course = $sql->execute();
+            if ($new_course === false) {
+                throw new Exception("Error en la consulta SQL: " . $conn->error);
             }
+        } else //return if course exists
+        {
+            return "Ese código de curso ya existe!!";
         }
         return;
     }
