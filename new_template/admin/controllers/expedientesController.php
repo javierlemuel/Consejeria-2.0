@@ -24,7 +24,7 @@ class ExpedientesController
         //
 
         // Search query (q) and pagination (p)
-        $q = $_GET["q"] ?? "";
+        $q = $_GET["q"] ?? null;
         $q = sanitizeSearch($q);
         $p = $_GET["p"] ?? 1;
 
@@ -32,11 +32,6 @@ class ExpedientesController
         $statusFilter = $_GET['status'] ?? NULL;
         $didCounseling = $_GET['did_counseling'] ?? NULL;
 
-        try {
-            $p = (int)$p;
-        } catch (Exception $e) {
-            $p = 1;
-        }
         if (isset($_GET['autorecommend'])) {
             // Entrar función de auto-recomendación de cursos en oferta a todos los estudiantes
             $date = date("Y-m-d");
