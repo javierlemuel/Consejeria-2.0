@@ -157,12 +157,19 @@
                         <tr style='background-color: lightgray'>
                             <td style='text-align:center'>Estudiantes que realizaron su Consejería</td>
                             <td style='text-align:center'><?php echo $studentsRegistrados  ?></td>
-                            <td></td>
+                            <td style='text-align:center; vertical-align:middle'><a href='?reports&code=Cons'>
+                            <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                         </tr>
                         <tr>
                             <td style='text-align:center'>Expedientes revisados</td>
                             <td style='text-align:center'><?php echo $studentsEditados  ?></td>
                             <td></td>
+                        </tr>
+                        <tr style='background-color: lightgray'>
+                            <td style='text-align:center'>Actualizar estudiantes inactivos</td>
+                            <td style='text-align:center'><?php echo $studentsInactivos  ?></td>
+                            <td style='text-align:center; vertical-align:middle'><!-- <a href='?reports&code=inactive'> -->
+                            <span class='badge whitespace-nowrap badge-outline-primary' style='background:#FFB6AC;'>Coming Soon!</span> </td>
                         </tr>
                     </tbody></table>
 

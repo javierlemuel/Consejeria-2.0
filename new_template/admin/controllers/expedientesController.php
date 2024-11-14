@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../models/MinorModel.php');
 //
 require_once(__DIR__ . '/../config/database.php');
 require_once(__DIR__ . '/../models/CohorteModel.php');
-
+require_once(__DIR__ . '/../global_classes/utils.php');
 class ExpedientesController
 {
     public function index()
@@ -22,6 +22,15 @@ class ExpedientesController
         #$error_log = "";
         $_SESSION['registermodeltxt'] = "";
         //
+
+        // Search query (q) and pagination (p)
+        $q = $_GET["q"] ?? null;
+        $q = sanitizeSearch($q);
+        $p = $_GET["p"] ?? 1;
+
+        // Students filter
+        $statusFilter = $_GET['status'] ?? NULL;
+        $didCounseling = $_GET['did_counseling'] ?? NULL;
 
         if (isset($_GET['autorecommend'])) {
             // Entrar función de auto-recomendación de cursos en oferta a todos los estudiantes
@@ -116,6 +125,7 @@ class ExpedientesController
                 if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
+                    $studentWillTakeClasses = $studentModel->getClassesStudentWillTake($student_num, $selectedTerm, $conn); // clases que el estudiante escogio en la consejeria
                 } else {
                     $studentRecommendedClasses = NULL;
                 }
@@ -201,14 +211,14 @@ class ExpedientesController
                             $status = "P";
                         }
                     }
-                    
+
 
                     $result = $studentModel->studentAlreadyHasGrade($student_num, $course_code, $conn);
 
                     if ($grade == "") {
                         $studentModel->deleteStudentGrade($student_num, $course_code, $term, $conn);
-                    } 
-                    
+                    }
+
                     if ($result == TRUE) {
                         $studentModel->UpdateStudentGradeManual($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $level, $old_term, $status, $conn);
                     } else {
@@ -328,62 +338,59 @@ class ExpedientesController
 
                 require_once(__DIR__ . '/../views/counselingView.php');
                 return;
-            }
-            elseif ($action === 'blockCounseling') {
-            require_once(__DIR__ . '/../models/ClassesModel.php');
-            $classesModel = new ClassesModel();
-            require_once(__DIR__ . '/../models/ClassModel.php');
-            $classModel = new ClassModel();
-            $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
+            } elseif ($action === 'blockCounseling') {
+                require_once(__DIR__ . '/../models/ClassesModel.php');
+                $classesModel = new ClassesModel();
+                require_once(__DIR__ . '/../models/ClassModel.php');
+                $classModel = new ClassModel();
+                $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
 
-            // info del estudiatne
-            $student_num = $_POST['student_num'];
-            $studentData = $studentModel->selectStudent($student_num, $conn);
-            $studentCohort = $studentData['cohort_year'];
-            $studentRecommendedTerms = $studentModel->studentRecommendedTerms($student_num, $conn);
+                // info del estudiatne
+                $student_num = $_POST['student_num'];
+                $studentData = $studentModel->selectStudent($student_num, $conn);
+                $studentCohort = $studentData['cohort_year'];
+                $studentRecommendedTerms = $studentModel->studentRecommendedTerms($student_num, $conn);
 
-            if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
-                $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
-                $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
-            } else {
-                $studentRecommendedClasses = NULL;
-            }
-            $lockStatus = '';
+                if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
+                    $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
+                    $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
+                } else {
+                    $studentRecommendedClasses = NULL;
+                }
+                $lockStatus = '';
 
-            if(isset($_POST['block']))
-            {
-                $_SESSION['consejeria_msg'] = 'Consejería fue bloqueada para el estudiante!';
-                $lockStatus = 1;
-            }
+                if (isset($_POST['block'])) {
+                    $_SESSION['consejeria_msg'] = 'Consejería fue bloqueada para el estudiante!';
+                    $lockStatus = 1;
+                }
 
-            if(isset($_POST['unblock']))
-            {
-                $_SESSION['consejeria_msg'] = 'Consejería fue desbloqueada para el estudiante!';
-                $lockStatus = 0;
-            }
-            
-            $studentModel->changeCounselingLock($student_num, $conn, $lockStatus);
-            $studentHaveMinor = $studentModel->studentHaveMinor($student_num, $conn);
+                if (isset($_POST['unblock'])) {
+                    $_SESSION['consejeria_msg'] = 'Consejería fue desbloqueada para el estudiante!';
+                    $lockStatus = 0;
+                }
 
-            $studentData = $studentModel->selectStudent($student_num, $conn);
+                $studentModel->changeCounselingLock($student_num, $conn, $lockStatus);
+                $studentHaveMinor = $studentModel->studentHaveMinor($student_num, $conn);
 
-            // variables para las notas
-            $currentlyTaking = $classesModel->getCurrentlyTakingClasses($conn, $student_num);
-            $ccomByCohort = $classesModel->getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num);
-            $ccomFreeByNotCohort = $classesModel->getCohortCoursesWgradesCCOMfree($conn, $studentCohort, $student_num);
-            $notccomByCohort = $classesModel->getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num);
-            $notccomByNotCohort = $classesModel->getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num);
-            $otherClasses = $classesModel->getAllOtherCoursesWgrades($conn, $student_num);
+                $studentData = $studentModel->selectStudent($student_num, $conn);
 
-            // variables para las recomendaciones
-            $mandatoryClasses = $classesModel->getCcomCourses($conn);
-            $electiveClasses = $classesModel->getCcomElectives($conn);
-            $dummyClasses = $classesModel->getDummyCourses($conn);
-            $generalClasses = $classesModel->getGeneralCourses($conn);
+                // variables para las notas
+                $currentlyTaking = $classesModel->getCurrentlyTakingClasses($conn, $student_num);
+                $ccomByCohort = $classesModel->getCohortCoursesWgradesCCOM($conn, $studentCohort, $student_num);
+                $ccomFreeByNotCohort = $classesModel->getCohortCoursesWgradesCCOMfree($conn, $studentCohort, $student_num);
+                $notccomByCohort = $classesModel->getCohortCoursesWgradesNotCCOM($conn, $studentCohort, $student_num);
+                $notccomByNotCohort = $classesModel->getCohortCoursesWgradesNotCCOMfree($conn, $studentCohort, $student_num);
+                $otherClasses = $classesModel->getAllOtherCoursesWgrades($conn, $student_num);
 
-            require_once(__DIR__ . '/../views/counselingView.php');
-            return;
-        } elseif ($action === 'uploadCSV') {
+                // variables para las recomendaciones
+                $mandatoryClasses = $classesModel->getCcomCourses($conn);
+                $electiveClasses = $classesModel->getCcomElectives($conn);
+                $dummyClasses = $classesModel->getDummyCourses($conn);
+                $generalClasses = $classesModel->getGeneralCourses($conn);
+
+                require_once(__DIR__ . '/../views/counselingView.php');
+                return;
+            } elseif ($action === 'uploadCSV') {
                 $archivoRegistro = __DIR__ . '/archivo_de_registro.txt';
 
                 $currentDateTime = date("Y-m-d H:i:s");
@@ -562,19 +569,15 @@ class ExpedientesController
                                     $type = 'free';
                                 } else #AQUI
                                 {
-                                    if (isset($course_info['required']))
-                                    {
-                                        if($course_info['required'] == 1)
+                                    if (isset($course_info['required'])) {
+                                        if ($course_info['required'] == 1)
                                             $type = 'general';
                                         else
                                             $type = 'free';
-                                    }
-                                    elseif ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
-                                        if ($course_info['type'] == 'FREE'){
+                                    } elseif ($course_info['type'] != 'mandatory' && $course_info['type'] != 'elective') {
+                                        if ($course_info['type'] == 'FREE') {
                                             $type = 'free';
-                                        }
-                                            
-                                        else
+                                        } else
                                             $type = 'general';
                                     } else {
                                         $type = $course_info['type'];
@@ -624,44 +627,12 @@ class ExpedientesController
             }
         }
 
-        // Parámetros de paginación
-        $studentsPerPage = 9; // Cambia esto al número deseado
-        if (!isset($_SESSION['page']))
-            $_SESSION['page'] = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        if (isset($_GET['page']))
-            $_SESSION['page'] = $_GET['page'];
-        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : (int)$_SESSION['page'];
 
-
-        // Obtener los parámetros del filtro de estado y búsqueda
-        if (!isset($_SESSION['status']))
-            $_SESSION['status'] = isset($_GET['status']) ? $_GET['status'] : 'Todos';
-        if (isset($_GET['status']) && $_GET['status'] !== $_SESSION['status']) {
-            $_SESSION['status'] = $_GET['status'];
-            $_SESSION['page'] = 1;
-        }
-        $statusFilter = isset($_GET['status']) ? $_GET['status'] : $_SESSION['status'];
-
-        if (!isset($_SESSION['search']))
-            $_SESSION['search'] = isset($_GET['search']) ? $_GET['search'] : '';
-        //if(isset($_SESSION['search']) && $_SESSION['search'] != '' && !isset($_GET['page']))
-        //  $currentPage = 1;
-        if (isset($_GET['search'])) {
-            $_SESSION['search'] = $_GET['search'];
-            if ($_GET['search'] == 'null')
-                $currentPage = 1;
-        }
-        $searchKeyword = isset($_GET['search']) ? $_GET['search'] : $_SESSION['search'];
 
 
         // Obtenemos la lista de estudiantes según el filtro y la búsqueda
-        $students = $studentModel->getStudentsByPageAndStatusAndSearch($conn, $studentsPerPage, $currentPage, $statusFilter, $searchKeyword);
-
-        // Contamos el total de estudiantes según el filtro y la búsqueda
-        $totalStudents = $studentModel->getTotalStudentsByStatusAndSearch($conn, $statusFilter, $searchKeyword);
-
-        // Calculamos el número de páginas
-        $totalPages = ceil($totalStudents / $studentsPerPage);
+        $students = $studentModel->getStudents($conn, $p, $statusFilter, $q, $didCounseling);
+        $amountOfPages = $studentModel->getPageAmount();
 
         //JAVIER (Add minors)
         $minors = $minorModel->getMinors($conn);

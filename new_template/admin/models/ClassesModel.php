@@ -16,42 +16,72 @@ class ClassesModel
     }
 
 
-    public function getCcomCourses($conn, $q = null, $p = null)
+
+    public function getCcomCourses(mysqli $conn, $q = null, $p = null)
     {
+        // Pagination settings
         if (!isset($p)) {
             $p_limit = PHP_INT_MAX;
             $offset = 0;
         } else {
+            $p_limit = $this->pagination_limit ?? PHP_INT_MAX;
             $offset = $this->calculateOffset($p);
         }
-        $search = $q ?? "";
-        $sql = "SELECT crse_code, name, credits
-                FROM ccom_courses 
-                WHERE type = 'mandatory'
-                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%') 
-                ORDER BY crse_code ASC
-                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
 
-        $result = $conn->query($sql);
-        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM ccom_courses WHERE type = 'mandatory'
-                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
-        $row = $rowCount->fetch_assoc();
-        $this->amountOfRows = $row['total'];
+        // Prepare search pattern
+        $search = "%{$q}%";
+        $params = [];
+        $types = "";
+
+        // SQL to count total rows
+        $countSql = "SELECT COUNT(*) AS total_rows 
+                 FROM ccom_courses 
+                 WHERE type = 'mandatory'";
+
+        if (!empty($q)) {
+            $countSql .= " AND (crse_code LIKE ? OR name LIKE ?)";
+            $types = "ss"; // Parameter types for search query
+            $params = array_fill(0, 2, $search);
+        }
+
+        // Prepare count statement
+        $countStmt = $conn->prepare($countSql);
+        if (!empty($types)) {
+            $countStmt->bind_param($types, ...$params);
+        }
+        $countStmt->execute();
+        $this->amountOfRows = $countStmt->get_result()->fetch_assoc()['total_rows'];
+        $countStmt->close();
+
+        // Main query with pagination
+        $sql = "SELECT crse_code, name, credits
+            FROM ccom_courses
+            WHERE type = 'mandatory'";
+
+        if (!empty($q)) {
+            $sql .= " AND (crse_code LIKE ? OR name LIKE ?)";
+        }
+
+        // Add sorting and pagination
+        $sql .= " ORDER BY crse_code ASC LIMIT ? OFFSET ?";
+        $types .= "ii";
+        array_push($params, $p_limit, $offset);
+
+        // Prepare and bind parameters for main query
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+
+        // Execute and return results
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
-
-        // $students = [];
-        // while ($row = $result->fetch_assoc()) {
-        //     $student_num = $row['student_num'];
-        //     $formatted_student_num = substr($student_num, 0, 3) . '-' . substr($student_num, 3, 2) . '-' . substr($student_num, 5);
-        //     $row['formatted_student_num'] = $formatted_student_num;
-        //     $students[] = $row;
-        // }
+        $stmt->close();
 
         return $result;
     }
-
     public function getCohorts($conn)
     {
         $sql = "SELECT DISTINCT cohort_year FROM cohort ORDER BY cohort_year;";
@@ -65,85 +95,200 @@ class ClassesModel
         return $result;
     }
 
-    public function getCcomElectives($conn, $q = null, $p = null)
+
+    public function getCcomElectives(mysqli $conn, $q = null, $p = null)
     {
+        // Pagination setup
         if (!isset($p)) {
             $p_limit = PHP_INT_MAX;
             $offset = 0;
         } else {
+            $p_limit = $this->pagination_limit ?? PHP_INT_MAX;
             $offset = $this->calculateOffset($p);
         }
-        $search = $q ?? "";
-        $sql = "SELECT *
-                FROM ccom_courses
-                WHERE type != 'mandatory'
-                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')
-                ORDER BY crse_code ASC
-                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
 
-        $result = $conn->query($sql);
-        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM ccom_courses WHERE type != 'mandatory'
-                AND (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
-        $row = $rowCount->fetch_assoc();
-        $this->amountOfRows = $row['total'];
+        // Prepare search pattern
+        $search = "%{$q}%";
+        $params = [];
+        $types = "";
+
+        // SQL for counting total rows with the search filter
+        $countSql = "SELECT COUNT(*) AS total_rows 
+                 FROM ccom_courses 
+                 WHERE type != 'mandatory'";
+
+        if (!empty($q)) {
+            $countSql .= " AND (crse_code LIKE ? OR name LIKE ?)";
+            $types = "ss"; // Parameter types for search query
+            $params = array_fill(0, 2, $search);
+        }
+
+        // Prepare and execute the count statement
+        $countStmt = $conn->prepare($countSql);
+        if (!empty($types)) {
+            $countStmt->bind_param($types, ...$params);
+        }
+        $countStmt->execute();
+        $this->amountOfRows = $countStmt->get_result()->fetch_assoc()['total_rows']; // Total rows
+        $countStmt->close();
+
+        // Main query with pagination and search filter
+        $sql = "SELECT *
+            FROM ccom_courses
+            WHERE type != 'mandatory'";
+
+        if (!empty($q)) {
+            $sql .= " AND (crse_code LIKE ? OR name LIKE ?)";
+        }
+
+        // Add sorting and pagination
+        $sql .= " ORDER BY crse_code ASC LIMIT ? OFFSET ?";
+        $types .= "ii";
+
+        array_push($params, $p_limit, $offset);
+
+        // Prepare and bind parameters for main query
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+
+        // Execute the main query
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
+
+
+        $stmt->close();
 
         return $result;
     }
 
-    public function getGeneralCourses($conn, $q = null, $p = null)
+
+
+    public function getGeneralCourses(mysqli $conn, $q = null, $p = null)
     {
+        // Pagination setup
         if (!isset($p)) {
             $p_limit = PHP_INT_MAX;
             $offset = 0;
         } else {
+            $p_limit = $this->pagination_limit ?? PHP_INT_MAX;
             $offset = $this->calculateOffset($p);
         }
-        $search = $q ?? "";
 
+        // Prepare search pattern and parameters
+        $params = [];
+        $types = "";
+        $searchCondition = "";
+
+        if (!empty($q)) {
+            $search = "%{$q}%";
+            $searchCondition = "WHERE crse_code LIKE ? OR name LIKE ?";
+            $types = "ss";
+            $params = [$search, $search];
+        }
+
+        // SQL to count total rows with the search filter
+        $countSql = "SELECT COUNT(*) AS total_rows FROM general_courses $searchCondition";
+
+        // Prepare and execute count statement
+        $countStmt = $conn->prepare($countSql);
+        if (!empty($types)) {
+            $countStmt->bind_param($types, ...$params);
+        }
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $row = $countResult->fetch_assoc();
+        $this->amountOfRows = $row['total_rows']; // Total rows
+        $countStmt->close();
+
+        // Main query for fetching results with pagination and search filter
         $sql = "SELECT *
-                FROM general_courses
-                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
-                ORDER BY crse_code ASC
-                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
+            FROM general_courses
+            $searchCondition
+            ORDER BY crse_code ASC
+            LIMIT ? OFFSET ?";
+        $types .= "ii";
+        array_push($params, $p_limit, $offset);
 
-        $result = $conn->query($sql);
-        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM general_courses WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
-        $row = $rowCount->fetch_assoc();
-        $this->amountOfRows = $row['total'];
+        // Prepare and bind parameters for main query
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+
+        // Execute the main query
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
+
+        $stmt->close();
 
         return $result;
     }
 
-    public function getDummyCourses($conn, $q = null, $p = null)
+    public function getDummyCourses(mysqli $conn, $q = null, $p = null)
     {
+        // Pagination setup
         if (!isset($p)) {
             $p_limit = PHP_INT_MAX;
             $offset = 0;
         } else {
+            $p_limit = $this->pagination_limit ?? PHP_INT_MAX;
             $offset = $this->calculateOffset($p);
         }
 
-        $search = $q ?? "";
+        // Prepare search pattern and parameters
+        $params = [];
+        $types = "";
+        $searchCondition = "";
+
+        if (!empty($q)) {
+            $search = "%{$q}%";
+            $searchCondition = "WHERE crse_code LIKE ? OR name LIKE ?";
+            $types = "ss";
+            $params = [$search, $search];
+        }
+
+        // SQL to count total rows with the search filter
+        $countSql = "SELECT COUNT(*) AS total_rows FROM dummy_courses $searchCondition";
+
+        // Prepare and execute count statement
+        $countStmt = $conn->prepare($countSql);
+        if (!empty($types)) {
+            $countStmt->bind_param($types, ...$params);
+        }
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $row = $countResult->fetch_assoc();
+        $this->amountOfRows = $row['total_rows']; // Total rows
+        $countStmt->close();
+
+        // Main query for fetching results with pagination and search filter
         $sql = "SELECT *
-                FROM dummy_courses
-                WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')
-                ORDER BY crse_code ASC
-                LIMIT " . ($p_limit ?? $this->pagination_limit) . " OFFSET $offset";
+            FROM dummy_courses
+            $searchCondition
+            ORDER BY crse_code ASC
+            LIMIT ? OFFSET ?";
+        $types .= "ii";
+        array_push($params, $p_limit, $offset);
 
-        $result = $conn->query($sql);
+        // Prepare and bind parameters for main query
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
 
-        $rowCount = $conn->query("SELECT COUNT(*) AS total FROM dummy_courses WHERE (crse_code LIKE '%$search%' OR name LIKE '%$search%')");
-        $row = $rowCount->fetch_assoc();
-        $this->amountOfRows = $row['total'];
+        // Execute the main query
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
+
+        $stmt->close();
 
         return $result;
     }

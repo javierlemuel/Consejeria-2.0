@@ -216,7 +216,8 @@ class StudentModel
             END AS recommended
             FROM student_courses
             JOIN general_courses on general_courses.crse_code = student_courses.crse_code
-            WHERE student_courses.student_num = ? AND type = 'FISI';";
+            WHERE student_courses.student_num = ? AND type = 'FISI'
+            ORDER BY type, crse_code;";
 
         $stmt = $conn->prepare($sql);
 
