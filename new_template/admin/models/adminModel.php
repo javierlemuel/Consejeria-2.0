@@ -63,11 +63,11 @@ class AdminModel
 
     public function changeAdminInfoModel(mysqli $conn, $old_email, $email, $fname, $lname, $priv, $pass)
     {
-        $sql = "UPDATE advisor SET pass = ?";
+        $sql = "UPDATE advisor SET pass = ? WHERE email = ?";
 
         $stmt = $conn->prepare($sql);
         if (!empty($pass)) {
-            $stmt->execute([password_hash($pass, PASSWORD_DEFAULT)]);
+            $stmt->execute([password_hash($pass, PASSWORD_DEFAULT), $old_email]);
         }
 
         $sql = $conn->prepare("UPDATE advisor

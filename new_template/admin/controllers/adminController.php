@@ -58,14 +58,14 @@ class AdminController
         $adminModel = new AdminModel();
 
         $old_email = $_POST['old_email'];
-        $old_pass = $_POST['old_p'];
+        // $old_pass = $_POST['old_p'];
 
         $email = $_POST['email'];
 
-        if ($old_pass != $_POST['pass']) {
-            $pass = $_POST['pass'];
-        } else
-            $pass = $old_pass;
+        // if ($old_pass != $_POST['pass']) {
+        $pass = $_POST['pass'];
+        // } else
+        //     $pass = $old_pass;
 
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
