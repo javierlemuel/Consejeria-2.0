@@ -151,7 +151,6 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
                                     <h1 style='font-size: 20px; font-weight: bold'><?php echo $admin['email'] ?></h1><br>
                                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                         <input type='hidden' name='old_email' value="<?php echo $admin['email'] ?>">
-                                        <input type='hidden' name='old_p' value="<?php echo $admin['pass'] ?>">
                                         <div>
                                             <label for="email">Email</label>
                                             <input name="email" type="text" value="<?php echo $admin['email'] ?>" class="form-input" required />
