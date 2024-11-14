@@ -176,7 +176,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         // Verificar si la variable $studentRecommendedClasses no es NULL y no está vacía
                         if ($studentRecommendedClasses !== NULL && !empty($studentRecommendedClasses)) {
                         ?>
-                            <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Cursos Recomendados en el Semestre: <?php echo $selectedTerm ?></h2>
+                            <h2 class="m-0 dark:text-white-dark" style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 1em; margin-bottom: 1em;">Cursos Recomendados en el Semestre: <?php echo $selectedTerm ?></h2>                            
                             <!-- tabla de los cursos recomendados -->
                             <div class="table-responsive">
                                 <table style="font-size: 12px; border-collapse: collapse;">
@@ -207,11 +207,39 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                             echo "</form>";
                                             echo "</tr>";
                                         }
-
                                         ?>
-
                                     </tbody>
                                 </table>
+                                        <?php } ?>
+                                <h3 class="m-0 dark:text-white-dark" style="font-size: 1.5em; font-weight: bold; margin-top: 1em; margin-bottom: 1em;"> Estatus de la Consejería</h3>
+                                    <?php if ($studentData['status'] == 'Graduando' || $studentData['status'] == 'Graduado'): ?>
+                                        <span class="badge whitespace-nowrap badge-outline-primary">No necesita</span>
+                                    <?php elseif ($studentData['conducted_counseling'] == 0): ?>
+                                        <span class="badge whitespace-nowrap badge-outline-danger">No realizada</span>
+                                    <?php else: ?>
+                                        <span class="badge whitespace-nowrap badge-outline-primary">Realizada</span>
+                                    <?php endif; ?>
+
+                                    <?php 
+                                    if ($studentData['status'] != 'Graduando' && $studentData['status'] != 'Graduado' && $studentData['conducted_counseling'] == 1 && isset($studentWillTakeClasses)) { 
+                                    echo "<h3 class='m-0 dark:text-white-dark' style='font-size: 1.5em; font-weight: bold; margin-top: 1em; margin-bottom: 1em;'>Clases que el estudiante escogió</h3>
+                                    <div class='table-responsive'>
+                                            <table style='font-size: 12px; border-collapse: collapse;'>
+                                                <thead>
+                                                    <tr>
+                                                        <th style='padding: 5px;'>Código Del Curso</th>
+                                                        <th style='padding: 5px;'>Nombre</th>
+                                                        <th style='padding: 5px;'></th>
+                                                    </tr>
+                                                </thead>
+                                            <tbody>";
+                                        foreach ($studentWillTakeClasses as $willTakeCourse) {
+                                                        echo "<tr>";
+                                                        echo "<td style='padding: 5px;'>" . $willTakeCourse['crse_code'] . "</td>";
+                                                        echo "<td style='padding: 5px;'>" . $willTakeCourse['name'] . "</td>";
+                                        }
+                                        echo "</table>";
+                                    ?>
                                 <form method='POST' action='index.php'>
                                     <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
                                     <input type='hidden' name='deleteAllRecommendationsforOneStudent' value='deleteAllRecommendationsforOneStudent'>
@@ -220,7 +248,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                 <form method='POST' action='index.php'>
                                     <input type='hidden' name='confirmRecomendation' value='confirmRecomendation'>
                                     <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
-                                    <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar</button>
+                                    <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar<br>Coming Soon!</button>
                                 </form>
                             </div>
                         <?php

@@ -620,6 +620,19 @@ class StudentModel
         return;
     }
 
+    public function closeAllCounseling($conn)
+    {
+        $sql = "UPDATE student SET counseling_lock = 0";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $lockStatus, $student_num);
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        return;
+    }
+
 
     public function studentAlreadyHasGrade($student_num, $code, $conn)
     {
@@ -1232,6 +1245,44 @@ class StudentModel
         $res = $conn->query($sql);
         if ($res === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+    }
+
+    public function getClassesStudentWillTake($student_num, $selectedTerm, $conn)
+    {
+        $sql = "SELECT COALESCE(courses.name, '') AS name, COALESCE(courses.crse_code, '') AS crse_code 
+        FROM will_take 
+        LEFT JOIN
+            (SELECT crse_code, name FROM ccom_courses
+             UNION
+             SELECT crse_code, name FROM general_courses
+             UNION
+             SELECT crse_code, name FROM dummy_courses) AS courses
+        ON
+            will_take.crse_code = courses.crse_code
+        WHERE will_take.student_num = ? AND will_take.term = ?";
+
+        // Preparar la sentencia
+        $stmt = $conn->prepare($sql);
+        // Vincular los parámetros con los valores
+        $stmt->bind_param("ss", $student_num, $selectedTerm);
+        // Ejecutar la sentencia
+        $stmt->execute();
+        // Obtener el resultado de la consulta
+        $result = $stmt->get_result();
+        // Cerrar la sentencia
+        $stmt->close();
+
+        // Verificar si hay resultados
+        if ($result->num_rows === 0) {
+            return NULL; // Devolver NULL si no hay filas
+        } else {
+            // Obtener los resultados como un array asociativo
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data; // Devolver los resultados
         }
     }
 }

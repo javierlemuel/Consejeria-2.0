@@ -132,6 +132,12 @@ class ReporteModel {
             WHERE conducted_counseling = 0
             AND status = 'Activo'";
         }
+        else if ($type == 'Cons')
+        {
+            $sql = "SELECT DISTINCT student_num, name1, name2, last_name1, last_name2
+            FROM will_take NATURAL JOIN student
+            WHERE term = '$term'";
+        }
         else if ($type == 'active')
         {
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
@@ -282,4 +288,26 @@ class ReporteModel {
         // }
     }
 
+    public function getClassesByStudent($conn) {
+        $term = $this->getTerm($conn);
+        $sql = "SELECT student_num, crse_code FROM will_take NATURAL JOIN student WHERE term = '$term';";
+
+        $result1 = $conn->query($sql);
+
+        if ($result1 === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $currentStudent = 0;
+        foreach ($result1 as $class) {
+            if ($currentStudent != $class['student_num']) {
+                $currentStudent = $class['student_num'];
+                $classes[$currentStudent] = [];
+            }
+
+            $classes[$currentStudent][] = $class['crse_code'];
+        }
+
+        return $classes;
+    }
 }

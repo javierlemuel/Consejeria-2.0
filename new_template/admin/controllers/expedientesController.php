@@ -29,8 +29,8 @@ class ExpedientesController
         $p = $_GET["p"] ?? 1;
 
         // Students filter
-        $statusFilter = $_GET['status'];
-        $didCounseling = $_GET['did_counseling'];
+        $statusFilter = $_GET['status'] ?? NULL;
+        $didCounseling = $_GET['did_counseling'] ?? NULL;
 
         try {
             $p = (int)$p;
@@ -130,6 +130,7 @@ class ExpedientesController
                 if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
+                    $studentWillTakeClasses = $studentModel->getClassesStudentWillTake($student_num, $selectedTerm, $conn); // clases que el estudiante escogio en la consejeria
                 } else {
                     $studentRecommendedClasses = NULL;
                 }
