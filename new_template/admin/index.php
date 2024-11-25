@@ -26,7 +26,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
     if (
         isset($_GET['lista']) || isset($_GET['classes']) || isset($_GET['ccomelectives']) ||
         isset($_GET['generalclasses']) || isset($_GET['dummyclasses']) || isset($_GET['addOffer']) 
-        || isset($_GET['removeOffer']) || isset($_GET['offer']) || isset($_GET['newterm'])
+        || isset($_GET['removeOffer']) || isset($_GET['offer'])
     ) {
         require_once 'controllers/classesController.php';
     } elseif (isset($_GET['createclass'])) {
@@ -44,7 +44,8 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
         require_once 'controllers/reporteController.php';
     } elseif (isset($_GET['minor'])) {
         require_once 'controllers/minorController.php';
-    } elseif (isset($_GET['terms'])) {
+    } elseif (isset($_GET['terms']) || isset($_GET['newterm']) || isset($_GET['updateterms'])
+                || isset($_GET['activateTerm'])) {
         require_once 'controllers/termsController.php';
     } else {
         require_once 'controllers/expedientesController.php'; // Incluye aquí

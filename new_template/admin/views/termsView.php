@@ -3,6 +3,8 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
     header("Location: ../index.php");
     exit;
 }
+
+$privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -121,6 +123,47 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
                 <!-- start main content section -->
                 <div>
                     <h2 class="m-0 dark:text-white-dark font-bold" style="font-size: large;">Guía de términos por año y semestre</h2>
+                        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                            <div class="flex gap-3">
+                                <div x-data="modal">
+                                    <?php if ($privileges == 1) { ?>
+                                        <button type="button" class="btn btn-primary !mt-6" @click="toggle">Crear term nuevo</button>
+                                        <form action="?updateterms" method="POST">
+                                            <input type="submit" class="btn btn-primary" value="Actualizar terms">
+                                        </form>
+                                    <?php } ?>
+                                    <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60"
+                                        :class="open && '!block'">
+                                        <div class="flex min-h-screen items-start justify-center px-4"
+                                            @click.self="open = false">
+                                            <div x-show="open" x-transition x-transition.duration.300
+                                                class="panel my-8 w-full max-w-[300px] overflow-hidden rounded-lg border-0 bg-secondary p-0 dark:bg-secondary"
+                                                style='background-color: white'>
+                                                <div
+                                                    class="flex items-center justify-end pt-4 text-white ltr:pr-4 rtl:pl-4 dark:text-white-light">
+
+                                                </div>
+                                                <div class="p-5">
+                                                    <form action="?newterm" method="POST">
+                                                        <div class="py-5 text-center text-white dark:text-white-light">
+                                                            <label for='term' style='color:black'>Código (term) para próximo
+                                                                semestre: </label>
+                                                            <input style='color:black' size="3" maxlength="3" name='term'
+                                                                type='text' placeholder='' class='form-input' required>
+                                                        </div>
+                                                        <div class="flex justify-center gap-4 p-5">
+
+                                                            <button type="submit" class="btn btn-primary !mt-6">Crear
+                                                                term</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <div class="table-responsive">
                         <table class="table-striped">
                             <thead>
@@ -139,12 +182,17 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
 
                                 foreach ($termArray as $term) : ?>
                                     <tr>
-                                        <td><?= $term[1]['term']
-                                            ?></td>
-                                        <td><?= $term[2]['year']
-                                            ?></td>
-                                        <td><?= $term[0]['semester']
-                                            ?></td>
+                                        <td>
+                                            <?= $term['term'] ?>
+                                            <?php if($term['active'] == 1) echo "active term" ?>
+                                        </td>
+                                        <td><?= $term['year'] ?></td>
+                                        <td><?= $term['semester'] ?></td>
+                                        <td>
+                                            <a href="?activateTerm&code=<?= $term['term_id'] ?>">
+                                                <span class='badge whitespace-nowrap badge-outline-primary'>Activar Term</span>
+                                            </a>
+                                        </td>
                                     </tr>
                                 <?php endforeach;  ?>
                             </tbody>

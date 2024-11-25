@@ -5,12 +5,14 @@ if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
     exit;
 }
 require_once(__DIR__ . '/../models/ReporteModel.php');
+require_once(__DIR__ . '/../models/TermsModel.php');
 require_once(__DIR__ . '/../config/database.php');
 
 class ReporteController{
     public function index() {   
         global $conn;
         $reporteModel = new ReporteModel();
+        $termModel = new TermsModel();
 
         $studentsAconsejados = $reporteModel->getStudentsAconsejados($conn);
         $studentsSinCCOM = $reporteModel->getStudentsSinCCOM($conn);
@@ -20,7 +22,8 @@ class ReporteController{
         $studentsRegistrados = $reporteModel->getRegistrados($conn);
         $studentsEditados = $reporteModel->getEditados($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
-        $term = $reporteModel->getTerm($conn);
+        $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
+        $term = $termModel->getActiveTerm($conn);
         $count = 0;
 
         if(isset($_GET['code']))
@@ -40,14 +43,18 @@ class ReporteController{
                 $classesByStudent = $reporteModel->getClassesByStudent($conn);
             }
 
-            $studentsInfo = $reporteModel->getStudentsInfo($conn, $type);
+            $studentsInfo = $reporteModel->getStudentsInfo($conn, $type, $term);
             // Data array for the second table
             $TableData = [];
             if (isset($studentsInfo)) {
                 foreach ($studentsInfo as $s) {
                     if (isset($classesByStudent)) {
                         $TableData[] = [$s['student_num'], $s['full_name'], implode(',', $classesByStudent[$s['student_num']])];
-                    } else {
+                    } 
+                    else if ($type == 'incomplete') {
+                        $TableData[] = [$s['student_num'], $s['full_name'], $s['crse_code'], $s['crse_grade']];
+                    }
+                    else {
                         $TableData[] = [$s['student_num'], $s['full_name']];
                     }
                 }
@@ -71,6 +78,8 @@ class ReporteController{
                 $combinedCsvFileName = "Report_Estudiantes_Activos_".$term.".csv";
             else if($type == 'inactive')
                 $combinedCsvFileName = "Report_Estudiantes_Inactivos_".$term.".csv";
+            else if($type == 'incomplete')
+                $combinedCsvFileName = "Report_Notas_Incompletas.csv";
             else
                 $combinedCsvFileName = "Report_Estudiantes_Apuntados_".$type."-".$term.".csv";
             $_SESSION['filename'] = $combinedCsvFileName;

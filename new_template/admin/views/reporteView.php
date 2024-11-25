@@ -166,10 +166,16 @@
                             <td></td>
                         </tr>
                         <tr style='background-color: lightgray'>
+                            <td style='text-align:center'>Notas que tienen incompletos</td>
+                            <td style='text-align:center'><?php echo $studentsIncompletos  ?></td>
+                            <td style='text-align:center; vertical-align:middle'><a href='?reports&code=incomplete'>
+                            <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
+                        </tr>
+                        <tr>
                             <td style='text-align:center'>Actualizar estudiantes inactivos</td>
                             <td style='text-align:center'><?php echo $studentsInactivos  ?></td>
-                            <td style='text-align:center; vertical-align:middle'><!-- <a href='?reports&code=inactive'> -->
-                            <span class='badge whitespace-nowrap badge-outline-primary' style='background:#FFB6AC;'>Coming Soon!</span> </td>
+                            <td style='text-align:center; vertical-align:middle'><a href='?reports&code=inactive'>
+                            <span class='badge whitespace-nowrap badge-outline-primary' style='background:#FFB6AC;'>Actualizar</span> </td>
                         </tr>
                     </tbody></table>
 

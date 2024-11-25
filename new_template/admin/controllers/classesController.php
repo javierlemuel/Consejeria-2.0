@@ -82,8 +82,8 @@ class ClassesController
         } elseif (isset($_GET['newterm'])) {
             if (isset($_POST['term'])) {
 
-                error_reporting(E_ALL);
-                ini_set('display_errors', 'On');
+                // error_reporting(E_ALL);
+                // ini_set('display_errors', 'On');
 
                 //Generate reports
                 $new_term = $_POST['term'];
