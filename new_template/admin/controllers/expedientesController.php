@@ -48,6 +48,12 @@ class ExpedientesController
             $studentModel->deleteAllRecommendationsOnOneStudent($conn, $_POST['student_num']);
         }
 
+        if (isset($_GET['blockAllCounseling'])) {
+            require_once(__DIR__ . '/../models/StudentModel.php');
+            $studentModel = new StudentModel();
+            $studentModel->closeAllCounseling($conn);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $date = date("Y-m-d");
             $action = isset($_POST['action']) ? $_POST['action'] : '';
@@ -338,6 +344,10 @@ class ExpedientesController
 
                 require_once(__DIR__ . '/../views/counselingView.php');
                 return;
+            } elseif (isset($_GET['blockAllCounseling'])) {
+                require_once(__DIR__ . '/../models/StudentModel.php');
+                $studentModel = new StudentModel();
+                $studentModel->closeAllCounseling($conn);
             } elseif ($action === 'blockCounseling') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();

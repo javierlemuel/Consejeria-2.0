@@ -52,8 +52,9 @@ class ReporteModel {
    {
         $sql = "SELECT COUNT(DISTINCT student_num) AS count
         FROM student
-        WHERE conducted_counseling = 0
-        AND status = 'Activo'";
+        WHERE status = 'Activo' AND student_num NOT IN (
+            SELECT DISTINCT student_num
+            FROM will_take)";
         $result = $conn->query($sql);
 
         if ($result === false) {
@@ -128,8 +129,9 @@ class ReporteModel {
         {
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
             FROM student
-            WHERE conducted_counseling = 0
-            AND status = 'Activo'";
+            WHERE status = 'Activo' AND student_num NOT IN (
+                SELECT DISTINCT student_num
+                FROM will_take)";
         }
         else if ($type == 'Cons')
         {
@@ -143,7 +145,7 @@ class ReporteModel {
             FROM student
             WHERE status = 'Activo'";
         }
-        else if ($type == 'inactive')
+        else if ($type == 'openinactive')
         {
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
             FROM student

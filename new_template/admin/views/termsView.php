@@ -182,9 +182,9 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
                                 foreach ($termArray as $term) : ?>
                                     <tr>
-                                        <td>
+                                        <td <?php if($term['active'] == 1) echo "style = 'color: green; font-weight: bolder;'" ?>>
                                             <?= $term['term'] ?>
-                                            <?php if($term['active'] == 1) echo "active term" ?>
+                                            <?php if($term['active'] == 1) echo "(Active Term)" ?>
                                         </td>
                                         <td><?= $term['year'] ?></td>
                                         <td><?= $term['semester'] ?></td>

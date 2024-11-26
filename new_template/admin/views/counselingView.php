@@ -913,16 +913,16 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         <br> 
                         <?php if($studentData['counseling_lock'] == 0) { ?>
                             <form method="POST" action="index.php">
-                            <input type='hidden' name='block' value='block'>
-                            <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Cerrar Consejería al Estudiante</button>
+                                <input type='hidden' name='block' value='block'>
+                                <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
+                                <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Cerrar Consejería a este Estudiante</button>
                             </form>
                         <?php } 
                             else if($studentData['counseling_lock'] == 1) { ?>
                             <form method="POST" action="index.php">
                             <input type='hidden' name='openCounseling' value='openCounseling'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Abrir Consejería al Estudiante</button>
+                            <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Abrir Consejería a este Estudiante</button>
                             </form>
                         <?php } ?>
                         <button class="btn btn-danger !mt-6" onclick="window.location.href = 'index.php'">Volver a Estudiantes</button>

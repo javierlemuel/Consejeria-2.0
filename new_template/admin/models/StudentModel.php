@@ -621,7 +621,7 @@ class StudentModel
 
     public function closeAllCounseling($conn)
     {
-        $sql = "UPDATE student SET counseling_lock = 0";
+        $sql = "UPDATE student SET counseling_lock = 1";
 
         $stmt = $conn->prepare($sql);
         $result = $stmt->execute();
