@@ -312,8 +312,8 @@ class ClassModel
 
         return 'insert success';
     }
-    public function selectCourseWNull($conn, $course)
-    {
+    public function selectCourseWNull($conn, $course) // select course with null? why null? 
+    { // parece estar recibiendo los cursos normales
 
         $table = 'general_courses';
 

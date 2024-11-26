@@ -48,6 +48,12 @@ class ExpedientesController
             $studentModel->deleteAllRecommendationsOnOneStudent($conn, $_POST['student_num']);
         }
 
+        if (isset($_GET['blockAllCounseling'])) {
+            require_once(__DIR__ . '/../models/StudentModel.php');
+            $studentModel = new StudentModel();
+            $studentModel->closeAllCounseling($conn);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $date = date("Y-m-d");
             $action = isset($_POST['action']) ? $_POST['action'] : '';
@@ -338,6 +344,10 @@ class ExpedientesController
 
                 require_once(__DIR__ . '/../views/counselingView.php');
                 return;
+            } elseif (isset($_GET['blockAllCounseling'])) {
+                require_once(__DIR__ . '/../models/StudentModel.php');
+                $studentModel = new StudentModel();
+                $studentModel->closeAllCounseling($conn);
             } elseif ($action === 'blockCounseling') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
                 $classesModel = new ClassesModel();
@@ -602,10 +612,13 @@ class ExpedientesController
                                     }
                                 }
 
-                                if (!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995']))
+                                if (!in_array($class, ['CCOM3135', 'CCOM3985', 'INTD4995'])) # estas clases se pueden repetir y cuenta como entradas distintas
                                     $result = $studentModel->studentAlreadyHasGrade($studentNumber, $class, $conn);
                                 else
-                                    $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn); //el estudiante ya tiene una nota en esa clase y en ese semestre
+                                    # CCOM3135 es temas en ciencias de computos
+                                    # CCOM3985 es investigacion en ciencias de computos
+                                    # INTD4995 es la clase de COOP
+                                    $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn); // el estudiante ya tiene una nota en esa clase y en ese semestre
 
                                 if ($result == TRUE) {
                                     $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);

@@ -621,10 +621,9 @@ class StudentModel
 
     public function closeAllCounseling($conn)
     {
-        $sql = "UPDATE student SET counseling_lock = 0";
+        $sql = "UPDATE student SET counseling_lock = 1";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $lockStatus, $student_num);
         $result = $stmt->execute();
 
         $stmt->close();
@@ -729,6 +728,9 @@ class StudentModel
         $stmt0->close();
 
         $checker = false;
+        if (strpos($crse_grade, 'I') != false) { // verificar por que este no esta funcionando
+            $_SESSION['registermodeltxt'] .= "El estudiante: " . $student_num . " tenia un incompleto en el curso" . $course_code . ".\n";
+        }
         if (strpos($grade, 'D') == true || strpos($grade, 'F') == true)
             if (strpos($crse_grade, 'W') == true)
                 $checker = true;

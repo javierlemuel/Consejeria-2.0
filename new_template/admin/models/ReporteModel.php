@@ -52,8 +52,9 @@ class ReporteModel {
    {
         $sql = "SELECT COUNT(DISTINCT student_num) AS count
         FROM student
-        WHERE conducted_counseling = 0
-        AND status = 'Activo'";
+        WHERE status = 'Activo' AND student_num NOT IN (
+            SELECT DISTINCT student_num
+            FROM will_take)";
         $result = $conn->query($sql);
 
         if ($result === false) {
@@ -103,9 +104,8 @@ class ReporteModel {
             return 0;
    }
 
-    public function getStudentsInfo($conn, $type)
+    public function getStudentsInfo($conn, $type, $term)
    {
-        $term = $this->getTerm($conn);
 
         if ($type == 'consCCOM')
         {
@@ -129,8 +129,9 @@ class ReporteModel {
         {
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
             FROM student
-            WHERE conducted_counseling = 0
-            AND status = 'Activo'";
+            WHERE status = 'Activo' AND student_num NOT IN (
+                SELECT DISTINCT student_num
+                FROM will_take)";
         }
         else if ($type == 'Cons')
         {
@@ -144,14 +145,21 @@ class ReporteModel {
             FROM student
             WHERE status = 'Activo'";
         }
-        else if ($type == 'inactive')
+        else if ($type == 'openinactive')
         {
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
             FROM student
             WHERE status = 'Inactivo'";
         }
+        else if ($type == 'incomplete')
+        {
+            $sql = "SELECT student_num, name1, name2, last_name1, last_name2, crse_code, crse_grade
+            FROM student NATURAL JOIN student_courses
+            WHERE crse_grade LIKE '%I%'";
+        }
  
-        else {
+        else { // si no cae en ninguno de los anteriores $type debe ser un curso, y va a buscar
+            // los estudiantes que lo tomaran el proximo term
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
             FROM will_take NATURAL JOIN student
             WHERE crse_code = '$type' AND term = '$term'";
@@ -251,6 +259,7 @@ class ReporteModel {
 
     // funciones nuevas
     public function updateInactiveStudents($conn) {
+        $term = $this->getTerm($conn);
         $sql = "SELECT DISTINCT student_num
         FROM student
         WHERE status = 'Activo' AND student_num NOT IN (
@@ -309,5 +318,24 @@ class ReporteModel {
         }
 
         return $classes;
+    }
+
+    public function getStudentsIncompletos($conn) {
+        $sql = "SELECT COUNT(crse_code) AS count
+        FROM student_courses
+        WHERE crse_grade LIKE '%I%'";
+
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        
+        if ($result->num_rows > 0)
+            foreach($result as $res)
+                return $res['count'];
+        else    
+            return 0;
     }
 }
