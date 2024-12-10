@@ -36,7 +36,7 @@
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
                                 <?php
                                 foreach ($_SESSION['cohortes'] as $year) {
-                                    echo '<li><a href="index.php?page=' . $year . '" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">Cohorte' . $year . '</a></li>';
+                                    echo '<li><a href="index.php?cohort=' . $year . '" class="block p-2 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60 border-b border-transparent text-lg font-bold">Cohorte' . $year . '</a></li>';
                                 }
                                 ?>
                             </ul>
@@ -186,7 +186,7 @@
                             <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0 whitespace-nowrap">
                                 <?php
                                 foreach ($_SESSION['cohortes'] as $year) {
-                                    echo '<li><a href="index.php?page=' . $year . '" class="block p-2 ml-3 hover:text-primary dark:bg-dark/40  border-b border-transparent text-lg">Cohorte' . $year . '</a></li>';
+                                    echo '<li><a href="index.php?cohort=' . $year . '" class="block p-2 ml-3 hover:text-primary dark:bg-dark/40  border-b border-transparent text-lg">Cohorte' . $year . '</a></li>';
                                 }
                                 ?>
                             </ul>
