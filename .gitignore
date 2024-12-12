@@ -1,3 +1,5 @@
-
 new_template/admin/config/config.php
 new_template/student/config/config.php
+Dockerfile
+docker-compose.yml
+Consejeria.code-workspace

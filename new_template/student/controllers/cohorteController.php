@@ -31,7 +31,7 @@ class CohorteController
 }
 
 
-if (isset($_GET['page'])) {
+if (isset($_GET['cohort'])) {
     $cohorteController = new CohorteController();
-    $cohorteController->cohorte($_GET['page']);
+    $cohorteController->cohorte($_GET['cohort']);
 }
