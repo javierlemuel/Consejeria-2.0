@@ -3,7 +3,8 @@
 class ReporteModel {
 
     public function getStudentsAconsejados($conn){
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT COUNT(DISTINCT student_num) AS count
         FROM recommended_courses
         WHERE term = '$term'";
@@ -25,7 +26,8 @@ class ReporteModel {
 
     public function getStudentsSinCCOM($conn)
    {
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT COUNT(DISTINCT student_num) AS count
         FROM recommended_courses
         WHERE student_num NOT IN (
@@ -119,11 +121,11 @@ class ReporteModel {
             FROM recommended_courses NATURAL JOIN student
             WHERE student_num NOT IN (
                 SELECT DISTINCT student_num
-                FROM recommended_courses
+                FROM recommended_courses 
                 WHERE crse_code LIKE 'CCOM%'
                 AND term = '$term'
                 )
-            AND term = '$term'";
+            AND term = '$term'"; // por que lo saca de recommended courses y no de ccom_courses??
         }
         else if ($type == 'noCons')
         {
@@ -186,7 +188,8 @@ class ReporteModel {
    }
 
     public function getRegistrados($conn){
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT COUNT(DISTINCT student_num) AS count
         FROM will_take
         WHERE term = '$term';";
@@ -224,7 +227,8 @@ class ReporteModel {
 
 
     public function getStudentsPerClass($conn){
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT crse_code, COUNT(*) AS count
         FROM ccom_courses NATURAL JOIN will_take
         WHERE crse_code LIKE 'CCOM%'
@@ -240,26 +244,27 @@ class ReporteModel {
 
    }
 
-    public function getTerm($conn){
-        $sql = "SELECT term
-                FROM offer
-                WHERE crse_code = 'XXXX'";
+//     public function getTerm($conn){
+//         $sql = "SELECT term
+//                 FROM offer
+//                 WHERE crse_code = 'XXXX'";
 
-        $result = $conn->query($sql);
+//         $result = $conn->query($sql);
 
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+//         if ($result === false) {
+//             throw new Exception("Error en la consulta SQL: " . $conn->error);
+//         }
 
-        foreach ($result as $res)
-            $term = $res['term'];
+//         foreach ($result as $res)
+//             $term = $res['term'];
 
-        return $term;
-   }
+//         return $term;
+//    }
 
     // funciones nuevas
     public function updateInactiveStudents($conn) {
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT DISTINCT student_num
         FROM student
         WHERE status = 'Activo' AND student_num NOT IN (
@@ -298,7 +303,8 @@ class ReporteModel {
     }
 
     public function getClassesByStudent($conn) {
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT student_num, crse_code FROM will_take NATURAL JOIN student WHERE term = '$term';";
 
         $result1 = $conn->query($sql);

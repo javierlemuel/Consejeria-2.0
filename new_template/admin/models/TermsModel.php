@@ -103,4 +103,21 @@ class TermsModel
         $term = $row['code'];
         return $term;
     }
+
+    public function getNextTerm($conn) {
+        $sql = "SELECT DISTINCT code
+        FROM term
+        WHERE active = 1";
+
+        $result = $conn->query($sql);
+
+        
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $row = $result->fetch_assoc();
+        $term = $row['code'];
+        return $term;
+    }
 }

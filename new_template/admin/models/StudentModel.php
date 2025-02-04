@@ -718,8 +718,6 @@ class StudentModel
             $stmt0->bind_result($crse_grade, $old_term);
             $stmt0->fetch();
 
-            // Cerrar
-            // $stmt0->close();
         } else {
             // Error
             echo "Error executing query.";
@@ -727,10 +725,11 @@ class StudentModel
 
         $stmt0->close();
 
+
         $checker = false;
-        if (strpos($crse_grade, 'I') != false) { // verificar por que este no esta funcionando
+        //if (strpos($crse_grade, 'I') != false) { // verificar por que este no esta funcionando
             $_SESSION['registermodeltxt'] .= "El estudiante: " . $student_num . " tenia un incompleto en el curso" . $course_code . ".\n";
-        }
+        //}
         if (strpos($grade, 'D') == true || strpos($grade, 'F') == true)
             if (strpos($crse_grade, 'W') == true)
                 $checker = true;
@@ -881,8 +880,44 @@ class StudentModel
 
     public function InsertStudentGrade($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $category, $status, $conn)
     {
-
+        // variable para ver si el curso es electiva avanzada o intermedia
         $course_level = '';
+
+        // query que busca la nota y el semestre del curso que se busca en este estudiante
+        $sql0 = "SELECT crse_grade, term
+                FROM student_courses
+                WHERE student_num = ? AND crse_code = ?";
+
+        // Preparar la sentencia
+        $stmt0 = $conn->prepare($sql0);
+        if (!$stmt0) {
+            // Manejar el error de preparación de la consulta
+            return FALSE;
+        }
+
+        // adaptando el query con los parametros que entran por la funcion
+        $stmt0->bind_param("is", $student_num, $course_code);
+
+        // variables para guardar el la nota y el semestre anterior
+        $crse_grade = '';
+        $old_term = '';
+
+        // Ejecutar
+        if ($stmt0->execute()) {
+            // the selected columns (grade, term) 
+            $stmt0->bind_result($crse_grade, $old_term);
+            // $stmt0->fetch();
+            
+        } else {
+            // Error
+            echo "Error executing query.";
+        }
+
+        $result = $stmt0->get_result();
+
+        if ($result->num_rows) {
+            return FALSE;
+        }
 
         if ((strpos($course_code, 'CCOM') !== false)) {
             $sql0 = "SELECT `level` FROM ccom_courses WHERE crse_code = ?";
@@ -913,6 +948,25 @@ class StudentModel
                 $course_code = $this->validateLanguageGenerals($conn, $course_code);
                 $equi .= $old_course_code;
             }
+
+        $sql = "SELECT crse_code FROM student_courses WHERE student_num = ? AND crse_code = ?";
+        // Preparar la sentencia
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            // Manejar el error de preparación de la consulta
+            return FALSE;
+        }
+
+        // Vincular los parámetros con los valores
+        $stmt->bind_param("ss", $student_num, $course_code);
+
+        if ($stmt->execute()) {
+            if ($stmt->affected_rows > 0) {
+                return 0;
+            }
+        }
+
+        $stmt->close();
 
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, category, level, crse_grade, crse_status, term, equivalencia, convalidacion)
@@ -1285,5 +1339,45 @@ class StudentModel
             }
             return $data; // Devolver los resultados
         }
+    }
+
+    public function getRepeatedCourses($term, $conn) {
+        // counter to find how many courses are repeated
+        $counter = 0;
+        $currentCourse = '';
+
+        $sql = "SELECT student_num, crse_code, term, crse_grade
+                FROM student_courses
+                WHERE term = ?
+                ORDER BY student_num, crse_code, term, crse_grade";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $term);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        foreach ($result as $course) {
+            $sql = "SELECT student_num, crse_code, term, crse_grade
+                FROM student_courses
+                WHERE student_num = ? AND crse_code = ? AND crse_grade = ? AND term = ?";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("isss", $course['student_num'], 
+                                $course['crse_code'], $course['crse_grade'], $term);
+            $stmt->execute();
+            $result2 = $stmt->get_result();
+            $stmt->close();
+
+            if ($result2->num_rows > 1) {
+                $counter += 1;
+                if ($currentCourse == $course) {
+                    continue;
+                }
+            }
+            $currentCourse = $course;
+        }
+
+        return $counter;
     }
 }

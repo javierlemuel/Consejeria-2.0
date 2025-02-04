@@ -6,6 +6,7 @@ if(!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true)
 }
 require_once(__DIR__ . '/../models/ReporteModel.php');
 require_once(__DIR__ . '/../models/TermsModel.php');
+require_once(__DIR__ . '/../models/StudentModel.php');
 require_once(__DIR__ . '/../config/database.php');
 
 class ReporteController{
@@ -13,6 +14,7 @@ class ReporteController{
         global $conn;
         $reporteModel = new ReporteModel();
         $termModel = new TermsModel();
+        $studentModel = new StudentModel();
 
         $studentsAconsejados = $reporteModel->getStudentsAconsejados($conn);
         $studentsSinCCOM = $reporteModel->getStudentsSinCCOM($conn);
@@ -23,6 +25,7 @@ class ReporteController{
         $studentsEditados = $reporteModel->getEditados($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
         $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
+        $repeatedCourses = $studentModel->getRepeatedCourses('C32', $conn);
         $term = $termModel->getActiveTerm($conn);
         $count = 0;
 

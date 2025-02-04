@@ -862,8 +862,9 @@ class ClassesModel
 
     public function addToOffer($conn, $courseID)
     {
+        $termsModel = new TermsModel();
         //Verifica que el curso no exista ya en la oferta
-        $term = $this->getTerm($conn);
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT term
                 FROM offer
                 WHERE crse_code = '$courseID'
@@ -871,16 +872,16 @@ class ClassesModel
         $result = $conn->query($sql);
 
         if ($result->num_rows == 0) {
-            $sql = "SELECT term
-                    FROM offer
-                    WHERE crse_code = 'XXXX'";
+            // $sql = "SELECT term
+            //         FROM offer
+            //         WHERE crse_code = 'XXXX'";
 
-            $res = $conn->query($sql);
-            if ($res === false) {
-                throw new Exception("Error en la consulta SQL: " . $conn->error);
-            } else {
-                foreach ($res as $r)
-                    $term = $r['term'];
+            // $res = $conn->query($sql);
+            // if ($res === false) {
+            //     throw new Exception("Error en la consulta SQL: " . $conn->error);
+            // } else {
+            //     foreach ($res as $r)
+            //         $term = $r['term'];
 
                 $sql2 = "INSERT INTO offer
                         VALUES('$courseID', '$term')";
@@ -891,7 +892,7 @@ class ClassesModel
                 }
 
                 return 'success';
-            }
+            // }
         }
 
         return 'failure';
@@ -899,7 +900,8 @@ class ClassesModel
 
     public function removeFromOffer($conn, $courseID)
     {
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "DELETE FROM offer
                 WHERE crse_code = '$courseID'
                 AND term = '$term'";
@@ -960,42 +962,44 @@ class ClassesModel
         return $resulti;
     }
 
-    public function getTerm($conn)
-    {
-        $sql = "SELECT term
-                FROM offer
-                WHERE crse_code = 'XXXX'";
-        $result = $conn->query($sql);
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+    // public function getTerm($conn) // estas funciones se deben 
+    // eliminar porque se debe usar los terms de reporteModel
+    // {
+    //     $sql = "SELECT term
+    //             FROM offer
+    //             WHERE crse_code = 'XXXX'";
+    //     $result = $conn->query($sql);
+    //     if ($result === false) {
+    //         throw new Exception("Error en la consulta SQL: " . $conn->error);
+    //     }
 
-        $term = '';
+    //     $term = '';
 
-        while ($row = $result->fetch_assoc()) {
-            $term = $row['term'];
-            break;
-        }
+    //     while ($row = $result->fetch_assoc()) {
+    //         $term = $row['term'];
+    //         break;
+    //     }
 
-        return $term;
-    }
+    //     return $term;
+    // }
 
-    public function getTerms($conn)
-    {
-        $sql = "SELECT DISTINCT term
-                FROM offer";
+    // public function getTerms($conn)
+    // {
+    //     $sql = "SELECT DISTINCT term
+    //             FROM offer";
 
-        $result = $conn->query($sql);
+    //     $result = $conn->query($sql);
 
-        if ($result === false)
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
+    //     if ($result === false)
+    //         throw new Exception("Error en la consulta SQL: " . $conn->error);
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
     public function getMatriculadosModel($conn, $course)
     {
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT count(student_num) AS count
                 FROM will_take
                 WHERE crse_code = '$course'
@@ -1020,7 +1024,8 @@ class ClassesModel
 
     public function getStudentsMatriculadosModel($conn, $course)
     {
-        $term = $this->getTerm($conn);
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
         $sql = "SELECT *
                 FROM will_take NATURAL JOIN student
                 WHERE will_take.student_num = student.student_num AND
