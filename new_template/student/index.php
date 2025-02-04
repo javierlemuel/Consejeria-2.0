@@ -25,15 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticated'] === true) {
     // La sesión está autenticada, muestra la página de expedientes
     $page = $_GET['page'] ?? 'counseling';
+    // Check for cohort value
+    $cohort = $_GET['cohort'] ?? '';
 
     // Load the appropriate view based on the page parameter
     if ($page === 'expediente') {
         // Load the "About Us" view
         require_once 'controllers/expedienteController.php';
-    } else if ($page === '2017' || $page === '2022') {
-        require_once 'controllers/cohorteController.php';
     } else if ($page === 'links') {
         require_once 'views/linksView.php';
+    } else if (isset($cohort)) {
+        // Load cohort page
+        require_once 'controllers/cohorteController.php';
     } else {
         // carga la pagina de consegeria 
         require_once 'controllers/counselingController.php';
