@@ -5,6 +5,7 @@ if (!isset($_SESSION['authenticated']) && $_SESSION['authenticated'] !== true) {
 }
 require_once(__DIR__ . '/../models/ClassesModel.php');
 require_once(__DIR__ . '/../models/ReporteModel.php');
+require_once(__DIR__ . '/../models/TermsModel.php');
 require_once(__DIR__ . '/../config/database.php');
 require_once(__DIR__ . "/../global_classes/utils.php");
 //session_start();
@@ -17,8 +18,9 @@ class ClassesController
         global $conn;
         $classesModel = new ClassesModel();
         $reporteModel = new ReporteModel();
+        $termsModel = new TermsModel();
 
-        $terms = $classesModel->getTerms($conn);
+        $terms = $termsModel->getTerms($conn);
 
         // Search query (q) and pagination (p)
         $q = $_GET["q"] ?? "";
@@ -36,36 +38,36 @@ class ClassesController
             require_once(__DIR__ . '/../views/listaView.php');
         } elseif (isset($_GET['ccomelectives'])) {
 
-            $term = $classesModel->getTerm($conn);
+            $term = $termsModel->getActiveTerm($conn);
 
             $courses = $classesModel->getCcomElectives($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'electivas';
         } elseif (isset($_GET['generalclasses'])) {
-            $term = $classesModel->getTerm($conn);
+            $term = $termsModel->getActiveTerm($conn);
             $courses = $classesModel->getGeneralCourses($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'generales';
             $current_class = 'generalclasses';
         } elseif (isset($_GET['dummyclasses'])) {
-            $term = $classesModel->getTerm($conn);
+            $term = $termsModel->getActiveTerm($conn);
             $courses = $classesModel->getDummyCourses($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'dummy';
         } elseif (isset($_GET['offer'])) {
-            if (isset($_GET['otherterm'])) {
-                $term = $_GET['otherterm'];
-                $courses = $classesModel->getOfferCourses($conn, $term);
-                $category = 'oferta';
-            } else {
-                $term = $classesModel->getTerm($conn);
-                $courses = $classesModel->getOfferCourses($conn, $term);
-                $category = 'oferta';
-            }
+            // if (isset($_GET['otherterm'])) {
+            //     $term = $_GET['otherterm'];
+            //     $courses = $classesModel->getOfferCourses($conn, $term);
+            //     $category = 'oferta';
+            // } else {
+            $term = $termsModel->getActiveTerm($conn);
+            $courses = $classesModel->getOfferCourses($conn, $term);
+            $category = 'oferta';
+            // }
         } elseif (isset($_GET['addOffer']) && isset($_GET['code'])) {
             $courseID = $_GET['code'];
             $message = $classesModel->addToOffer($conn, $courseID);
-            $term = $classesModel->getTerm($conn);
+            $term = $termsModel->getActiveTerm($conn);
             $courses = $classesModel->getCcomCourses($conn);
             $category = 'concentracion';
             header('Location: ?classes&message=' . $message);
@@ -74,7 +76,7 @@ class ClassesController
             echo "HEY";
             $courseID = $_GET['code'];
             $message = $classesModel->removeFromOffer($conn, $courseID);
-            $term = $classesModel->getTerm($conn);
+            $term = $termsModel->getActiveTerm($conn);
             $courses = $classesModel->getOfferCourses($conn, $term);
             $category = 'oferta';
             header('Location: ?offer&message=' . $message);
@@ -92,7 +94,7 @@ class ClassesController
                 $studentsRegistrados = $reporteModel->getRegistrados($conn);
                 $studentsEditados = $reporteModel->getEditados($conn);
                 $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
-                $term = $reporteModel->getTerm($conn);
+                $term = $termsModel->getActiveTerm($conn);
 
                 // Data array for the first table
                 $firstTableData = [
@@ -135,7 +137,7 @@ class ClassesController
                 $classesModel->setNewTerm($conn, $new_term);
             } else {
                 // Get present term if not creating a new term
-                $term = $classesModel->getTerm($conn);
+                $term = $termsModel->getActiveTerm($conn);
             }
             // Get courses in offer and return to offer page
             $courses = $classesModel->getOfferCourses($conn, $_POST['term']);
@@ -149,7 +151,7 @@ class ClassesController
             $courses = $classesModel->getCcomCourses($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'concentracion';
-            $term = $classesModel->getTerm($conn);
+            $term = $termsModel->getActiveTerm($conn);
         }
 
         if (!isset($_GET['lista']))

@@ -1,6 +1,7 @@
 <?php
 // index.php
 require_once 'config/database.php';
+// die("Hola");
 define('__ROOT__', dirname(dirname(__FILE__)));
 
 // Inicia o reanuda la sesión

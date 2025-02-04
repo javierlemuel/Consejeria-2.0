@@ -62,11 +62,11 @@ session_start()
                                                 <input type="hidden" name="action" value="uploadCSV">
                                                 <div>
                                                     <!-- Campo para el primer archivo CSV -->
-                                                    <label for="csvfile">Subir archivo .txt con información de estudiantes. (ZWN3FL_84)</label>
+                                                    <label for="csvfile">Subir archivo .txt con información de estudiantes. (ZWN3FL_84_RBR-CCOM.DAT)</label>
                                                     <input required type="file" id="files" name="files" class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file:ml-5 file:text-white file:hover:bg-primary">
 
                                                     <!-- Campo para el segundo archivo CSV -->
-                                                    <label for="csvfile2">Subir archivo .CSV con información de fechas de nacimiento. (PET9710)</label>
+                                                    <label for="csvfile2">Subir archivo .CSV con información de fechas de nacimiento. (ZWN1FL_84_PET9710.DAT)</label>
                                                     <input required type="file" id="files2" name="files2" class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file:ml-5 file:text-white file:hover:bg-primary">
                                                 </div>
                                                 <div class="mt-8 flex items-center justify-end">
@@ -100,7 +100,7 @@ session_start()
                                                 <input type="hidden" name="action" value="updateGradeCSV">
                                                 <div>
                                                     <!-- Campo para el CSV de las notas -->
-                                                    <label for="csvfile">Subir archivo CSV con las notas de los estudiantes. (ZWN1FL_84)</label>
+                                                    <label for="csvfile">Subir archivo CSV con las notas de los estudiantes. (ZWN1FL_84_CTI-1001.DAT)</label>
                                                     <input required type="file" id="files" name="files" class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file:ml-5 file:text-white file:hover:bg-primary">
                                                 </div>
                                                 <div class="mt-8 flex items-center justify-end">

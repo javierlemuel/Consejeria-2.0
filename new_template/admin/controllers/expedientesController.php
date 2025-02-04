@@ -150,7 +150,7 @@ class ExpedientesController
                     #error_log($logMessage, 3, $archivoRegistro);
                     $_SESSION['registermodeltxt'] .= $logMessage;
 
-                    $term = $classesModel->getTerm($conn);
+                    $term = $termsModel->getActiveTerm($conn);
 
                     if (isset($_POST['seleccion']) && is_array($_POST['seleccion'])) {
                         // Obtiene los valores de los checkboxes seleccionados
@@ -236,13 +236,13 @@ class ExpedientesController
                     $crse_code = strtoupper($crse_code);
                     $term = $_POST['term'];
                     if ($term == '') {
-                        $term = $classesModel->getTerm($conn);
+                        $term = $termsModel->getActiveTerm($conn);
                     }
                     $studentAlreadyHasGradeInTerm = $studentModel->alreadyHasGradeInTerm($student_num, $crse_code, $term, $conn); # revisa si ya el estudiante a tiene nota en esta clase y semestre
                     if ($studentAlreadyHasGradeInTerm == TRUE) # el estudiante ya tiene una nota en esa clase y semestre.
                     {
                         #error_log("El estudiante $student_num ya tiene una calificacion en el curso $crse_code en el term $term. No se actualizo nada.\n", 3, $archivoRegistro);
-                        $_SESSION['registermodeltxt'] .= "El estudiante $student_num ya tiene una calificacion en el curso $crse_code en el term $term. No se actualizo nada.\n";
+                        $_SESSION['registermodeltxt'] .= "El estudiante $student_num ya tiene una calificacion en el curso $crse_code en el term $term. No se actualizo nada. A ver si esto sale.\n";
                     } else # el estudiante no tiene una nota en esa clase y semestre.
                     {
                         $credits = $_POST['credits'];
@@ -524,7 +524,7 @@ class ExpedientesController
                     // no se mando ningun arhivo o solo 1
                     $result = "Error: No se ha seleccionado ningún archivo.";
                     #error_log("No se a seleccionado ningun archivo \n", 3, $archivoRegistro);
-                    $_SESSION['registermodeltxt'] .= "No se a seleccionado ningun archivo \n";
+                    $_SESSION['registermodeltxt'] .= "No se ha seleccionado ningun archivo \n";
                 }
             } elseif ($action === 'updateGradeCSV') {
                 require_once(__DIR__ . '/../models/ClassesModel.php');
