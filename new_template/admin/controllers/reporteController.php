@@ -25,7 +25,7 @@ class ReporteController{
         $studentsEditados = $reporteModel->getEditados($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
         $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
-        $repeatedCourses = $studentModel->getRepeatedCourses('C32', $conn);
+        $repeatedCourses = 0; //$reporteModel->getRepeatedCourses($conn);
         $term = $termModel->getActiveTerm($conn);
         $count = 0;
 

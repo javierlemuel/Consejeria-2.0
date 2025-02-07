@@ -726,17 +726,17 @@ class StudentModel
         $stmt0->close();
 
 
-        $checker = false;
-        //if (strpos($crse_grade, 'I') != false) { // verificar por que este no esta funcionando
+        $checker = false; // el checker verifica que el estudiante haya pasado la clase
+        if (strpos($crse_grade, 'I') != false) { 
             $_SESSION['registermodeltxt'] .= "El estudiante: " . $student_num . " tenia un incompleto en el curso" . $course_code . ".\n";
-        //}
+        }
         if (strpos($grade, 'D') == true || strpos($grade, 'F') == true)
-            if (strpos($crse_grade, 'W') == true)
+            if (strpos($crse_grade, 'W') == false || strpos($crse_grade, 'I') == false)
                 $checker = true;
 
         # $crse_grade is the grade they currently have
         # $grade is the grade being inserted
-        if (($crse_grade > $grade || $crse_grade == '') && $checker == false) {
+        if ((strcmp($grade, $crse_grade) < 0 || $crse_grade == '') && $checker == false) {
             $sql1 = "UPDATE student_courses 
                     SET credits = ?, category = ?, crse_grade = ?, crse_status = ?, term = ?, equivalencia = ?, convalidacion = ?
                     WHERE student_num = ? AND crse_code = ? AND term = ?";
@@ -753,30 +753,34 @@ class StudentModel
             $stmt1->bind_param("ssssssssss", $credits, $type, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
 
             // Ejecutar la sentencia
-            if ($stmt1->execute()) {
-                // Verificar si la actualización fue exitosa
-                if ($stmt1->affected_rows > 0) {
-                    $stmt1->close();
-                    $_SESSION['students_list_msg'] = "Cursos de estudiantes fueron actualizados!!";
-                    $date = date("Y-m-d");
-                    $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
-                    $result = $conn->query($sql2);
+            try {
+                if ($stmt1->execute()) {
+                    // Verificar si la actualización fue exitosa
+                    if ($stmt1->affected_rows > 0) {
+                        $stmt1->close();
+                        $_SESSION['students_list_msg'] = "Cursos de estudiantes fueron actualizados!!";
+                        $date = date("Y-m-d");
+                        $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                        $result = $conn->query($sql2);
 
-                    if ($result === false) {
-                        throw new Exception("Error en la consulta SQL: " . $conn->error);
+                        if ($result === false) {
+                            throw new Exception("Error en la consulta SQL: " . $conn->error);
+                        }
+                        return TRUE; // La actualización fue exitosa
+                    } else {
+                        $stmt1->close();
+                        $_SESSION['students_list_msg'] = "No hubo cambios en la base de datos";
+                        return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
                     }
-                    return TRUE; // La actualización fue exitosa
-
-
                 } else {
+                    // Ocurrió un error al ejecutar la consulta
+                    // Manejar el error según sea necesario
+                    //echo "Error executing SQL statement: " . $stmt1->error . "<br>";
+                    $_SESSION['students_list_msg'] = "Error al insertar cursos de estudiantes en la base de datos: " . $conn->error;
                     $stmt1->close();
-                    $_SESSION['students_list_msg'] = "No hubo cambios en la base de datos";
-                    return FALSE; // La actualización no tuvo ningún efecto (ninguna fila afectada)
+                    return FALSE;
                 }
-            } else {
-                // Ocurrió un error al ejecutar la consulta
-                // Manejar el error según sea necesario
-                //echo "Error executing SQL statement: " . $stmt1->error . "<br>";
+            } catch (Exception $e) {
                 $_SESSION['students_list_msg'] = "Error al insertar cursos de estudiantes en la base de datos: " . $conn->error;
                 $stmt1->close();
                 return FALSE;
@@ -915,8 +919,17 @@ class StudentModel
 
         $result = $stmt0->get_result();
 
-        if ($result->num_rows) {
-            return FALSE;
+        // if ($result->num_rows) {
+        //     return FALSE;
+        // }
+
+        if ($result['term'] == $term) {
+            $sql = "UPDATE student_courses
+                    SET crse_grade = ? 
+                    WHERE student_num = ? AND crse_code = ? AND term = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("siss", $grade, $student_num, $course_code, $term);
+            $stmt->execute();
         }
 
         if ((strpos($course_code, 'CCOM') !== false)) {
@@ -960,13 +973,15 @@ class StudentModel
         // Vincular los parámetros con los valores
         $stmt->bind_param("ss", $student_num, $course_code);
 
-        if ($stmt->execute()) {
-            if ($stmt->affected_rows > 0) {
-                return 0;
-            }
-        }
+        // if ($stmt->execute()) {
+        //     if ($stmt->affected_rows > 0) {
+        //         return 0;
+        //     }
+        // }
 
         $stmt->close();
+
+
 
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, category, level, crse_grade, crse_status, term, equivalencia, convalidacion)
@@ -985,29 +1000,33 @@ class StudentModel
         // echo $stmt;
 
         // Ejecutar la sentencia
-        if ($stmt->execute()) {
-            // Verificar si la inserción fue exitosa
-            if ($stmt->affected_rows > 0) {
-                $stmt->close();
-                $_SESSION['consejeria_msg'] = "Curso $course_code y nota fueron insertados!!";
-                $date = date("Y-m-d");
-                $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
-                $result = $conn->query($sql2);
+        try {
+            if ($stmt->execute()) {
+                // Verificar si la inserción fue exitosa
+                if ($stmt->affected_rows > 0) {
+                    $stmt->close();
+                    $_SESSION['consejeria_msg'] = "Curso $course_code y nota fueron insertados!!";
+                    $date = date("Y-m-d");
+                    $sql2 = "UPDATE student SET edited_date = '$date' WHERE student_num = $student_num";
+                    $result = $conn->query($sql2);
 
-                if ($result === false) {
-                    throw new Exception("Error en la consulta SQL: " . $conn->error);
+                    if ($result === false) {
+                        throw new Exception("Error en la consulta SQL: " . $conn->error);
+                    }
+                    return TRUE; // La inserción fue exitosa
+                } else {
+                    $stmt->close();
+                    $_SESSION['consejeria_msg'] = "No se pudo insertar nota y curso $course_code.";
+                    return FALSE; // La inserción no tuvo ningún efecto (ninguna fila afectada)
                 }
-                return TRUE; // La inserción fue exitosa
             } else {
+                // Ocurrió un error al ejecutar la consulta
                 $stmt->close();
                 $_SESSION['consejeria_msg'] = "No se pudo insertar nota y curso $course_code.";
-                return FALSE; // La inserción no tuvo ningún efecto (ninguna fila afectada)
+                return FALSE;
             }
-        } else {
-            // Ocurrió un error al ejecutar la consulta
-            $stmt->close();
+        } catch (Exception $e) {
             $_SESSION['consejeria_msg'] = "No se pudo insertar nota y curso $course_code.";
-            return FALSE;
         }
     }
 
@@ -1339,45 +1358,5 @@ class StudentModel
             }
             return $data; // Devolver los resultados
         }
-    }
-
-    public function getRepeatedCourses($term, $conn) {
-        // counter to find how many courses are repeated
-        $counter = 0;
-        $currentCourse = '';
-
-        $sql = "SELECT student_num, crse_code, term, crse_grade
-                FROM student_courses
-                WHERE term = ?
-                ORDER BY student_num, crse_code, term, crse_grade";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $term);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
-
-        foreach ($result as $course) {
-            $sql = "SELECT student_num, crse_code, term, crse_grade
-                FROM student_courses
-                WHERE student_num = ? AND crse_code = ? AND crse_grade = ? AND term = ?";
-
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("isss", $course['student_num'], 
-                                $course['crse_code'], $course['crse_grade'], $term);
-            $stmt->execute();
-            $result2 = $stmt->get_result();
-            $stmt->close();
-
-            if ($result2->num_rows > 1) {
-                $counter += 1;
-                if ($currentCourse == $course) {
-                    continue;
-                }
-            }
-            $currentCourse = $course;
-        }
-
-        return $counter;
     }
 }

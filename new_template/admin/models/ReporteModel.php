@@ -344,4 +344,94 @@ class ReporteModel {
         else    
             return 0;
     }
+
+    public function getRepeatedCourses($conn) {
+        // get the active term from the terms model
+        $termsModel = new TermsModel();
+        $term = $termsModel->getActiveTerm($conn);
+        // counter to find how many courses are repeated
+        $counter = 0;
+
+        // este query busca todos los cursos de todos los estudiantes y los pone en orden
+        $sql = "SELECT student_num, crse_code, term, crse_grade
+                FROM student_courses
+                WHERE term = ?
+                ORDER BY student_num, crse_code, term, crse_grade";
+
+        // se procesa el query y se guardan los resultados en $result
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $term); // selecciona el term activo
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        // para cada curso en $result se hace un query para buscar cuantos hay con el mismo 
+        // numero de estudiante, codigo del curso, nota y term
+        foreach ($result as $course) {
+            $sql = "SELECT *
+                FROM student_courses
+                WHERE student_num = ? AND crse_code = ? AND crse_grade = ? AND term = ?";
+
+            // se procesa el query y se guarda en $result2
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("isss", $course['student_num'], 
+                                $course['crse_code'], $course['crse_grade'], $term);
+            $stmt->execute();
+            $result2 = $stmt->get_result();
+            $stmt->close();
+
+            // si hay mas de una fila con esa informacion se verifica que no este en la tabla nueva
+            if ($result2->num_rows > 1) {
+                $sql = "SELECT *
+                    FROM new_student_courses
+                    WHERE student_num = ? AND crse_code = ? AND crse_grade = ? AND term = ?";
+
+                // se procesa el query y se guarda en $result3
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("isss", $course['student_num'], 
+                                    $course['crse_code'], $course['crse_grade'], $term);
+                $stmt->execute();
+                $result3 = $stmt->get_result();
+                $stmt->close();
+
+                // si no esta en la tabla nueva se hace el query para insertar la informacion
+                // guardada en el $result2
+                if ($result3->num_rows < 1) {
+                    $equivalencia = '';
+                    $convalidacion = '';
+
+                    foreach ($result2 as $courseInfo) {
+                        $equivalencia .= $courseInfo['equivalencia'];
+                        $convalidacion .= $courseInfo['convalidacion'];
+                    }
+
+                    // se procesa el query y se guarda en $result3
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("isss", $course['student_num'], 
+                                        $course['crse_code'], $course['crse_grade'], $term);
+                    $stmt->execute();
+                    $result3 = $stmt->get_result();
+                    $stmt->close();
+
+                    $sql = "INSERT INTO new_student_courses (student_num, crse_code, credits, category,
+                                        level, crse_grade, crse_status, term, equivalencia, convalidacion)
+                    VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+                    $stmt = $conn->prepare($sql);
+
+                    $row = $result2->fetch_assoc();
+                    $stmt->bind_param("isisssssss", $row['student_num'], $row['crse_code'],
+                                        $row['credits'], $row['category'],
+                                        $row['level'], $row['crse_grade'], $row['crse_status'],
+                                        $term, $equivalencia, $convalidacion);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // se incrementa el counter para indicar que habia un curso con duplicados
+                    $counter += 1;
+                }
+            }
+        }
+        return $counter;
+    }
 }
