@@ -918,7 +918,12 @@ class StudentModel
         }
 
         $result = $stmt0->get_result();
+        if ($result->num_rows == 0) {
+            return FALSE;
+            
+        }
 
+        $result = $result->fetch_assoc();
         // if ($result->num_rows) {
         //     return FALSE;
         // }
