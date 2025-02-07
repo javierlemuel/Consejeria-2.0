@@ -174,12 +174,10 @@
                             <td style='text-align:center; vertical-align:middle'><a href='?reports&code=incomplete'>
                             <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                         </tr>
-                        <!-- <tr style='background-color: lightgray'>
+                        <tr style='background-color: lightgray'>
                             <td style='text-align:center'>Cursos repetidos</td>
                             <td style='text-align:center'><?php echo $repeatedCourses  ?></td>
-                            <td style='text-align:center; vertical-align:middle'><a href=''>
-                            <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
-                        </tr> -->
+                        </tr>
                         <tr>
                             <td style='text-align:center'>Actualizar estudiantes inactivos</td>
                             <td style='text-align:center'><?php echo $studentsInactivos  ?></td>
