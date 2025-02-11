@@ -903,6 +903,15 @@ class StudentModel
         // adaptando el query con los parametros que entran por la funcion
         $stmt0->bind_param("is", $student_num, $course_code);
 
+        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
+
+        foreach ($language_generals as $lg)
+        if ($lg == $course_code) {
+            $old_course_code = $course_code;
+            $course_code = $this->validateLanguageGenerals($conn, $course_code);
+            $equi .= $old_course_code;
+        }
+
         // variables para guardar el la nota y el semestre anterior
         $crse_grade = '';
         $old_term = '';
@@ -967,14 +976,7 @@ class StudentModel
         } else
             $level = 'NULL';
 
-        $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
 
-        foreach ($language_generals as $lg)
-            if ($lg == $course_code) {
-                $old_course_code = $course_code;
-                $course_code = $this->validateLanguageGenerals($conn, $course_code);
-                $equi .= $old_course_code;
-            }
 
         $sql = "SELECT crse_code FROM student_courses WHERE student_num = ? AND crse_code = ?";
         // Preparar la sentencia
