@@ -624,11 +624,13 @@ class ExpedientesController
                                     $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
                                     $date = date("Y-m-d");
                                     $studentModel->updateEditDate($conn, $studentNumber, $date);
+                                    $_SESSION['registermodeltxt'] .= "updatestudentgrade $studentNumber $class \n";
                                 } else // el estudiante no tiene una nota en esa clase.
                                 {
                                     $result = $studentModel->InsertStudentGrade($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $status, $conn);
                                     $date = date("Y-m-d");
                                     $studentModel->updateEditDate($conn, $studentNumber, $date);
+                                    $_SESSION['registermodeltxt'] .= "insertstudentgrade $studentNumber $class \n";
                                 }
                             }
                         }
