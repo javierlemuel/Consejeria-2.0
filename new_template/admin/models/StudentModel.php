@@ -641,7 +641,8 @@ class StudentModel
             if ($lg == $code)
                 $code = $this->validateLanguageGenerals($conn, $code);
 
-        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND crse_grade != ''";
+        $sql = "SELECT * FROM student_courses 
+        WHERE student_num = ? AND crse_code = ? AND crse_grade != '' AND crse_status != 'M'";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
@@ -888,7 +889,7 @@ class StudentModel
         $course_level = '';
 
         // query que busca la nota y el semestre del curso que se busca en este estudiante
-        $sql0 = "SELECT crse_grade, term
+        $sql0 = "SELECT crse_grade, term, crse_status
                 FROM student_courses
                 WHERE student_num = ? AND crse_code = ?";
 
@@ -905,36 +906,44 @@ class StudentModel
         // variables para guardar el la nota y el semestre anterior
         $crse_grade = '';
         $old_term = '';
+        $old_status = '';
 
         // Ejecutar
         if ($stmt0->execute()) {
             // the selected columns (grade, term) 
-            $stmt0->bind_result($crse_grade, $old_term);
-            // $stmt0->fetch();
-            
+            $stmt0->bind_result($crse_grade, $old_term, $old_status);
+            $resultex = $stmt0->get_result();
+            $resultex = $resultex->fetch_assoc();
+            $stmt0->close();
         } else {
             // Error
             echo "Error executing query.";
         }
 
-        $result = $stmt0->get_result();
-        if ($result->num_rows == 0) {
-            return FALSE;
+        // $result = $stmt0->get_result();
+        // if ($result->num_rows == 0) {
+        //     return FALSE;
             
-        }
+        // }
 
-        $result = $result->fetch_assoc();
+        // $result = $result->fetch_assoc();
         // if ($result->num_rows) {
         //     return FALSE;
         // }
 
-        if ($result['term'] == $term) {
-            $sql = "UPDATE student_courses
-                    SET crse_grade = ? 
-                    WHERE student_num = ? AND crse_code = ? AND term = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("siss", $grade, $student_num, $course_code, $term);
-            $stmt->execute();
+        if (isset($resultex['crse_status'])) {
+            $_SESSION['registermodeltxt'] .= "OLD STATUS: " . $resultex['crse_status'] . " \n";
+            if ($resultex['crse_status'] == 'M') {
+                $sql = "UPDATE student_courses
+                        SET crse_grade = ?, crse_status = ?
+                        WHERE student_num = ? AND crse_code = ? AND term = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssiss", $grade, $status, $student_num, $course_code, $term);
+                $stmt->execute();
+                $stmt->close();
+                $_SESSION['registermodeltxt'] .= "No debe llegar al insert para $student_num, $course_code \n";
+                return TRUE;
+            }
         }
 
         if ((strpos($course_code, 'CCOM') !== false)) {
@@ -987,7 +996,7 @@ class StudentModel
         $stmt->close();
 
 
-
+        $_SESSION['registermodeltxt'] .= "Llega al insert para $student_num, $course_code \n";
         // Preparar la consulta SQL para la inserción
         $sql = "INSERT INTO student_courses (student_num, crse_code, credits, category, level, crse_grade, crse_status, term, equivalencia, convalidacion)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
