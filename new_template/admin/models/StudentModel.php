@@ -1,5 +1,6 @@
 <?php
 // models/StudentModel.php
+require_once(__DIR__ . '/../models/TermsModel.php');
 class StudentModel
 {
     public $pagination_limit = 20;
@@ -31,6 +32,8 @@ class StudentModel
 
     public function getStudents(mysqli $conn, $p = null, $status = null, $q = null, $conducted_counseling = null)
     {
+        $termsModel = new TermsModel();
+
         // Pagination settings
         if (!isset($p)) {
             $p_limit = PHP_INT_MAX;
@@ -131,7 +134,7 @@ class StudentModel
 
         // Process and return results
         $students = [];
-        $term = $this->getTerm($conn); // Get the current term
+        $term = $termsModel->getActiveTerm($conn); // Get the current term
 
         while ($row = $result->fetch_assoc()) {
             $student_num = $row['student_num'];
