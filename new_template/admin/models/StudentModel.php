@@ -153,6 +153,18 @@ class StudentModel
             // Close the secondary statement
             $stmt2->close();
 
+            // Secondary query to check if counseling done by the student
+            $sql2 = "SELECT DISTINCT student_num FROM will_take WHERE student_num = ? AND term = ?";
+            $stmt2 = $conn->prepare($sql2);
+            $stmt2->bind_param("ss", $student_num, $term);
+            $stmt2->execute();
+            $result2 = $stmt2->get_result();
+
+            $row['conducted_counseling'] = $result2->num_rows > 0 ? 1 : 0;
+
+            // Close the secondary statement
+            $stmt2->close();
+
             $students[] = $row;
         }
 
@@ -671,7 +683,9 @@ class StudentModel
             if ($lg == $code)
                 $code = $this->validateLanguageGenerals($conn, $code);
 
-        $sql = "SELECT * FROM student_courses WHERE student_num = ? AND crse_code = ? AND term = ? AND crse_grade != ''";
+        $sql = "SELECT * FROM student_courses 
+        WHERE student_num = ? AND crse_code = ? AND crse_grade != '' 
+        AND crse_status != 'M' AND term = ?";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
@@ -689,7 +703,7 @@ class StudentModel
         }
     }
 
-    public function UpdateStudentGradeCSV($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $old_term, $status, $conn)
+    public function UpdateStudentGradeCSV($student_num, $course_code, $grade, $equi, $conva, $credits, $term, $type, $status, $conn)
     {
         // Preparar la consulta SQL para la actualización
         $language_generals = array('INGL3101', 'INGL3103', 'INGL3011', 'INGL3102', 'INGL3104', 'INGL3012', 'ESPA3101', 'ESPA3003', 'ESPA3102', 'ESPA3004');
@@ -944,8 +958,7 @@ class StudentModel
         // }
 
         if (isset($resultex['crse_status'])) {
-            $_SESSION['registermodeltxt'] .= "OLD STATUS: " . $resultex['crse_status'] . " \n";
-            if ($resultex['crse_status'] == 'M') {
+            if ($resultex['crse_status'] == 'M' || in_array($course_code, ['CCOM3135', 'CCOM3985', 'INTD4995'])) {
                 $sql = "UPDATE student_courses
                         SET crse_grade = ?, crse_status = ?
                         WHERE student_num = ? AND crse_code = ? AND term = ?";
@@ -953,7 +966,6 @@ class StudentModel
                 $stmt->bind_param("ssiss", $grade, $status, $student_num, $course_code, $term);
                 $stmt->execute();
                 $stmt->close();
-                $_SESSION['registermodeltxt'] .= "No debe llegar al insert para $student_num, $course_code \n";
                 return TRUE;
             }
         }

@@ -621,7 +621,7 @@ class ExpedientesController
                                     $result = $studentModel->studentAlreadyHasGradeWithSemester($studentNumber, $class, $term, $conn); // el estudiante ya tiene una nota en esa clase y en ese semestre
 
                                 if ($result == TRUE) {
-                                    $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $term, $status, $conn);
+                                    $result = $studentModel->UpdateStudentGradeCSV($studentNumber, $class, $grade, $equi, $conva, $creditAmount, $term, $type, $status, $conn);
                                     $date = date("Y-m-d");
                                     $studentModel->updateEditDate($conn, $studentNumber, $date);
                                     $_SESSION['registermodeltxt'] .= "updatestudentgrade $studentNumber $class \n";
