@@ -5,17 +5,10 @@ class CounselingModel
 
     public function getRecommendedCourses($conn, $student_num)
     {
-        $sql = "SELECT DISTINCT  term
-        FROM offer AS o
-        WHERE o.crse_code = 'XXXX'";
-        $result = $conn->query($sql);
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
 
-        $result = $result->fetch_assoc();
-        $term = $result['term'];
-
+        $term = $termsModel->getActiveTerm($conn);
 
         $sql = "SELECT DISTINCT  gc.crse_code, gc.name, gc.credits
                 FROM recommended_courses rc
