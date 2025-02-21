@@ -589,12 +589,16 @@ class ExpedientesController
                                             $type = 'free';
                                         } else
                                             $type = 'general';
-                                    } else {
+                                    } elseif ($course_info['type'] == 'mandatory' && !$studentModel->requiredByCohort($conn, $class, $studentData['cohort_year'])) {
+                                        $type = 'elective';
+                                    } else
+                                    {
                                         $type = $course_info['type'];
                                     }
                                 }
 
                                 #echo "{$course_info['crse_code']} has type: {$type}\n";
+                                $grade = str_replace(" ", '', $grade);
 
                                 if ($grade == "") {
                                     $status = "M";
