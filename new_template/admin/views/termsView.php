@@ -186,14 +186,19 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                             <?= $term['term'] ?>
                                             <?php if($term['active'] == 1) 
                                             echo "<p style = 'color: green; font-weight: bolder; float: right;'>(Active Term)</p>" ?>
-                                            <?php if($term['active'] == 1) 
-                                            echo "<p style = 'color: blue; font-weight: bolder; float: right;'>(Report Term)</p>" ?>
+                                            <?php if($term['counseling'] == 1) 
+                                            echo "<p style = 'color: blue; font-weight: bolder; float: right;'>(Counseling Term)</p>" ?>
                                         </td>
                                         <td><?= $term['year'] ?></td>
                                         <td><?= $term['semester'] ?></td>
                                         <td>
                                             <a href="?activateTerm&code=<?= $term['term_id'] ?>">
-                                                <span class='badge whitespace-nowrap badge-outline-primary'>Activar Term</span>
+                                                <span class='badge whitespace-nowrap badge-outline-primary'>Activar Term Actual</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="?activateCounselingTerm&code=<?= $term['term_id'] ?>">
+                                                <span class='badge whitespace-nowrap badge-outline-primary'>Activar Term de Consejeria</span>
                                             </a>
                                         </td>
                                     </tr>

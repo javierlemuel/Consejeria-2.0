@@ -204,15 +204,21 @@ class ExpedientesController
                     $term = $_POST['term'];
                     $old_term = $_POST['old_term'];
 
+                    $grade = str_replace(" ", '', $grade);
+
                     if ($department == "CCOM") {
                         if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                             $status = "NP";
+                        } elseif ($grade == '') {
+                            $status = "M";
                         } else {
                             $status = "P";
                         }
                     } else {
                         if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                             $status = "NP";
+                        } elseif ($grade == '') {
+                            $status = "M";
                         } else {
                             $status = "P";
                         }

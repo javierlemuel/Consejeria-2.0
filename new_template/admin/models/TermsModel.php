@@ -4,7 +4,7 @@ class TermsModel
 
     public function getTerms($conn)
     {
-        $sql = "SELECT term_id, code, year, semester, active
+        $sql = "SELECT term_id, code, year, semester, active, counseling
         FROM term
         ORDER BY code";
 
@@ -17,7 +17,8 @@ class TermsModel
         $terms = [];
         while ($row = $result->fetch_assoc()) {
             $terms[] = ['term_id' => $row['term_id'], 'term' => $row['code'], 
-            'year' => $row['year'], 'semester' => $row['semester'], 'active' => $row['active']];
+            'year' => $row['year'], 'semester' => $row['semester'], 'active' => $row['active'],
+            'counseling' => $row['counseling']];
         }
 
         return $terms;
@@ -104,10 +105,25 @@ class TermsModel
         return $term;
     }
 
-    public function getNextTerm($conn) {
+    public function setCounselingTerm($term, $conn) {
+        // deactivate all terms
+        $sql = "UPDATE term
+                SET counseling = 0";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // activate selected term
+        $sql = "UPDATE term
+                SET counseling = 1
+                WHERE term_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$term]);
+    }
+
+    public function getCounselingTerm($conn) {
         $sql = "SELECT DISTINCT code
         FROM term
-        WHERE active = 1";
+        WHERE counseling = 1";
 
         $result = $conn->query($sql);
 

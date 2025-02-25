@@ -46,7 +46,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
     } elseif (isset($_GET['minor'])) {
         require_once 'controllers/minorController.php';
     } elseif (isset($_GET['terms']) || isset($_GET['newterm']) || isset($_GET['updateterms'])
-                || isset($_GET['activateTerm'])) {
+                || isset($_GET['activateTerm']) || isset($_GET['activateCounselingTerm'])) {
         require_once 'controllers/termsController.php';
     } else {
         require_once 'controllers/expedientesController.php'; // Incluye aquí
