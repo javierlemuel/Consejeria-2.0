@@ -22,11 +22,12 @@ class ReporteController{
         $studentsActivos = $reporteModel->getStudentsActivos($conn);
         $studentsInactivos = $reporteModel->getStudentsInactivos($conn);
         $studentsRegistrados = $reporteModel->getRegistrados($conn);
-        $studentsEditados = $reporteModel->getEditados($conn);
+        $studentsConfirmados = $reporteModel->getConfirmed($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
         $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
-        $repeatedCourses = 0; // $reporteModel->getRepeatedCourses($conn);
-        $term = $termModel->getActiveTerm($conn);
+        // $reporteModel->moveRepeatedCourses($conn);
+        $activeTerm = $termModel->getActiveTerm($conn);
+        $counselingTerm = $termModel->getCounselingTerm($conn);
         $count = 0;
 
         if(isset($_GET['code']))
@@ -47,7 +48,7 @@ class ReporteController{
             }
 
             if ($type != 'updateinactive') {
-                $studentsInfo = $reporteModel->getStudentsInfo($conn, $type, $term);
+                $studentsInfo = $reporteModel->getStudentsInfo($conn, $type, $activeTerm);
                 // Data array for the second table
                 $TableData = [];
                 if (isset($studentsInfo)) {
@@ -71,21 +72,21 @@ class ReporteController{
 
                 $_SESSION['csv_content'] = $combinedCsvContent;
                 if($type == 'consCCOM')
-                    $combinedCsvFileName = "Report_Aconsejados_".$term.".csv";
+                    $combinedCsvFileName = "Report_Aconsejados_".$counselingTerm.".csv";
                 else if($type == 'consSinCCOM')
-                    $combinedCsvFileName = "Report_Aconsejados_Sin_CCOM_".$term.".csv";
+                    $combinedCsvFileName = "Report_Aconsejados_Sin_CCOM_".$counselingTerm.".csv";
                 else if($type == 'noCons')
-                    $combinedCsvFileName = "Report_No_Han_Realizado_Consejeria_".$term.".csv";
+                    $combinedCsvFileName = "Report_No_Han_Realizado_Consejeria_".$counselingTerm.".csv";
                 else if($type == 'Cons')
-                    $combinedCsvFileName = "Report_Realizaron_Consejeria_".$term.".csv";
+                    $combinedCsvFileName = "Report_Realizaron_Consejeria_".$counselingTerm.".csv";
                 else if($type == 'active')
-                    $combinedCsvFileName = "Report_Estudiantes_Activos_".$term.".csv";
+                    $combinedCsvFileName = "Report_Estudiantes_Activos_".$counselingTerm.".csv";
                 else if($type == 'openinactive')
-                    $combinedCsvFileName = "Report_Estudiantes_Inactivos_".$term.".csv";
+                    $combinedCsvFileName = "Report_Estudiantes_Inactivos_".$counselingTerm.".csv";
                 else if($type == 'incomplete')
                     $combinedCsvFileName = "Report_Notas_Incompletas.csv";
                 else
-                    $combinedCsvFileName = "Report_Estudiantes_Apuntados_".$type."-".$term.".csv";
+                    $combinedCsvFileName = "Report_Estudiantes_Apuntados_".$type."-".$counselingTerm.".csv";
                 $_SESSION['filename'] = $combinedCsvFileName;
             }
 

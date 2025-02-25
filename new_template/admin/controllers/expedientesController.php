@@ -204,15 +204,21 @@ class ExpedientesController
                     $term = $_POST['term'];
                     $old_term = $_POST['old_term'];
 
+                    $grade = str_replace(" ", '', $grade);
+
                     if ($department == "CCOM") {
                         if (in_array($grade, ['D', 'F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                             $status = "NP";
+                        } elseif ($grade == '') {
+                            $status = "M";
                         } else {
                             $status = "P";
                         }
                     } else {
                         if (in_array($grade, ['F', 'F*', 'NP', 'I', 'W', 'W*', 'NR'])) {
                             $status = "NP";
+                        } elseif ($grade == '') {
+                            $status = "M";
                         } else {
                             $status = "P";
                         }
@@ -589,12 +595,16 @@ class ExpedientesController
                                             $type = 'free';
                                         } else
                                             $type = 'general';
-                                    } else {
+                                    } elseif ($course_info['type'] == 'mandatory' && !$studentModel->requiredByCohort($conn, $class, $studentData['cohort_year'])) {
+                                        $type = 'elective';
+                                    } else
+                                    {
                                         $type = $course_info['type'];
                                     }
                                 }
 
                                 #echo "{$course_info['crse_code']} has type: {$type}\n";
+                                $grade = str_replace(" ", '', $grade);
 
                                 if ($grade == "") {
                                     $status = "M";

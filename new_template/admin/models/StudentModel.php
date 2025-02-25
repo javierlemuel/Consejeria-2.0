@@ -957,6 +957,7 @@ class StudentModel
         //     return FALSE;
         // }
 
+        // a este result le puse resultex para asegurarme que no conflija con ninguno anterior 
         if (isset($resultex['crse_status'])) {
             if ($resultex['crse_status'] == 'M' || in_array($course_code, ['CCOM3135', 'CCOM3985', 'INTD4995'])) {
                 $sql = "UPDATE student_courses
@@ -1347,8 +1348,8 @@ class StudentModel
     {
         $sql = "DELETE FROM recommended_courses
                 WHERE student_num=$student_num";
-        $res = $conn->query($sql);
-        if ($res === false) {
+        $result = $conn->query($sql);
+        if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
     }
@@ -1367,15 +1368,15 @@ class StudentModel
             will_take.crse_code = courses.crse_code
         WHERE will_take.student_num = ? AND will_take.term = ?";
 
-        // Preparar la sentencia
+        // Preparar el query
         $stmt = $conn->prepare($sql);
         // Vincular los parámetros con los valores
         $stmt->bind_param("ss", $student_num, $selectedTerm);
-        // Ejecutar la sentencia
+        // Ejecutar el query
         $stmt->execute();
         // Obtener el resultado de la consulta
         $result = $stmt->get_result();
-        // Cerrar la sentencia
+        // Cerrar el query
         $stmt->close();
 
         // Verificar si hay resultados
@@ -1389,5 +1390,18 @@ class StudentModel
             }
             return $data; // Devolver los resultados
         }
+    }
+
+    public function requiredByCohort($conn, $course_code, $cohort_year)
+    {
+        $sql = "SELECT cohort_year FROM cohort WHERE cohort_year=$cohort_year AND crse_code='$course_code'";
+        $result = $conn->query($sql);
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+        if ($result->num_rows > 0)
+            return TRUE;
+        else
+            return FALSE;
     }
 }

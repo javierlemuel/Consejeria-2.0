@@ -118,7 +118,7 @@
             <div class="animate__animated p-6" :class="[$store.app.animation]" style='padding: 5% 10%'>
                 <!-- start main content section -->
 
-                <div style='text-align:center; font-size: 35px'><h2>Reportes Generales: Semestre <?php echo $term ?></h2></div>
+                <div style='text-align:center; font-size: 35px'><h2>Reportes Generales: Semestre <?php echo $counselingTerm ?></h2></div>
                     <a href="?blockAllCounseling"><button value="blockAllCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2"
                         style="margin-top: 5vh;">
                         Cerrar consejería a todos los estudiantes</button></a>
@@ -165,7 +165,7 @@
                         </tr>
                         <tr>
                             <td style='text-align:center'>Expedientes revisados</td>
-                            <td style='text-align:center'><?php echo $studentsEditados  ?></td>
+                            <td style='text-align:center'><?php echo $studentsConfirmados  ?></td>
                             <td></td>
                         </tr>
                         <tr style='background-color: lightgray'>
@@ -174,10 +174,6 @@
                             <td style='text-align:center; vertical-align:middle'><a href='?reports&code=incomplete'>
                             <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
                         </tr>
-                        <!-- <tr style='background-color: lightgray'>
-                            <td style='text-align:center'>Cursos repetidos</td>
-                            <td style='text-align:center'><?php echo $repeatedCourses  ?></td>
-                        </tr> -->
                         <tr>
                             <td style='text-align:center'>Actualizar estudiantes inactivos</td>
                             <td style='text-align:center'><?php echo $studentsInactivos  ?></td>
