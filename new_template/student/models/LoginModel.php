@@ -20,7 +20,7 @@ class LoginModel
                 // Verifica el status del estudiante
                 $status = $row['status'];
             }
-            if ($status == 'Activo')
+            if ($status == 'Activo' || $status == 'Graduando')
                 // Las credenciales son correctas, el usuario está autenticado
                 return true;
             else

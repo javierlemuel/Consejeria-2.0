@@ -207,7 +207,6 @@ class ReporteModel {
                 return $res['count'];
         else    
             return 0;
-
    }
 
     public function getConfirmed($conn)
@@ -364,11 +363,10 @@ class ReporteModel {
             $student_num = $course['student_num'];
             $crse_code = $course['crse_code'];
             $term = $course['term'];
-            $crse_grade = $course['crse_grade'];
 
             // este query va a verificar si el curso ya esta en la tabla nueva
-            $sql = "SELECT student_num, crse_code, term, crse_grade
-            FROM new_student_courses
+            $sql = "SELECT student_num, crse_code, term
+            FROM student_courses_new
             WHERE student_num = $student_num AND crse_code = '$crse_code' AND term = '$term'";
 
             $stmt = $conn->prepare($sql);
@@ -390,17 +388,39 @@ class ReporteModel {
                 $equivalencia = '';
                 $convalidacion = '';
                 foreach ($currentCourseInOldTable as $oldInfo) {
-                    $equivalencia .= $oldInfo['equivalencia'];
-                    $convalidacion .= $oldInfo['convalidacion'];
+                    // PARA LAS EQUIVALENCIAS
+                    if ($equivalencia == '' && $equivalencia != $oldInfo['equivalencia'])
+                    $equivalencia .= $oldInfo['equivalencia'] . ' | ';
+                    elseif (substr($equivalencia,0,-3) != $oldInfo['equivalencia'])
+                        $equivalencia .= $oldInfo['equivalencia'] . ' | ';
+                    // PARA LAS CONVALIDACIONES
+                    if ($convalidacion == '' && $convalidacion != $oldInfo['convalidacion'])
+                    $convalidacion .= $oldInfo['convalidacion'] . ' | ';
+                    elseif (substr($convalidacion,0,-3) != $oldInfo['convalidacion'])
+                        $convalidacion .= $oldInfo['convalidacion'] . ' | ';
+
+                    // if (strcasecmp($crse_grade, $oldInfo['crse_grade']) > 0 || $crse_grade == '') { 
+                    //     if ($oldInfo['crse_grade'] != 'F' && $oldInfo['crse_grade'] != 'D' && $oldInfo['crse_grade'] != 'W' && strpos($oldInfo['crse_grade'], 'I') == false){
+                    //         // falta hacer otra comparacion para los cursos que no son de ccom
+                    //         $crse_grade = $oldInfo['crse_grade'];
+                    //     }
+                    // }
                 }
 
+                if (substr_count($equivalencia, '|') >= 1)
+                    $equivalencia = substr($equivalencia,0,-3);
+
+                if (substr_count($convalidacion, '|') >= 1)
+                    $convalidacion = substr($convalidacion,0,-3);
+
+                $crse_grade = $course['crse_grade'];
                 $credits = $course['credits'];
                 $category = $course['category'];
                 $level = $course['level'];
                 $crse_status = $course['crse_status'];
 
                 // este query va a insertar la clase en la tabla nueva
-                $sql = "INSERT INTO new_student_courses 
+                $sql = "INSERT INTO student_courses_new 
                 (student_num, crse_code, term, crse_grade, credits, category, 
                 level, crse_status, equivalencia, convalidacion) 
                 VALUES ($student_num, '$crse_code', '$term', '$crse_grade', $credits, 
