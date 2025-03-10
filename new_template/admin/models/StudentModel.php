@@ -134,7 +134,7 @@ class StudentModel
 
         // Process and return results
         $students = [];
-        $term = $termsModel->getActiveTerm($conn); // Get the current term
+        $term = $termsModel->getCounselingTerm($conn); // Get the term for counseling status
 
         while ($row = $result->fetch_assoc()) {
             $student_num = $row['student_num'];
@@ -657,7 +657,7 @@ class StudentModel
                 $code = $this->validateLanguageGenerals($conn, $code);
 
         $sql = "SELECT * FROM student_courses 
-        WHERE student_num = ? AND crse_code = ? AND crse_grade != '' AND crse_status != 'M'";
+        WHERE student_num = ? AND crse_code = ? AND crse_status != 'M'";
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
         // Vincular el parámetro con el valor
@@ -827,6 +827,7 @@ class StudentModel
             return FALSE;
         }
 
+
         // Vincular los parámetros con los valores
         $stmt1->bind_param("issssssssss", $credits, $category, $level, $grade, $status, $term, $equi, $conva, $student_num, $course_code, $old_term);
 
@@ -959,7 +960,7 @@ class StudentModel
 
         // a este result le puse resultex para asegurarme que no conflija con ninguno anterior 
         if (isset($resultex['crse_status'])) {
-            if ($resultex['crse_status'] == 'M' || in_array($course_code, ['CCOM3135', 'CCOM3985', 'INTD4995'])) {
+            if ($resultex['crse_status'] == 'M' || in_array($course_code, ['CCOM3135', 'CCOM3985', 'INTD4995', 'FISI4985'])) {
                 $sql = "UPDATE student_courses
                         SET crse_grade = ?, crse_status = ?
                         WHERE student_num = ? AND crse_code = ? AND term = ?";
@@ -1058,6 +1059,8 @@ class StudentModel
                 return FALSE;
             }
         } catch (Exception $e) {
+            // esta pasando por aqui
+            // die("exception");
             $_SESSION['consejeria_msg'] = "No se pudo insertar nota y curso $course_code.";
         }
     }
