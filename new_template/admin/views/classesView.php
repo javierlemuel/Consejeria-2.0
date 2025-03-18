@@ -383,7 +383,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
 
                                                 if ($category !== 'oferta' && $privileges == 1) {
                                                     echo "<td style='text-align:center; vertical-align:middle'><a href='?addOffer&code=$courseCode'>
-                    <span class='badge whitespace-nowrap badge-outline-primary'>Añade a oferta</span>";
+                    <span class='badge whitespace-nowrap badge-outline-primary'>Añade </span>";
                                                     echo "<td style='text-align:center; vertical-align:middle'><a href='?class=$courseCode'>
                     <span class='badge whitespace-nowrap badge-outline-primary'>Editar curso</span>";
                                                 } elseif ($category == 'oferta') {

@@ -38,19 +38,19 @@ class ClassesController
             require_once(__DIR__ . '/../views/listaView.php');
         } elseif (isset($_GET['ccomelectives'])) {
 
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
 
             $courses = $classesModel->getCcomElectives($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'electivas';
         } elseif (isset($_GET['generalclasses'])) {
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
             $courses = $classesModel->getGeneralCourses($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'generales';
             $current_class = 'generalclasses';
         } elseif (isset($_GET['dummyclasses'])) {
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
             $courses = $classesModel->getDummyCourses($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'dummy';
@@ -60,14 +60,14 @@ class ClassesController
             //     $courses = $classesModel->getOfferCourses($conn, $term);
             //     $category = 'oferta';
             // } else {
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
             $courses = $classesModel->getOfferCourses($conn, $term);
             $category = 'oferta';
             // }
         } elseif (isset($_GET['addOffer']) && isset($_GET['code'])) {
             $courseID = $_GET['code'];
             $message = $classesModel->addToOffer($conn, $courseID);
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
             $courses = $classesModel->getCcomCourses($conn);
             $category = 'concentracion';
             header('Location: ?classes&message=' . $message);
@@ -76,7 +76,7 @@ class ClassesController
             echo "HEY";
             $courseID = $_GET['code'];
             $message = $classesModel->removeFromOffer($conn, $courseID);
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
             $courses = $classesModel->getOfferCourses($conn, $term);
             $category = 'oferta';
             header('Location: ?offer&message=' . $message);
@@ -94,7 +94,7 @@ class ClassesController
                 $studentsRegistrados = $reporteModel->getRegistrados($conn);
                 $studentsEditados = $reporteModel->getEditados($conn);
                 $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
-                $term = $termsModel->getActiveTerm($conn);
+                $term = $termsModel->getCounselingTerm($conn);
 
                 // Data array for the first table
                 $firstTableData = [
@@ -137,7 +137,7 @@ class ClassesController
                 $classesModel->setNewTerm($conn, $new_term);
             } else {
                 // Get present term if not creating a new term
-                $term = $termsModel->getActiveTerm($conn);
+                $term = $termsModel->getCounselingTerm($conn);
             }
             // Get courses in offer and return to offer page
             $courses = $classesModel->getOfferCourses($conn, $_POST['term']);
@@ -151,7 +151,7 @@ class ClassesController
             $courses = $classesModel->getCcomCourses($conn, $q, $p);
             $amountOfPages = $classesModel->getPageAmount();
             $category = 'concentracion';
-            $term = $termsModel->getActiveTerm($conn);
+            $term = $termsModel->getCounselingTerm($conn);
         }
 
         if (!isset($_GET['lista']))

@@ -864,7 +864,7 @@ class ClassesModel
     {
         $termsModel = new TermsModel();
         //Verifica que el curso no exista ya en la oferta
-        $term = $termsModel->getActiveTerm($conn);
+        $term = $termsModel->getCounselingTerm($conn);
         $sql = "SELECT term
                 FROM offer
                 WHERE crse_code = '$courseID'

@@ -145,12 +145,16 @@ class ExpedientesController
                     if (isset($_POST['updateGrade']))
                         unset($_POST['updateGrade']);
 
+                    require_once(__DIR__ . '/../models/TermsModel.php');
+                    $termsModel = new TermsModel();
+
+                    $classesModel = new ClassesModel();
                     $currentDateTime = date("Y-m-d H:i:s");
                     $logMessage = "\n" . $currentDateTime . "\n";
                     #error_log($logMessage, 3, $archivoRegistro);
                     $_SESSION['registermodeltxt'] .= $logMessage;
 
-                    $term = $termsModel->getActiveTerm($conn);
+                    $term = $termsModel->getCounselingTerm($conn);
 
                     if (isset($_POST['seleccion']) && is_array($_POST['seleccion'])) {
                         // Obtiene los valores de los checkboxes seleccionados

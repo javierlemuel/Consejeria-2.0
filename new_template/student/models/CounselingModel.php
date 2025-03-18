@@ -8,7 +8,7 @@ class CounselingModel
         require_once(__DIR__ . '/../models/TermsModel.php');
         $termsModel = new TermsModel();
 
-        $term = $termsModel->getActiveTerm($conn);
+        $term = $termsModel->getCounselingTerm($conn);
 
         $sql = "SELECT DISTINCT  gc.crse_code, gc.name, gc.credits
                 FROM recommended_courses rc
@@ -53,16 +53,10 @@ class CounselingModel
         //selecciona las clases que estan en offer y ccom_courses pero que el estudiante no haya pasado (crse_status = 'P')
         // y ademas que los cursos no esten en recommended
 
-        $sql = "SELECT DISTINCT  term
-        FROM offer AS o
-        WHERE o.crse_code = 'XXXX'";
-        $result = $conn->query($sql);
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
 
-        $result = $result->fetch_assoc();
-        $term = $result['term'];
+        $term = $termsModel->getCounselingTerm($conn);
 
         $sql = "SELECT DISTINCT  of.crse_code, cc.type, cc.name, cc.credits
                 FROM offer as of
@@ -129,16 +123,11 @@ class CounselingModel
 
     public function getGeneralCourses($conn, $student_num)
     {
-        $sql = "SELECT DISTINCT  term
-        FROM offer AS o
-        WHERE o.crse_code = 'XXXX'";
-        $result = $conn->query($sql);
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
 
-        $result = $result->fetch_assoc();
-        $term = $result['term'];
+        $term = $termsModel->getCounselingTerm($conn);
+
         //selecciona clases generales que estan en oferta y que el estudiante no haya pasado
         $sql = "SELECT DISTINCT  of.crse_code, gc.type, gc.name, gc.credits
                 FROM offer as of
@@ -207,19 +196,10 @@ class CounselingModel
 
     public function setCourses($conn, $student_num, $courses)
     {
-        //add SELECT DISTINCT ed courses to will_take table
-        $sql = "SELECT DISTINCT  term
-                FROM offer AS o
-                WHERE o.crse_code = 'XXXX'";
-        $result = $conn->query($sql);
-        if ($result === false) {
-            throw new Exception("Error en la consulta SQL: " . $conn->error);
-        }
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
 
-        while ($row = $result->fetch_assoc()) {
-            $term = $row['term'];
-            break;
-        }
+        $term = $termsModel->getCounselingTerm($conn);
 
         foreach ($courses as $course) {
 
