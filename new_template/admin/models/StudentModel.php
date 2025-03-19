@@ -1338,8 +1338,11 @@ class StudentModel
 
     public function confirmCounseling($conn, $id)
     {
+        $termsModel = new TermsModel();
+        $term = $termsModel->getCounselingTerm($conn);
+
         $sql = "UPDATE student
-                SET confirmed = 1
+                SET confirmed = '$term'
                 WHERE student_num = $id";
         $res = $conn->query($sql);
         if ($res === false) {

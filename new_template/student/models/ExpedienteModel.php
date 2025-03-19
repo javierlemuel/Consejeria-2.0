@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__ . '/../models/TermsModel.php');
 // models/LoginModel.php
 class StudentModel
 {
@@ -36,10 +37,12 @@ class StudentModel
 
     public function getStudentCCOMCourses($conn, $student_num, $cohort_year)
     {
+        $termsModel = new TermsModel();
+        $counselingTerm = $termsModel->getCounselingTerm($conn);
         $sql = "SELECT DISTINCT ccom_courses.crse_code, ccom_courses.name, ccom_courses.credits, student_courses.crse_grade, student_courses.crse_status, 
                 student_courses.convalidacion, student_courses.equivalencia,  student_courses.term, ccom_courses.type,
                 cohort.cohort_year,
-                CASE WHEN ccom_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
+                CASE WHEN ccom_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' ELSE NULL END AS recommended
 
         FROM ccom_courses
         LEFT JOIN student_courses ON ccom_courses.crse_code = student_courses.crse_code
@@ -51,7 +54,7 @@ class StudentModel
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param("sss", $student_num, $student_num, $cohort_year);
+        $stmt->bind_param("ssss", $student_num, $counselingTerm, $student_num, $cohort_year);
 
         // ejecuta el statement
         $stmt->execute();
@@ -80,6 +83,9 @@ class StudentModel
         //         JOIN cohort on cohort.crse_code = general_courses.crse_code
         //         WHERE cohort.cohort_year = ? AND general_courses.crse_code NOT IN ('INGL3113', 'INGL3114');";
 
+        $termsModel = new TermsModel();
+        $counselingTerm = $termsModel->getCounselingTerm($conn);
+
         $sql = "SELECT DISTINCT 
             student_courses.crse_code, 
             general_courses.name, 
@@ -91,7 +97,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -111,7 +117,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -131,7 +137,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -151,7 +157,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -171,7 +177,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -191,7 +197,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -211,7 +217,7 @@ class StudentModel
             student_courses.term, 
             general_courses.type,
             CASE 
-            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ?) THEN 'Prox. Sem' 
+            WHEN general_courses.crse_code IN (SELECT DISTINCT  crse_code FROM recommended_courses WHERE student_num = ? AND term = ?) THEN 'Prox. Sem' 
             ELSE NULL 
             END AS recommended
             FROM student_courses
@@ -222,8 +228,9 @@ class StudentModel
         $stmt = $conn->prepare($sql);
 
         // sustituye el ? por el valor de $student_num
-        $stmt->bind_param('ssssssssssssss', $student_num, $student_num, $student_num, $student_num, $student_num, $student_num, $student_num,
-        $student_num, $student_num, $student_num, $student_num, $student_num, $student_num, $student_num);
+        $stmt->bind_param('sssssssssssssssssssss', $student_num, $counselingTerm, $student_num, $student_num, $counselingTerm, $student_num, $student_num, 
+        $counselingTerm, $student_num, $student_num, $counselingTerm, $student_num, $student_num, $counselingTerm, $student_num, $student_num, $counselingTerm, 
+        $student_num, $student_num, $counselingTerm, $student_num);
 
         // ejecuta el statement
         $stmt->execute();

@@ -26,6 +26,7 @@ class ReporteController{
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
         $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
         // $reporteModel->moveRepeatedCourses($conn);
+        // $reporteModel->deleteRepeatedRecommendations($conn);
         $activeTerm = $termModel->getActiveTerm($conn);
         $counselingTerm = $termModel->getCounselingTerm($conn);
         $count = 0;
@@ -48,7 +49,7 @@ class ReporteController{
             }
 
             if ($type != 'updateinactive') {
-                $studentsInfo = $reporteModel->getStudentsInfo($conn, $type, $activeTerm);
+                $studentsInfo = $reporteModel->getStudentsInfo($conn, $type, $counselingTerm);
                 // Data array for the second table
                 $TableData = [];
                 if (isset($studentsInfo)) {

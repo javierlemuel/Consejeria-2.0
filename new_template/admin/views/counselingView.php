@@ -210,6 +210,18 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                         ?>
                                     </tbody>
                                 </table>
+                                <form method='POST' action='index.php'>
+                                    <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
+                                    <input type='hidden' name='deleteAllRecommendationsforOneStudent' value='deleteAllRecommendationsforOneStudent'>
+                                    <button type='submit' name='action' value='deleteAllRecommendationsforOneStudent' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345; margin-top: 5vh; float: right;'>Eliminar todas</button>
+                                </form>
+                                <?php if ($term == $selectedTerm) { ?>
+                                    <form method='POST' action='index.php'>
+                                        <input type='hidden' name='confirmRecommendation' value=<?=$term?>>
+                                        <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
+                                        <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar</button>
+                                    </form>
+                                    <?php } ?>
                                         <?php } ?>
                                 <h3 class="m-0 dark:text-white-dark" style="font-size: 1.5em; font-weight: bold; margin-top: 1em; margin-bottom: 1em;"> Estatus de la Consejería</h3>
                                     <?php if ($studentData['status'] == 'Graduando' || $studentData['status'] == 'Graduado'): ?>
@@ -240,16 +252,6 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                         }
                                         echo "</table>";
                                     ?>
-                                <form method='POST' action='index.php'>
-                                    <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
-                                    <input type='hidden' name='deleteAllRecommendationsforOneStudent' value='deleteAllRecommendationsforOneStudent'>
-                                    <button type='submit' name='action' value='deleteAllRecommendationsforOneStudent' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345; margin-top: 5vh; float: right;'>Eliminar todas</button>
-                                </form>
-                                <form method='POST' action='index.php'>
-                                    <input type='hidden' name='confirmRecomendation' value='confirmRecomendation'>
-                                    <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
-                                    <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar<br>Coming Soon!</button>
-                                </form>
                             </div>
                         <?php
                         }
@@ -339,7 +341,8 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                             echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                            }
+                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='deleteStudentCourse' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</i></button></td>"; 
+                                                }echo "</tr>";
                                             echo "</tr>";
                                             echo "<input type='hidden' name='equivalencia' value=''/>";
                                             echo "<input type='hidden' name='convalidacion' value=''/>";
@@ -420,7 +423,8 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                             echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             if ($privileges == 1) {
                                                 echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                            }
+                                                echo "<td style='padding: 5px;'> <button type='submit' name='action' value='deleteStudentCourse' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</i></button></td>"; 
+                                                }echo "</tr>";
                                             echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
@@ -500,7 +504,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                             echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                             if ($privileges == 1) {
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Eliminar</i></button></td>"; // TENGO QUE HACER LA FUNCIONALIDAD DE BORRAR
+                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='deleteStudentCourse' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</i></button></td>"; 
                                             }echo "</tr>";
                                             echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                             echo "</form>";
@@ -595,8 +599,8 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                                 echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                                 if ($privileges == 1) {
                                                     echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                }
-                                                echo "</tr>";
+                                                    echo "<td style='padding: 5px;'> <button type='submit' name='action' value='deleteStudentCourse' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</i></button></td>"; 
+                                                    }echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
                                             }
@@ -673,7 +677,8 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                                 echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
                                                 if ($privileges == 1) {
                                                     echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                                }
+                                                    echo "<td style='padding: 5px;'> <button type='submit' name='action' value='deleteStudentCourse' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</i></button></td>"; 
+                                                    }echo "</tr>";
                                                 echo "</tr>";
                                                 echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                                 echo "</form>";
@@ -748,9 +753,10 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                         echo "<td style='padding: 5px;'> <input type='text' name='equivalencia' class='form-input' value='" . $curso['equivalencia'] . "'/></td>";
                                         echo "<td style='padding: 5px;'> <input type='text' name='convalidacion' class='form-input' value='" . $curso['convalidacion'] . "'/></td>";
                                         echo "<input type='hidden' name='updateGrade' value='updateGrade'>";
-                                        if (/*$curso['db'] == 'yes' && */$privileges == 1)
+                                        if (/*$curso['db'] == 'yes' && */$privileges == 1){
                                             echo "<td style='padding: 5px;'> <button type='submit' name='action' value='studentCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2'>Actualizar</button></td>";
-                                        echo "</tr>";
+                                            echo "<td style='padding: 5px;'> <button type='submit' name='action' value='deleteStudentCourse' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345;'>Eliminar</i></button></td>"; 
+                                            }echo "</tr>";
                                         echo "<input type='hidden' name='student_num' value=" . $studentData['student_num'] . ">";
                                         echo "</form>";
                                     }

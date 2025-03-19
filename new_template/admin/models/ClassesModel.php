@@ -864,7 +864,7 @@ class ClassesModel
     {
         $termsModel = new TermsModel();
         //Verifica que el curso no exista ya en la oferta
-        $term = $termsModel->getActiveTerm($conn);
+        $term = $termsModel->getCounselingTerm($conn);
         $sql = "SELECT term
                 FROM offer
                 WHERE crse_code = '$courseID'
@@ -999,7 +999,7 @@ class ClassesModel
     public function getMatriculadosModel($conn, $course)
     {
         $termsModel = new TermsModel();
-        $term = $termsModel->getActiveTerm($conn);
+        $term = $termsModel->getCounselingTerm($conn);
         $sql = "SELECT count(student_num) AS count
                 FROM will_take
                 WHERE crse_code = '$course'
