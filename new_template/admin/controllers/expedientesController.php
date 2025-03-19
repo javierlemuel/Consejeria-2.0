@@ -11,6 +11,7 @@ require_once(__DIR__ . '/../models/MinorModel.php');
 require_once(__DIR__ . '/../config/database.php');
 require_once(__DIR__ . '/../models/CohorteModel.php');
 require_once(__DIR__ . '/../global_classes/utils.php');
+require_once(__DIR__ . '/../models/TermsModel.php');
 class ExpedientesController
 {
     public function index()
@@ -19,6 +20,7 @@ class ExpedientesController
         $studentModel = new StudentModel();
         //JAVIER
         $minorModel = new MinorModel();
+        $termsModel = new TermsModel();
         #$error_log = "";
         $_SESSION['registermodeltxt'] = "";
         //
@@ -46,6 +48,10 @@ class ExpedientesController
         if (isset($_POST['deleteAllRecommendationsforOneStudent']) && $_POST['student_num']) {
             // Entrar función de borrar todas las recomendaciones
             $studentModel->deleteAllRecommendationsOnOneStudent($conn, $_POST['student_num']);
+        }
+
+        if (isset($_POST['confirmRecommendation']) && $_POST['student_num']) {
+            $studentModel->confirmCounseling($conn, $_POST['student_num']); // falta que lleve al estudiante otra vez
         }
 
         if (isset($_GET['blockAllCounseling'])) {
@@ -127,12 +133,18 @@ class ExpedientesController
                 $studentData = $studentModel->selectStudent($student_num, $conn);
                 $studentCohort = $studentData['cohort_year'];
                 $studentRecommendedTerms = $studentModel->studentRecommendedTerms($student_num, $conn);
+                $counselingTerm = $termsModel->getCounselingTerm($conn);
 
                 if (isset($_POST['selectedTerm']) && !empty($_POST['selectedTerm'])) {
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
                     $studentWillTakeClasses = $studentModel->getClassesStudentWillTake($student_num, $selectedTerm, $conn); // clases que el estudiante escogio en la consejeria
-                } else {
+                } elseif (in_array($counselingTerm, $studentRecommendedTerms)) {
+                    $selectedTerm = $counselingTerm;
+                    $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $counselingTerm, $conn); // clases recomendadas en ese term
+                    $studentWillTakeClasses = $studentModel->getClassesStudentWillTake($student_num, $counselingTerm, $conn); // clases que el estudiante escogio en la consejeria
+                }
+                else {
                     $studentRecommendedClasses = NULL;
                 }
                 if (isset($_POST['deleteRecomendation']) && !empty($_POST['deleteRecomendation'])) {
@@ -144,9 +156,6 @@ class ExpedientesController
                 if (isset($_POST['makecounseling']) && !empty($_POST['makecounseling'])) {
                     if (isset($_POST['updateGrade']))
                         unset($_POST['updateGrade']);
-
-                    require_once(__DIR__ . '/../models/TermsModel.php');
-                    $termsModel = new TermsModel();
 
                     $classesModel = new ClassesModel();
                     $currentDateTime = date("Y-m-d H:i:s");

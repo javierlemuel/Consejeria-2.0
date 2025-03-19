@@ -433,4 +433,37 @@ class ReporteModel {
             }
         }
     }
+
+    public function deleteRepeatedRecommendations($conn) {
+        // este query busca todos los cursos recomendados
+        $sql = "SELECT student_num, crse_code, term
+                FROM recommended_courses";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $recommendedCourses = $stmt->get_result(); 
+        $stmt->close();
+
+        foreach( $recommendedCourses as $course) {
+            $sql = "SELECT COUNT(student_num)
+            FROM recommended_courses
+            WHERE student_num = ? AND crse_code = ? AND term = ?";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('sss', $course['student_num'], $course['crse_code'], $course['term']);
+            $stmt->execute();
+            $recommendedCount = $stmt->get_result(); 
+            $stmt->close();
+
+            if ($recommendedCount->fetch_row()[0] > 1) {
+                $sql = "DELETE FROM recommended_courses
+                WHERE student_num = ? AND crse_code = ? AND term = ?
+                LIMIT 1";
+    
+                $stmt = $conn->prepare($sql);
+                $stmt->execute($course['student_num'], $course['crse_code'], $course['term']);
+                $stmt->close();
+            }
+        }
+    }
 }
