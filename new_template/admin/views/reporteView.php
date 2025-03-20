@@ -165,7 +165,7 @@
                         </tr>
                         <tr>
                             <td style='text-align:center'>Expedientes revisados</td>
-                            <td style='text-align:center'><?php echo $studentsConfirmados  ?></td>
+                            <td style='text-align:center'><?php echo $studentsRevisados  ?></td>
                             <td></td>
                         </tr>
                         <tr style='background-color: lightgray'>

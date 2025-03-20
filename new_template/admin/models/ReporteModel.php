@@ -209,13 +209,25 @@ class ReporteModel {
             return 0;
    }
 
-    public function getConfirmed($conn)
+    public function getRevisados($conn)
    {    
         $termsModel = new TermsModel();
-        $term = $termsModel->getCounselingTerm($conn);
-        $sql = "SELECT COUNT(confirmed) AS count
+        $termInfo = $termsModel->getActiveTermInfo($conn);
+
+        $years = explode('-', $termInfo['year']);
+
+        if ($termInfo['semester'] == 'Primero') {
+            $semesterStart = date(DATE_ATOM, mktime(0, 0, 0, 8, 1, $years[0]));
+            $semesterEnd = date(DATE_ATOM, mktime(0, 0, 0, 12, 1, $years[0]));
+        } else {
+            $semesterStart = date(DATE_ATOM, mktime(0, 0, 0, 1, 1, $years[1]));
+            $semesterEnd = date(DATE_ATOM, mktime(0, 0, 0, 6, 1, $years[1]));
+        }
+
+        $sql = "SELECT COUNT(student_num) AS count
                 FROM student
-                WHERE confirmed = '$term'";
+                WHERE edited_date > '$semesterStart' AND edited_date < '$semesterEnd'";
+
         $result = $conn->query($sql);
         if ($result === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -461,7 +473,41 @@ class ReporteModel {
                 LIMIT 1";
     
                 $stmt = $conn->prepare($sql);
-                $stmt->execute($course['student_num'], $course['crse_code'], $course['term']);
+                $stmt->bind_param('sss', $course['student_num'], $course['crse_code'], $course['term']);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+
+
+        // este query busca todos los cursos que tomara el estudiante
+        $sql = "SELECT student_num, crse_code, term
+                FROM will_take";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $willTakeCourses = $stmt->get_result(); 
+        $stmt->close();
+
+        foreach( $willTakeCourses as $course) {
+            $sql = "SELECT COUNT(student_num)
+            FROM will_take
+            WHERE student_num = ? AND crse_code = ? AND term = ?";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('sss', $course['student_num'], $course['crse_code'], $course['term']);
+            $stmt->execute();
+            $recommendedCount = $stmt->get_result(); 
+            $stmt->close();
+
+            if ($recommendedCount->fetch_row()[0] > 1) {
+                $sql = "DELETE FROM will_take
+                WHERE student_num = ? AND crse_code = ? AND term = ?
+                LIMIT 1";
+    
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('sss', $course['student_num'], $course['crse_code'], $course['term']);
+                $stmt->execute();
                 $stmt->close();
             }
         }

@@ -22,7 +22,7 @@ class ReporteController{
         $studentsActivos = $reporteModel->getStudentsActivos($conn);
         $studentsInactivos = $reporteModel->getStudentsInactivos($conn);
         $studentsRegistrados = $reporteModel->getRegistrados($conn);
-        $studentsConfirmados = $reporteModel->getConfirmed($conn);
+        $studentsRevisados = $reporteModel->getRevisados($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
         $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
         // $reporteModel->moveRepeatedCourses($conn);
