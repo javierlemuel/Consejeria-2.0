@@ -139,7 +139,7 @@ class ExpedientesController
                     $selectedTerm = $_POST['selectedTerm']; // term seleccionado en el select de counseling view
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $selectedTerm, $conn); // clases recomendadas en ese term
                     $studentWillTakeClasses = $studentModel->getClassesStudentWillTake($student_num, $selectedTerm, $conn); // clases que el estudiante escogio en la consejeria
-                } elseif (in_array($counselingTerm, $studentRecommendedTerms)) {
+                } elseif (isset($counselingTerm) && isset($studentRecommendedTerms) && in_array($counselingTerm, $studentRecommendedTerms)) {
                     $selectedTerm = $counselingTerm;
                     $studentRecommendedClasses = $studentModel->studentRecommendedClasses($student_num, $counselingTerm, $conn); // clases recomendadas en ese term
                     $studentWillTakeClasses = $studentModel->getClassesStudentWillTake($student_num, $counselingTerm, $conn); // clases que el estudiante escogio en la consejeria

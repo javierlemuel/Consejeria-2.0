@@ -136,4 +136,20 @@ class TermsModel
         $term = $row['code'];
         return $term;
     }
+
+    public function getActiveTermInfo($conn) {
+        $sql = "SELECT *
+        FROM term
+        WHERE active = 1";
+
+        $result = $conn->query($sql);
+
+        
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $row = $result->fetch_assoc();
+        return $row;
+    }
 }
