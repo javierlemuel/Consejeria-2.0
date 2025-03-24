@@ -104,8 +104,8 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                 //crea array con categoria de cursos
                                 $courseCategories = array(
                                     "recomendadas",
-                                    "concentraciÓn",
-                                    "generales",
+                                    // "concentraciÓn",
+                                    // "generales",
                                 );
                                 //variable to control that only the first tab in the accoridon is open by default
                                 $tab = 1;
@@ -135,11 +135,12 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                                             <!-- create rows with the course info -->
                                                             <?php if ($category == 'RECOMENDADAS') {
                                                                 $courses = array_slice($recommendedCourses, 0);
-                                                            } elseif ($category == 'CONCENTRACIÓN') {
-                                                                $courses = array_slice($concentrationCourses, 0);
-                                                            } elseif ($category == 'GENERALES') {
-                                                                $courses = array_slice($generalCourses, 0);
-                                                            }
+                                                            } 
+                                                            // elseif ($category == 'CONCENTRACIÓN') {
+                                                            //     $courses = array_slice($concentrationCourses, 0);
+                                                            // } elseif ($category == 'GENERALES') {
+                                                            //     $courses = array_slice($generalCourses, 0);
+                                                            // }
 
                                                             //var_dump($recommendedCourses);
                                                             //var_dump($courses);
@@ -348,6 +349,7 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
 
 
                 // //if the Confirmar Consejeria buttton is disabled, disable the checkbox input and the remove course option
+                // counseling_button esta en el counseling controller, ahi se determina si se activa el boton o no
                 if ($('#counseling_button').prop('disabled')) {
                     $('input[type="checkbox"]').prop('disabled', true);
                 }

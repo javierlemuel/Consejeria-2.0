@@ -917,14 +917,18 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         </form> -->
                         <?php } ?>
                         <br> 
-                        <?php if($studentData['counseling_lock'] == 0) { ?>
+                        <?php 
+                            require_once(__DIR__ . '/../models/StudentModel.php');
+                            $studentModel = new StudentModel();
+                            $lock = $studentModel->getCounselingLock($conn, $studentData['student_num']);
+                            if(!$lock) { ?>
                             <form method="POST" action="index.php">
                                 <input type='hidden' name='block' value='block'>
                                 <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
                                 <button type="submit" name="action" value="blockCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Cerrar Consejería a este Estudiante</button>
                             </form>
                         <?php } 
-                            else if($studentData['counseling_lock'] == 1) { ?>
+                            else { ?>
                             <form method="POST" action="index.php">
                             <input type='hidden' name='openCounseling' value='openCounseling'>
                             <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
