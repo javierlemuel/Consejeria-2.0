@@ -621,15 +621,39 @@ class StudentModel
         return;
     }
 
-    public function changeCounselingLock($student_num, $conn, $lockStatus)
+    public function changeCounselingLock($student_num, $conn)
     {
-        $sql = "UPDATE student SET counseling_lock = ? WHERE student_num = ?";
+        $lock = self::getCounselingLock($conn, $student_num);
 
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $lockStatus, $student_num);
-        $result = $stmt->execute();
+        if ($lock) {
+            $sql = "UPDATE student SET counseling_lock = 0, conducted_counseling = 0 WHERE student_num = ?";
 
-        $stmt->close();
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $student_num); // toggle counseling lock
+            $result = $stmt->execute();
+
+            $stmt->close();
+
+            require_once(__DIR__ . '/../models/TermsModel.php');
+            $termsModel = new TermsModel();
+    
+            $term = $termsModel->getCounselingTerm($conn);
+            $sql = "DELETE FROM will_take WHERE student_num = ? AND term = ?";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("is", $student_num, $term);
+            $result = $stmt->execute();
+    
+            $stmt->close();
+        } else {
+            $sql = "UPDATE student SET counseling_lock = 1 WHERE student_num = ?";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $student_num); // toggle counseling lock
+            $result = $stmt->execute();
+
+            $stmt->close();
+        }
 
         return;
     }
@@ -1409,5 +1433,43 @@ class StudentModel
             return TRUE;
         else
             return FALSE;
+    }
+
+    public function getCounselingLock($conn, $student_num)
+    {
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
+
+        $term = $termsModel->getCounselingTerm($conn);
+
+        //get the courses the student confirmed for next semester
+        $sql1 = "SELECT student_num
+                FROM will_take
+                WHERE student_num = $student_num AND term = '$term'";      
+        
+        $result1 = $conn->query($sql1);
+
+        if ($result1 === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+
+        //get the student counseling lock, 0 == unblocked, 1 == blocked
+        $sql2 = "SELECT counseling_lock, conducted_counseling
+        FROM student
+        WHERE student_num = $student_num";      
+        
+        $result2 = $conn->query($sql2);
+
+        if ($result2 === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $row = $result2->fetch_assoc();
+        $lock = $row['counseling_lock'];
+        $confirmed = $row['conducted_counseling'];
+
+
+        return $confirmed || $lock;
     }
 }

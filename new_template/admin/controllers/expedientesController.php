@@ -398,7 +398,7 @@ class ExpedientesController
                     $lockStatus = 0;
                 }
 
-                $studentModel->changeCounselingLock($student_num, $conn, $lockStatus);
+                $studentModel->changeCounselingLock($student_num, $conn);
                 $studentHaveMinor = $studentModel->studentHaveMinor($student_num, $conn);
 
                 $studentData = $studentModel->selectStudent($student_num, $conn);

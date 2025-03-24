@@ -203,12 +203,23 @@ class CounselingModel
 
         foreach ($courses as $course) {
 
-            //$term = 'BB1';
-            $sql = "INSERT INTO will_take (student_num, crse_code, term) VALUES (?,?,?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sss", $student_num, $course, $term);
-            if (!$stmt->execute()) {
-                throw new Exception("Error: " . $stmt->error);
+            //get the courses the student confirmed for next semester
+            $sql1 = "SELECT student_num
+                    FROM will_take
+                    WHERE student_num = $student_num AND crse_code = '$course' AND term = '$term'";      
+            
+            $result1 = $conn->query($sql1);
+
+            if ($result1 === false) {
+                throw new Exception("Error en la consulta SQL: " . $conn->error);
+            }
+
+            if ($result1->num_rows > 0) { // aqui tengo que arreglar el commands out of sync
+                $sql2 = "INSERT INTO will_take (student_num, crse_code, term) VALUES ($student_num,$course,$term)";
+                $result2 = $conn->query($sql2);
+                if ($result2 === false) {
+                    throw new Exception("Error: " . $conn->error);
+                }
             }
         }
 
@@ -216,6 +227,20 @@ class CounselingModel
         $sql = "UPDATE student
                 SET conducted_counseling = 1
                 WHERE student_num = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $student_num);
+        if (!$stmt->execute()) {
+            throw new Exception("Error: " . $stmt->error);
+        }
+
+        return true;
+    }
+
+    public function confirmCounseling($conn, $student_num) {
+        //update conducted_counseling status to true (1)
+        $sql = "UPDATE student
+        SET conducted_counseling = 1
+        WHERE student_num = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $student_num);
         if (!$stmt->execute()) {
@@ -244,22 +269,39 @@ class CounselingModel
 
     public function getCounselingLock($conn, $student_num)
     {
-        //get the student counseling lock, 0 == unblocked, 1 == blocked
-        $sql1 = "SELECT DISTINCT counseling_lock
-                FROM student
-                WHERE student_num = $student_num";
-        $lock = 0;        
-        
-        $result = $conn->query($sql1);
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
 
-        if ($result === false) {
+        $term = $termsModel->getCounselingTerm($conn);
+
+        //get the courses the student confirmed for next semester
+        $sql1 = "SELECT student_num
+                FROM will_take
+                WHERE student_num = $student_num AND term = '$term'";      
+        
+        $result1 = $conn->query($sql1);
+
+        if ($result1 === false) {
             throw new Exception("Error en la consulta SQL: " . $conn->error);
         }
 
-        foreach ($result as $res)
-            $lock = $res['counseling_lock'];
 
-        return $lock;
+        //get the student counseling lock, 0 == unblocked, 1 == blocked
+        $sql2 = "SELECT counseling_lock, conducted_counseling
+        FROM student
+        WHERE student_num = $student_num";      
+        
+        $result2 = $conn->query($sql2);
+
+        if ($result2 === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        $row = $result2->fetch_assoc();
+        $lock = $row['counseling_lock'];
+        $confirmed = $row['conducted_counseling'];
+
+        return $confirmed || $lock;
     }
 
     public function getCohortes($conn)
