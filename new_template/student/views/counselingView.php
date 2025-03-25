@@ -142,15 +142,14 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                                                             //     $courses = array_slice($generalCourses, 0);
                                                             // }
 
-                                                            //var_dump($recommendedCourses);
-                                                            //var_dump($courses);
+                                                            // var_dump($recommendedCourses);
+                                                            // var_dump($courses);
                                                             ?>
 
 
                                                             <?php foreach ($courses as $course) : ?>
                                                                 <tr>
-                                                                    <td>
-                                                                        <input type='checkbox' class='form-checkbox' value=<?php echo $course['crse_code'] ?> </td>
+                                                                    <td><input type='checkbox' class='form-checkbox' value=<?php echo $course['crse_code']?>></td>
                                                                     <td><?= $course['crse_code'] ?></td>
                                                                     <td><?= mb_strtoupper($course['name']) ?></td>
                                                                     <td><?= $course['credits'] ?></td>
@@ -294,15 +293,16 @@ if (!isset($_SESSION['student_authenticated']) && $_SESSION['student_authenticat
                 const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
 
                 $('input[type="checkbox"]').change(function() {
-
                     // Retrieve the previously selected values from sessionStorage
                     let selectedCourses = JSON.parse(sessionStorage.getItem('selectedCourses')) || [];
+
+                    console.log(selectedCourses);
 
                     // Get the value of the current checkbox
                     const courseCode = $(this).val();
 
                     // If the checkbox is checked and its value is not already in the selectedCourses array, add it and update sessionStorage
-                    if ($(this).prop('checked') && !selectedCourses.includes(courseCode)) {
+                    if ($(this).prop('checked') /*&& !selectedCourses.includes(courseCode)*/) {
                         selectedCourses.push(courseCode);
                         sessionStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
                         console.log("cursos en sessionStorage: ", sessionStorage.getItem('selectedCourses'));
