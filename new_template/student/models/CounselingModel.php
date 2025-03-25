@@ -202,7 +202,6 @@ class CounselingModel
         $term = $termsModel->getCounselingTerm($conn);
 
         foreach ($courses as $course) {
-
             //get the courses the student confirmed for next semester
             $sql1 = "SELECT student_num
                     FROM will_take
@@ -214,8 +213,9 @@ class CounselingModel
                 throw new Exception("Error en la consulta SQL: " . $conn->error);
             }
 
-            if ($result1->num_rows > 0) { // aqui tengo que arreglar el commands out of sync
-                $sql2 = "INSERT INTO will_take (student_num, crse_code, term) VALUES ($student_num,$course,$term)";
+            if ($result1->num_rows == 0) { 
+                $sql2 = "INSERT INTO will_take (student_num, crse_code, term) VALUES ($student_num,'$course','$term')";
+                
                 $result2 = $conn->query($sql2);
                 if ($result2 === false) {
                     throw new Exception("Error: " . $conn->error);

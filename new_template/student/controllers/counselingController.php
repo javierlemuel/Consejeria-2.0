@@ -51,6 +51,8 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // You should check if the selectedCoursesList is not empty before proceeding.
+                var_dump($_POST['selectedCoursesList']);
+                
                 if (!isset($_POST['selectedCoursesList']) || empty($_POST['selectedCoursesList'])) {
                     $counselingModel->confirmCounseling($conn, $student_num);
                     header("Location: ../index.php");
@@ -61,7 +63,6 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
 
                     // Save selected courses to the database using the Model
                     $counselingModel->setCourses($conn, $student_num, $selectedCourses);
-
                     header("Location: ../index.php");
                     exit;
                 }
@@ -72,8 +73,10 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
             // FIX HERE
 
             if ($lock == 1) {
+                // $_SESSION['conducted_counseling'] = 1;
                 $_SESSION['counseling_button'] = '<button type="submit" value="Submit" id="counseling_button" class="btn btn-warning self-end" disabled>Confirmar Consejeria</button>';
             } else {
+                // $_SESSION['conducted_counseling'] = 0;
                 $_SESSION['counseling_button']  = '<button type="submit" value="Submit" id="counseling_button" class="btn btn-warning self-end">Confirmar Consejeria</button>';
             }
 

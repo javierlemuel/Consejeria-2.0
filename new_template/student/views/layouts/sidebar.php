@@ -21,7 +21,9 @@
                         <svg class="hidden h-5 w-4 flex-none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <!-- <line x1="5" y1="12" x2="19" y2="12"></line> -->
                         </svg>
-                        <span><?php echo $_SESSION['full_student_name'] ?></span>
+                        <span><?php 
+                        if (isset($_SESSION['full_student_name']))
+                            echo $_SESSION['full_student_name'] ?></span>
                     </h2>
                 </a>
 
@@ -65,7 +67,8 @@
 
                     <?php
                     //if the student conducted the counseling the button will be disable
-                    echo $_SESSION['counseling_button'];
+                    if (isset($_SESSION['counseling_button']))
+                        echo $_SESSION['counseling_button'];
 
                     ?>
 
@@ -196,13 +199,7 @@
         const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
         console.log("generales: ", generales);
 
-        if (<?php echo $_SESSION['conducted_counseling'] ?> == 1) {
-            var courseList = <?php echo $_SESSION['selectedCourses'] ?>;
-            console.log("courses db: ", courseList);
-        } else {
-            var courseList = JSON.parse(sessionStorage.getItem('selectedCourses'));
-            console.log("courses session storage: ", courseList);
-        }
+        var courseList = JSON.parse(sessionStorage.getItem("selectedCourses"));
 
         // unset($_SESSION['conducted_counseling']);
 
