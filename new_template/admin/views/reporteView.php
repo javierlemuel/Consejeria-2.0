@@ -183,6 +183,34 @@
                         </tr>
                     </tbody></table>
 
+                <br><br><br><br>
+                <div style='text-align:center; font-size: 35px'><h2>Reportes de Estudiantes Aconsejados por Curso de CCOM</h2></div>
+                <br><br><br>
+
+                <table style='font-size: 20px'>
+                    <thead>
+                        <tr>
+                            <th style='text-align:center; bold'>Curso</th>
+                            <th style='text-align:center; width: 40%; bold'>Cantidad de Estudiantes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if(isset($recommendationsPerClass)){
+                            $count = 0;
+                            foreach($recommendationsPerClass as $s)
+                            { ?>
+                                <tr <?php if($count % 2 == 0) echo "style='background-color: lightgray'"; ?>>
+                                    <td style='text-align:center'><?php echo $s['crse_code']?></td>
+                                    <td style='text-align:center'><?php echo $s['count'] ?></td>
+                                    <td style='text-align:center; vertical-align:middle'><a href='?reports&code=<?php echo $s['crse_code']?>'>
+                                    <span class='badge whitespace-nowrap badge-outline-primary'>Abrir CSV</span> </td>
+                                </tr>
+                            <?php $count++;
+                            } 
+                        }?>
+                    </tbody></table>
+
 
                 <br><br><br><br>
                 <div style='text-align:center; font-size: 35px'><h2>Reportes de Estudiantes Apuntados por Curso de CCOM</h2></div>
@@ -198,6 +226,7 @@
                     <tbody>
                         <?php 
                         if(isset($studentsPerClass)){
+                            $count = 0;
                             foreach($studentsPerClass as $s)
                             { ?>
                                 <tr <?php if($count % 2 == 0) echo "style='background-color: lightgray'"; ?>>
