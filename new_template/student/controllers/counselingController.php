@@ -47,6 +47,7 @@ if (!isset($_SESSION['student_authenticated']) || $_SESSION['student_authenticat
                 $_SESSION['formatted_student_num'] = $studentInfo['formatted_student_num'];
                 $_SESSION['email'] = $studentInfo['email'];
                 $_SESSION['student_note'] = $studentInfo['student_note'];
+                $_SESSION['conducted_counseling'] = $counselingModel->getCounselingLock($conn, $_SESSION['student_num']);
             }
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {

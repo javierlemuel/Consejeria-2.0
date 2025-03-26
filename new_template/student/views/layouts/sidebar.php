@@ -116,6 +116,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
 <script>
+
     function checkForConfirmDialog() {
         console.log('checking for dialog');
         if (sessionStorage.getItem('showConfirmDialog')) {
@@ -199,7 +200,17 @@
         const generales = ['MATE', 'INGL', 'CIBI', 'ESPA', 'FISI'];
         console.log("generales: ", generales);
 
-        var courseList = JSON.parse(sessionStorage.getItem("selectedCourses"));
+        if (<?php if (isset($_SESSION['conducted_counseling']))
+                    echo $_SESSION['conducted_counseling'];
+                  else {
+                    echo '0';
+                  } ?> == 1) {
+            var courseList = <?php echo $_SESSION['selectedCourses'] ?>;
+            console.log("courses db: ", courseList);
+        } else {
+            var courseList = JSON.parse(sessionStorage.getItem('selectedCourses'));
+            console.log("courses session storage: ", courseList);
+        }
 
         // unset($_SESSION['conducted_counseling']);
 
@@ -257,7 +268,6 @@
             $('input[type="checkbox"]').prop('disabled', true);
         }
         counselingButton();
-
         checkForConfirmDialog();
     });
 </script>

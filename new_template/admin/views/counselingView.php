@@ -215,12 +215,12 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                                     <input type='hidden' name='deleteAllRecommendationsforOneStudent' value='deleteAllRecommendationsforOneStudent'>
                                     <button type='submit' name='action' value='deleteAllRecommendationsforOneStudent' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #fc0345; margin-top: 5vh; float: right;'>Eliminar todas</button>
                                 </form>
-                                <?php if ($term == $selectedTerm) { ?>
-                                    <form method='POST' action='index.php'>
+                                <?php if ($term == $selectedTerm) { // este boton de confirmar ya no hace falta porque se busca la fecha ?>
+                                    <!-- <form method='POST' action='index.php'>
                                         <input type='hidden' name='confirmRecommendation' value=<?=$term?>>
                                         <input type='hidden' name='student_num' value=<?= $studentData['student_num'] ?>>
                                         <button type='submit' name='action' value='confirmCounseling' class='btn btn-primary ltr:ml-2 rtl:mr-2' style='background-color: #229944; margin-top: 5vh;'>Confirmar</button>
-                                    </form>
+                                    </form> -->
                                     <?php } ?>
                                         <?php } ?>
                                 <h3 class="m-0 dark:text-white-dark" style="font-size: 1.5em; font-weight: bold; margin-top: 1em; margin-bottom: 1em;"> Estatus de la Consejería</h3>
@@ -907,7 +907,7 @@ $privileges = isset($_SESSION['privileges']) ? $_SESSION['privileges'] : null;
                         </div>
                         <input type='hidden' name='makecounseling' value='makecounseling'>
                         <input type='hidden' name='student_num' value="<?php echo $studentData['student_num'] ?>">
-                        <button type="submit" name="action" value="studentCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2">Someter Consejería</button>
+                        <button type="submit" name="action" value="studentCounseling" class="btn btn-primary ltr:ml-2 rtl:mr-2" formnovalidate="formnovalidate">Someter Consejería</button>
                         </form>
                         <br> 
                         <!-- <form method="POST" action="index.php">
