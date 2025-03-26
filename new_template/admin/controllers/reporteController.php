@@ -44,8 +44,8 @@ class ReporteController{
                 devuelve la cantidad de estudiantes inactivos para actualizar la cantidad en la pantalla */
             }
 
-            if ($type == 'Cons') {
-                $classesByStudent = $reporteModel->getClassesByStudent($conn);
+            if ($type == 'Cons' || $type == 'consCCOM') {
+                $classesByStudent = $reporteModel->getClassesByStudent($conn, $type);
             }
 
             if ($type != 'updateinactive') {
