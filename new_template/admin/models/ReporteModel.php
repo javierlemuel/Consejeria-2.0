@@ -317,10 +317,16 @@ class ReporteModel {
         // }
     }
 
-    public function getClassesByStudent($conn) {
+    public function getClassesByStudent($conn, $type) {
         $termsModel = new TermsModel();
         $term = $termsModel->getCounselingTerm($conn);
-        $sql = "SELECT student_num, crse_code FROM will_take NATURAL JOIN student WHERE term = '$term';";
+
+        if ($type == 'consCCOM')
+            $table = 'recommended_courses';
+        if ($type == 'Cons')
+            $table = 'will_take';
+
+        $sql = "SELECT student_num, crse_code FROM $table NATURAL JOIN student WHERE term = '$term';";
 
         $result1 = $conn->query($sql);
 
