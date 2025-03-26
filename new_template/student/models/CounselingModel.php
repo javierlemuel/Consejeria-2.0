@@ -330,16 +330,17 @@ class CounselingModel
 
     public function getStudentSelectedCourses($conn, $student_num)
     {
+        require_once(__DIR__ . '/../models/TermsModel.php');
+        $termsModel = new TermsModel();
 
-        $sql = "SELECT DISTINCT  wt.student_num, wt.crse_code, wt.term
-                FROM will_take as wt 
-                JOIN offer as of
-                ON of.term = wt.term
-                WHERE of.crse_code = 'XXXX' 
-                AND wt.student_num = ?";
+        $term = $termsModel->getCounselingTerm($conn);
+
+        $sql = "SELECT DISTINCT  student_num, crse_code, term
+                FROM will_take
+                WHERE student_num = ? AND term = ?";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $student_num);
+        $stmt->bind_param("ss", $student_num, $term);
         if (!$stmt->execute()) {
             throw new Exception("Error: " . $stmt->error);
         } else {
@@ -349,6 +350,7 @@ class CounselingModel
             while ($row = $result->fetch_assoc()) {
                 $courses[] = $row['crse_code'];
             }
+
             return $courses;
         }
     }
