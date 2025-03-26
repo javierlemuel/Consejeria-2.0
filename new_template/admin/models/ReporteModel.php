@@ -259,6 +259,24 @@ class ReporteModel {
 
    }
 
+   public function getRecommendationsPerClass($conn){
+        $termsModel = new TermsModel();
+        $term = $termsModel->getCounselingTerm($conn);
+        $sql = "SELECT crse_code, COUNT(*) AS count
+        FROM ccom_courses NATURAL JOIN recommended_courses
+        WHERE crse_code LIKE 'CCOM%'
+        AND term = '$term'
+        GROUP BY crse_code;";
+        $result = $conn->query($sql);
+
+        if ($result === false) {
+            throw new Exception("Error en la consulta SQL: " . $conn->error);
+        }
+
+        return $result;
+
+    }
+
 //     public function getTerm($conn){
 //         $sql = "SELECT term
 //                 FROM offer

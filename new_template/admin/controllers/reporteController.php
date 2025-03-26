@@ -24,6 +24,7 @@ class ReporteController{
         $studentsRegistrados = $reporteModel->getRegistrados($conn);
         $studentsRevisados = $reporteModel->getRevisados($conn);
         $studentsPerClass = $reporteModel->getStudentsPerClass($conn);
+        $recommendationsPerClass = $reporteModel->getRecommendationsPerClass($conn);
         $studentsIncompletos = $reporteModel->getStudentsIncompletos($conn);
         // $reporteModel->moveRepeatedCourses($conn);
         // $reporteModel->deleteRepeatedRecommendations($conn);
