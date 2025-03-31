@@ -56,7 +56,7 @@ class ReporteModel {
         $term = $termsModel->getCounselingTerm($conn);
         $sql = "SELECT COUNT(DISTINCT student_num) AS count
         FROM student
-        WHERE status = 'Activo' AND student_num NOT IN (
+        WHERE status = 'Activo' AND counseling_lock = 0 AND student_num NOT IN (
             SELECT DISTINCT student_num
             FROM will_take
             WHERE term = '$term')";
@@ -114,7 +114,7 @@ class ReporteModel {
 
         if ($type == 'consCCOM')
         {
-            $sql = "SELECT student_num, name1, name2, last_name1, last_name2
+            $sql = "SELECT DISTINCT student_num, name1, name2, last_name1, last_name2
             FROM recommended_courses NATURAL JOIN student
             WHERE term = '$term'";
         }
@@ -128,15 +128,16 @@ class ReporteModel {
                 WHERE crse_code LIKE 'CCOM%'
                 AND term = '$term'
                 )
-            AND term = '$term'"; // por que lo saca de recommended courses y no de ccom_courses??
+            AND term = '$term'"; 
         }
         else if ($type == 'noCons')
         {
-            $sql = "SELECT student_num, name1, name2, last_name1, last_name2
+            $sql = "SELECT student_num, name1, name2, last_name1, last_name2, email
             FROM student
-            WHERE status = 'Activo' AND student_num NOT IN (
+            WHERE status = 'Activo' AND counseling_lock = 0 AND student_num NOT IN (
                 SELECT DISTINCT student_num
-                FROM will_take)";
+                FROM will_take
+                WHERE term = '$term')";
         }
         else if ($type == 'Cons')
         {
@@ -163,6 +164,13 @@ class ReporteModel {
             WHERE crse_grade LIKE '%I%'";
         }
  
+        else if (str_contains($type, 'ACCOM')) {
+            // si no cae en ninguno de los anteriores $type debe ser un curso aconsejado, y va a buscar
+            // los estudiantes que les fue recomendado tomarlo el proximo term
+            $sql = "SELECT student_num, name1, name2, last_name1, last_name2
+            FROM recommended_courses NATURAL JOIN student
+            WHERE crse_code = '$type' AND term = '$term'";
+        }
         else { // si no cae en ninguno de los anteriores $type debe ser un curso, y va a buscar
             // los estudiantes que lo tomaran el proximo term
             $sql = "SELECT student_num, name1, name2, last_name1, last_name2
