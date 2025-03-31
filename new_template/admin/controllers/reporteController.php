@@ -61,6 +61,9 @@ class ReporteController{
                         else if ($type == 'incomplete') {
                             $TableData[] = [$s['student_num'], $s['full_name'], $s['crse_code'], $s['crse_grade']];
                         }
+                        else if ($type == 'noCons') {
+                            $TableData[] = [$s['student_num'], $s['full_name'], $s['email']];
+                        }
                         else {
                             $TableData[] = [$s['student_num'], $s['full_name']];
                         }
